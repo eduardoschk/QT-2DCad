@@ -1,5 +1,7 @@
 file (GLOB UI "*.h" "*.cpp")
 
+include_directories("${PROJECT_SOURCE_DIR}/src/app")
+
 ##############################
 #############QT###############
 
@@ -11,7 +13,7 @@ list(APPEND THIRD_PARTY_LIBS Qt5::Widgets Qt5::Core)
 
 ###########ENDQT#############
 
-add_library(ui ${UI})
+add_library(ui STATIC ${UI})
 
 target_link_libraries(ui Qt5::Widgets)
 target_link_libraries(ui Qt5::Gui)

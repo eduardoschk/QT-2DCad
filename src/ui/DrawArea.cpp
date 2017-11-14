@@ -8,14 +8,20 @@
 #include <QtMath>
 #include <QScrollBar>
 
-DrawArea::DrawArea( int _widthArea , int _heightArea ) : widthArea( _widthArea ) , heightArea( _heightArea ) , widthHorizontalScrollBar( 0 ) , heigthVerticalScrollBar( 0 ) , scale( 1 ) , scene( new QGraphicsScene( this ) ) , currentItem( nullptr ) , currentShape( LINE )
+DrawArea::DrawArea( int _widthArea , int _heightArea , int _limitWidth , int _limitHeight ) :
+    widthDraw( _widthArea ) , heightDraw( _heightArea ) , 
+    widthHorizontalScrollBar( 0 ) , heigthVerticalScrollBar( 0 ) , 
+    scale( 1 ) , scene( new QGraphicsScene( this ) ) , 
+    currentItem( nullptr ) , currentShape( LINE ) ,
+    limitWidth ( _limitWidth ), limitHeight( _limitHeight )
 {
     setScene( scene );
 
     setBackgroundRole( QPalette::Base );
     setAutoFillBackground( true );
-    setFixedSize( widthArea + 10 , heightArea + 10 );
-    scene->setSceneRect( QRect( QPoint( 0 , 0 ) , QPoint( widthArea , heightArea ) ) );
+
+    scene->setSceneRect( QRect(QPoint (0,0), QPoint(widthDraw , heightDraw )));
+    changedSize( );
 
     hScrollBar = horizontalScrollBar();
     vScrollBar = verticalScrollBar();
@@ -29,17 +35,13 @@ void DrawArea::setScale( float _scale )
     scale = _scale;
     QMatrix ma;
     ma.scale( qreal( scale ) , qreal( scale ) );
-    setMatrix( ma );
-
-    if ( scale <= 1 )
-        setFixedSize( widthArea * scale + 10 , heightArea *scale + 10 );
-    else 
-        setFixedSize( widthArea + 10 , heightArea + 10 );
+    setMatrix( ma );        
+    changedSize();
 }
 
 void DrawArea::mousePressEvent(QMouseEvent * event)
 {
-    if ( currentShape == SHAPE::LINE ) {
+    if ( currentShape == SHAPE_TYPE::LINE ) {
         points[0] = event->pos();
     }
     else {
@@ -55,6 +57,21 @@ void DrawArea::mousePressEvent(QMouseEvent * event)
 QPoint DrawArea::corrigeScrollPoint( QPoint point )
 {
     return point+=QPoint(widthHorizontalScrollBar, heigthVerticalScrollBar);
+}
+
+void DrawArea::changedSize()
+{
+    int widthReal , heigthReal;
+    if ( 10 + widthDraw * scale > limitWidth )
+        widthReal= limitWidth;
+    else
+        widthReal = 10 + widthDraw * scale;
+    if ( 10 + heightDraw * scale > limitHeight )
+        heigthReal = limitHeight - 10;
+    else
+        heigthReal = 10 + heightDraw * scale;
+
+    setFixedSize( widthReal , heigthReal );
 }
 
 void DrawArea::mouseMoveEvent(QMouseEvent * event)
@@ -77,7 +94,7 @@ void DrawArea::mouseMoveEvent(QMouseEvent * event)
 
 void DrawArea::mouseReleaseEvent(QMouseEvent * event)
 {
-    if ( currentShape == SHAPE::LINE ) {
+    if ( currentShape == SHAPE_TYPE::LINE ) {
         itens.push_back( currentItem );
         clearPoints();
     }
@@ -90,45 +107,22 @@ void DrawArea::mouseReleaseEvent(QMouseEvent * event)
     setMouseTracking( false );
 }
 
-bool DrawArea::eventFilter( QObject * o , QEvent * e )
-{
-    /*QEvent::Type t = e->type();
-    if ( e->type() == QEvent::DynamicPropertyChange )
-    {
-        QSize s =  viewport()->size();
-        QRectF s1 = scene->itemsBoundingRect();
-
-        scene->update();
-        QRectF qf = scene->sceneRect();
-
-        int h = hScrollBar->pageStep();
-        QRect h2 = hScrollBar->contentsRect();
-        int max = hScrollBar->maximum();
-        int min = hScrollBar->minimum();
-
-        if ( ( s1.right() * scale ) > qreal( s.width() ) ) {
-            setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-            hScrollBar->setRange( 0 , ( s1.right() * scale ) );
-        }
-
-        if ( ( s1.bottom() * scale ) > qreal( s.height() ) ) {
-            setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-            vScrollBar->setRange( 0 , ( s1.bottom() * scale ) );
-        }
-    }*/
-    return QAbstractScrollArea::eventFilter( o , e );
-}
-
 void DrawArea::clearPoints()
 {
     currentItem = nullptr;
     points[0]=  points[1]= QPoint();
 }
 
-void DrawArea::setShapeToDraw( SHAPE shape )
+void DrawArea::setShapeToDraw( SHAPE_TYPE shape )
 {
     clearPoints();
     currentShape= shape;
+}
+
+void DrawArea::setLimitArea( const QSize & size )
+{
+    limitWidth= size.width();
+    limitHeight= size.height();
 }
 
 void DrawArea::scrollPress( int i)

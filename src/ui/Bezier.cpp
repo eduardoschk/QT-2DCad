@@ -25,10 +25,7 @@ QPainterPath Bezier::shape() const
 
 void Bezier::paint(QPainter * painter, const QStyleOptionGraphicsItem * item, QWidget * widget)
 {
-    qreal scale = QStyleOptionGraphicsItem::levelOfDetailFromTransform(painter->worldTransform());
-
-    painter->setRenderHint(QPainter::Antialiasing, true);
-    for (float t = 0; t <= 1; t += 0.0005) {
+    for (float t = 0; t <= 1; t += 0.0005f) {
         float resultX = pow((1 - t), 2) * initial.x() + 2 * t * (1-t) * middle.x() + pow(t, 2) * final.x();
         float resultY = pow((1 - t), 2) * initial.y() + 2 * t * (1 - t) * middle.y() + pow(t, 2) * final.y();
         painter->drawPoint(QPoint(resultX, resultY));

@@ -27,18 +27,42 @@ QRectF Line::boundingRect() const
 void Line::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setPen(QPen(Qt::red, 2));
-    //qreal scale = QStyleOptionGraphicsItem::levelOfDetailFromTransform( painter->worldTransform() );
 
-    //QTransform transform;
-    //transform.scale( scale , scale );
+    int x= initial.x();
+    int y= initial.y();
 
-    //painter->setTransform( transform );
-    
-    int dx = initial.x() - final.x();
-    int dy = initial.y() - final.y();
+    int dy = final.y() - initial.y();
+    int dx = final.x() - initial.x();
+    int stepX , stepY;
 
-    for ( int x = initial.x() ; x < final.x() ; ++x ) {
-        int y = initial.y() + dy * ( x - initial.x() ) / dx;
-        painter->drawPoint(x, y);
+    dy < 0 ? stepY= -1 : stepY= 1;
+    dy *= stepY;
+
+    dx < 0 ? stepX= -1 : stepX= 1;
+    dx *= stepX;
+
+    if ( dx > dy )
+    {
+        for ( int fraction = dy - dx ; x != final.x() ; painter->drawPoint( x , y ) )
+        {
+            if ( fraction >= 0 )
+            {
+                y += stepY;
+                fraction -= dx;
+            }
+            x += stepX;
+            fraction += dy;
+        }
     }
+    else {
+        for ( int fraction = dx - dy ; y != final.y() ; painter->drawPoint( x , y )) {
+            if ( fraction >= 0 ) {
+                x += stepX;
+                fraction -= dy;
+            }
+            y += stepY;
+            fraction += dx;
+        }
+    }
+
 }

@@ -1,10 +1,11 @@
+#pragma once
 #ifndef INCLUDED_DRAW_AREA_H
 #define INCLUDED_DRAW_AREA_H
 
 #include <QGraphicsView>
 #include <deque>
 
-enum SHAPE {
+enum SHAPE_TYPE {
     LINE,
     BEZIER,
     ARC
@@ -15,8 +16,10 @@ class DrawArea
 {
     Q_OBJECT
 private:
-    int widthArea;
-    int heightArea;
+    int widthDraw;
+    int heightDraw;
+    int limitWidth;
+    int limitHeight;
     float scale;
 
     QGraphicsScene * scene;
@@ -27,7 +30,7 @@ private:
     QScrollBar * vScrollBar;
     int heigthVerticalScrollBar;
 
-    SHAPE currentShape;
+    SHAPE_TYPE currentShape;
 
     QPoint points[2];
     QGraphicsItem * currentItem;
@@ -35,19 +38,21 @@ private:
     void clearPoints();
     QPoint corrigeScrollPoint(QPoint point);
 
+    void changedSize();
+
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent * event) override;
     void mouseReleaseEvent(QMouseEvent * event) override;
 
-    bool eventFilter( QObject * , QEvent * ) override;
-
 public:
     ~DrawArea() {}
-    DrawArea(int _widthArea, int _heightArea);
+    DrawArea(int _widthArea, int _heightArea, int _limitWidth, int _limitHeight);
 
     void setScale( float scale );
-    void setShapeToDraw(SHAPE shape);
+    void setShapeToDraw(SHAPE_TYPE shape);
+
+    void setLimitArea( const QSize & size );
 
 public slots:
     void scrollPress( int i );

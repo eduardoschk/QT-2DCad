@@ -225,7 +225,7 @@ void Arc::paint(QPainter * painter, const QStyleOptionGraphicsItem * item, QWidg
 
 void Arc::drawPoints( QPainter & painter, const float initAngule , const float finalAngule )
 {
-    for ( float ang = fmod(initAngule, 360.00001) ; ang >= fmod( finalAngule , 360 ); ang -= 0.5 ) {
+    for ( float ang = fmod(initAngule, 360.00001f) ; ang >= fmod( finalAngule , 360 ); ang -= 0.05f ) {
         float y = abs( raio * ( sin( ang * PI / 180 ) ) );
         float x = abs( sqrt( pow( raio , 2 ) - pow( y , 2 ) ) );
 
