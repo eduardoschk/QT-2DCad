@@ -27,7 +27,7 @@ enum ZOOM {
     TEN ,
     FIRST = ONE,
     LAST = TEN,
-    INITIAL = FOUR
+    DEFAULT = FOUR
 };
 
 MainWindow::MainWindow( UserInterface * _owner , QWidget *parent )
@@ -42,6 +42,25 @@ MainWindow::MainWindow( UserInterface * _owner , QWidget *parent )
 
     showMaximized();
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MainWindow::drawLine( QPoint initial , QPoint final )
+{
+    drawArea->drawLine( initial , final );
+}
+
+void MainWindow::drawBezier( QPoint initial , QPoint control , QPoint final )
+{
+    drawArea->drawBezier( initial , control , final );
+}
+
+void MainWindow::drawArc( QPoint center , QPoint initial , QPoint final )
+{
+    drawArea->drawArc( center , initial , final );
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::setShapeLine()
 {
@@ -67,17 +86,52 @@ void MainWindow::setShapArc()
     line->setChecked( false );
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 void MainWindow::minusZoomClicked()
 {
     sliderZoom->setValue( sliderZoom->value() - 1);
 }
 
+void MainWindow::plusZoomClicked()
+{
+    sliderZoom->setValue( sliderZoom->value() + 1 );
+}
+
+void MainWindow::zoomValueChange( int value )
+{
+    if ( !drawArea )
+        return;
+
+    float scale;
+
+    switch ( value ) {
+    case ONE:   scale= 0.125;   break;
+    case TWO:   scale= 0.25;    break;
+    case THREE: scale= 0.5;     break;
+    case FOUR:  scale= 1;       break;
+    case FIVE:  scale= 2;       break;
+    case SIX:   scale= 3;       break;
+    case SEVEN: scale= 4;       break;
+    case EIGHT: scale= 5;       break;
+    case NINE:  scale= 6;       break;
+    case TEN:   scale= 8;       break;
+    }
+
+    drawArea->setScale( scale );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void MainWindow::createNewDrawArea( int _width , int _height )
 {
-    sliderZoom->setValue( INITIAL );
+    sliderZoom->setValue( DEFAULT );
     drawArea= new DrawArea( _width , _height , width() , height() - 100 );
     setCentralWidget( drawArea );
+    configureDrawActions();
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::configureMenuBar( QMenuBar & menu )
 {
@@ -94,7 +148,7 @@ void MainWindow::configureMenuBar( QMenuBar & menu )
     connect( openAction , &QAction::triggered , owner , &UserInterface::optionOpenFile );
     connect( saveAction , &QAction::triggered , owner , &UserInterface::optionSaveFile );
     connect( saveAsAction , &QAction::triggered , owner , &UserInterface::optionSaveAsFile );
-    //connect( exitAction , &QAction::triggered , this , &QCoreApplication::quit );
+    connect( exitAction , &QAction::triggered , owner , &UserInterface::optionQuit );
 }
 
 void MainWindow::configureToolBarShapes()
@@ -126,7 +180,7 @@ void MainWindow::configureZoomControlOnStatusBar()
     sliderZoom = new QSlider( Qt::Horizontal );
     sliderZoom->setMinimum( FIRST );
     sliderZoom->setMaximum( LAST );
-    sliderZoom->setValue( INITIAL );
+    sliderZoom->setValue( DEFAULT );
     sliderZoom->setTickInterval( 1 );
     sliderZoom->setFocusPolicy( Qt::StrongFocus );
     sliderZoom->setTickPosition( QSlider::TicksBelow );
@@ -149,36 +203,17 @@ void MainWindow::configureZoomControlOnStatusBar()
     connect( sliderZoom , SIGNAL( valueChanged( int ) ) , this , SLOT( zoomValueChange( int ) ) );
 }
 
+void MainWindow::configureDrawActions()
+{
+    connect( drawArea , SIGNAL( drawLineFinish( QPoint , QPoint )) , owner , SLOT( drawLineFinish( QPoint , QPoint )));
+    connect( drawArea , SIGNAL( drawBezierFinish( QPoint , QPoint , QPoint )) , owner , SLOT( drawBezierFinish( QPoint , QPoint , QPoint )));
+    connect( drawArea , SIGNAL( drawArcFinish( QPoint , QPoint , QPoint )) , owner , SLOT( drawArcFinish( QPoint , QPoint , QPoint )));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void MainWindow::resizeEvent( QResizeEvent * event )
 {
     if ( drawArea )
         drawArea->setLimitArea(event->size());
-}
-
-void MainWindow::plusZoomClicked()
-{
-    sliderZoom->setValue( sliderZoom->value() + 1);
-}
-
-void MainWindow::zoomValueChange( int value )
-{
-    if ( !drawArea )
-        return;
-
-    float scale;
-
-    switch ( value ) {
-    case ONE:   scale= 0.125;   break;
-    case TWO:   scale= 0.25;    break;
-    case THREE: scale= 0.5;     break;
-    case FOUR:  scale= 1;       break;
-    case FIVE:  scale= 2;       break;
-    case SIX:   scale= 3;       break;
-    case SEVEN: scale= 4;       break;
-    case EIGHT: scale= 5;       break;
-    case NINE:  scale= 6;       break;
-    case TEN:   scale= 8;       break;
-    }
-
-    drawArea->setScale( scale );
 }

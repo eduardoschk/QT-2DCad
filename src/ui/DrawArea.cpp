@@ -82,8 +82,8 @@ void DrawArea::mouseMoveEvent(QMouseEvent * event)
 
     switch ( currentShape ) 
     {
-    case LINE:       currentItem = new Line( corrigeScrollPoint( points[0] ) , corrigeScrollPoint( event->pos() ) , scale );                                                      break;
-    case BEZIER:   currentItem = new Bezier( corrigeScrollPoint( points[0] ) , corrigeScrollPoint( points[1] ) , corrigeScrollPoint( event->pos() ) , scale );     break;
+    case LINE:      currentItem = new Line( corrigeScrollPoint( points[0] ) , corrigeScrollPoint( event->pos() ) , scale );                                           break;
+    case BEZIER:    currentItem = new Bezier( corrigeScrollPoint( points[0] ) , corrigeScrollPoint( points[1] ) , corrigeScrollPoint( event->pos() ) , scale );       break;
     case ARC:       currentItem = new Arc( corrigeScrollPoint( points[0] ) , corrigeScrollPoint( points[1] ) , corrigeScrollPoint( event->pos() ) , scale );          break;
     }
 
@@ -96,11 +96,17 @@ void DrawArea::mouseReleaseEvent(QMouseEvent * event)
 {
     if ( currentShape == SHAPE_TYPE::LINE ) {
         itens.push_back( currentItem );
+        QPoint p = event->pos();
+        emit( drawLineFinish( points[0] , event->pos() ) );
         clearPoints();
     }
     else {
         if ( !points[1].isNull() ) {
             itens.push_back( currentItem );
+            if (currentShape == SHAPE_TYPE::ARC )
+                emit( drawArcFinish( points[0] , points[1] , event->pos() ) );
+            else
+                emit( drawBezierFinish( points[0] , points[1] , event->pos() ) );
             clearPoints();
         }
     }
@@ -135,4 +141,22 @@ void DrawArea::scrollRelease(int i)
 {
     widthHorizontalScrollBar = i;
     std::cout << "H: " << i << std::endl;
+}
+
+void DrawArea::drawLine( QPoint initial , QPoint final )
+{
+    scene->addItem( new Line( corrigeScrollPoint( initial ) , corrigeScrollPoint( final ) , scale ));
+    scene->update();
+}
+
+void DrawArea::drawBezier( QPoint initial , QPoint control , QPoint final )
+{
+    scene->addItem( new Bezier( corrigeScrollPoint( initial ) , corrigeScrollPoint( control ) , corrigeScrollPoint( final ) , scale ) );
+    scene->update();
+}
+
+void DrawArea::drawArc( QPoint center , QPoint initial , QPoint final )
+{
+    scene->addItem( new Arc( corrigeScrollPoint( center ) , corrigeScrollPoint( initial ) , corrigeScrollPoint( final ) , scale ) );
+    scene->update();
 }

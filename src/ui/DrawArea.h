@@ -54,6 +54,15 @@ public:
 
     void setLimitArea( const QSize & size );
 
+    void drawLine( QPoint initial, QPoint final );
+    void drawBezier( QPoint initial , QPoint control , QPoint final );
+    void drawArc( QPoint center , QPoint initial , QPoint final );
+
+signals:
+    void drawLineFinish( QPoint , QPoint );
+    void drawBezierFinish( QPoint , QPoint , QPoint );
+    void drawArcFinish( QPoint , QPoint , QPoint );
+
 public slots:
     void scrollPress( int i );
     void scrollRelease(int i);

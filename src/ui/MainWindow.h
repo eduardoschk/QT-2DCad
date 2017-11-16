@@ -23,6 +23,7 @@ private:
     QAction * bezier;
     QAction * arc;
 
+    void configureDrawActions();
     void configureMenuBar(QMenuBar & menuBar);
     void configureToolBarShapes();
     void configureZoomControlOnStatusBar();
@@ -32,6 +33,10 @@ public:
     MainWindow( UserInterface * _owner, QWidget * parent = 0);
 
     void createNewDrawArea( int _width , int _heigth );
+
+    void drawLine( QPoint initial , QPoint final );
+    void drawBezier( QPoint initial , QPoint control , QPoint final );
+    void drawArc( QPoint center , QPoint initial , QPoint final );
 
 public slots:
     void setShapeLine();

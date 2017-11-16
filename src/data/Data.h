@@ -2,7 +2,7 @@
 #ifndef INCLUDED_DATA_H
 #define INCLUDED_DATA_H
 
-#include "Archive.h"
+class Archive;
 
 class Data {
 private:
@@ -12,6 +12,7 @@ public:
     ~Data();
 
     Archive * getCurrentArchive();
+    void setCurrentArchive(Archive * archive);
 };
 
 #endif // INCLUDED_DATA_H

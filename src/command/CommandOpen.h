@@ -3,12 +3,16 @@
 #define INCLUDED_COMMAND_OPEN_H
 
 #include "Command.h"
+#include <string>
 
 class CommandOpen :
     public Command
 {
+private:
+    std::string pathAndFileName;
 public:
-    CommandOpen() {}
+    CommandOpen( std::string _pathAndFileName ) :
+        pathAndFileName( _pathAndFileName ) {}
     ~CommandOpen() {}
 
     void exec( Data& data , UserInterface& ui );
