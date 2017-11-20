@@ -9,14 +9,8 @@
 class CommandNew :
     public Command
 {
-private:
-    std::string fileName;
-    int width;
-    int height;
-
 public:
-    CommandNew( std::string _pathAndFileName , int _width , int _height ) :
-        fileName ( _pathAndFileName ), width(_width), height(_height) {}
+    CommandNew() {}
     ~CommandNew() {}
 
     void exec( Data& data , UserInterface& ui );

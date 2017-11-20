@@ -15,13 +15,13 @@ class Point;
 class Shape
 {
 protected:
-    IDENTIFY id;
+   IDENTIFY id;
 public:
-    Shape() {}
-    virtual ~Shape() {}
+   Shape() {}
+   virtual ~Shape() {}
 
-    virtual int getId() = 0;
-    virtual std::deque<Point*> getPoints() = 0;
+   virtual int getId() = 0;
+   virtual std::deque<Point*> getPoints() = 0;
 };
 
 #endif //INCLUDED_SHAPE_H

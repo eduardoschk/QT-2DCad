@@ -8,12 +8,6 @@ class QLabel;
 class QLineEdit;
 class QSpinBox;
 
-//struct NewArchive {
-//    std::string name;
-//    int width;
-//    int heigth;
-//};
-
 class NewDrawPopup 
     : public QDialog
 {
@@ -26,17 +20,20 @@ private:
     QLabel * heigthLabel;
     QSpinBox * heigthText;
 
+    void configurePopupLayout();
+
  private slots:
     void cancel();
     void create();
 
 public:
     NewDrawPopup();
-    ~NewDrawPopup() {}
+    ~NewDrawPopup();
 
     void show();
 
-Q_SIGNALS:
+ Q_SIGNALS:
+    void sigCancel();
     void createNewArchive( QString , int, int );
 };
 

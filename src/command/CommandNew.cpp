@@ -1,13 +1,16 @@
 #include "CommandNew.h"
 #include "Data.h"
-#include "Archive.h"
+#include "File.h"
 #include "UserInterface.h"
 
-void CommandNew::exec( Data& data , UserInterface& ui ) 
+void CommandNew::exec( Data& data, UserInterface& ui ) 
 { 
-    Archive * archive = new Archive( fileName , width, height);
-    data.setCurrentArchive( archive );
-
-    ui.createDrawArea( width , height );
-    ui.setTitleWindow( fileName.c_str() );
+   bool response= true;
+   if ( &data.getCurrentFile() ) {
+      if ( !data.getCurrentFile().isSaved() )
+         response= ui.confirmOperation( "Existe um arquivo aberto e ele não está salvo, deseja continuar mesmo assim?" );
+   }
+   
+   if (response)
+      ui.showPopupNewFile();
 }

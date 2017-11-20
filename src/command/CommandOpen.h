@@ -2,17 +2,17 @@
 #ifndef INCLUDED_COMMAND_OPEN_H
 #define INCLUDED_COMMAND_OPEN_H
 
-#include "Command.h"
-#include <string>
+#include "CommandIO.h"
+
+class Shape;
 
 class CommandOpen :
-    public Command
+    public CommandIO
 {
 private:
-    std::string pathAndFileName;
+   void drawShape( UserInterface & ui, Shape & shape);
 public:
-    CommandOpen( std::string _pathAndFileName ) :
-        pathAndFileName( _pathAndFileName ) {}
+    CommandOpen() {}
     ~CommandOpen() {}
 
     void exec( Data& data , UserInterface& ui );

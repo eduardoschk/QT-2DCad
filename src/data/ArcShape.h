@@ -14,7 +14,7 @@ private:
 public:
     ArcShape();
     ArcShape( Point * _center , Point * _initial , Point * _final );
-    virtual ~ArcShape();
+    ~ArcShape();
 
     void setCenter( Point * _center );
     void setInitial( Point * _initial );

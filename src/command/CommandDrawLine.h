@@ -13,7 +13,7 @@ private:
     Point * initial;
     Point * final;
 public:
-    CommandDrawLine( int x1 , int y1 , int x2 , int y2 );
+    CommandDrawLine( int xInit , int yInit , int xFinal , int yFinal );
     ~CommandDrawLine() {}
 
     void exec( Data& data , UserInterface& ui );

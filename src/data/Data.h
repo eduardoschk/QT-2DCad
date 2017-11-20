@@ -2,17 +2,17 @@
 #ifndef INCLUDED_DATA_H
 #define INCLUDED_DATA_H
 
-class Archive;
+class File;
 
 class Data {
 private:
-    Archive * currentArchive;
+    File * currentFile;
 public:
     Data();
     ~Data();
 
-    Archive * getCurrentArchive();
-    void setCurrentArchive(Archive * archive);
+    File & getCurrentFile();
+    void setCurrentFile(File * file);
 };
 
 #endif // INCLUDED_DATA_H

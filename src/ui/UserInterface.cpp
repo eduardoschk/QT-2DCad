@@ -1,84 +1,80 @@
 #include "UserInterface.h"
 #include <QFileDialog>
 #include <QString>
-#include <string>
 #include <QPoint>
+#include <QMessageBox>
 
 #include "MainWindow.h"
 #include "NewDrawPopup.h"
-#include <iostream>
 #include "App.h"
 
-UserInterface::UserInterface( App * _owner , QWidget * parent) : QWidget( parent ), owner(_owner)
+UserInterface::UserInterface( App * _owner , QWidget * parent) : 
+   QWidget( parent ), owner( _owner ), newDrawPopup( nullptr )
 {
     mainWindow= new MainWindow(this);
 }
 
-UserInterface::~UserInterface() {}
+UserInterface::~UserInterface() 
+{
+   if ( newDrawPopup )
+      delete newDrawPopup;
+   delete mainWindow;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UserInterface::drawLine( int x1 , int y1 , int x2 , int y2 )
+void UserInterface::drawLine( int xInit , int yInit , int xFinal , int yFinal )
 {
-    mainWindow->drawLine(QPoint( x1, y1 ), QPoint( x2 , y2));
+   mainWindow->drawLine(QPoint( xInit, yInit ), QPoint( xFinal , yFinal));
 }
 
-void UserInterface::drawBezier( int x1 , int y1 , int x2 , int y2 , int x3 , int y3 )
+void UserInterface::drawBezier( int xInit , int yInit , int xControl , int yControl , int xFinal , int yFinal )
 {
-    mainWindow->drawBezier( QPoint( x1 , y1 ) , QPoint( x2 , y2 ) , QPoint(x3, y3) );
+   mainWindow->drawBezier( QPoint( xInit , yInit ) , QPoint( xControl , yControl ) , QPoint(xFinal, yFinal) );
 }
 
-void UserInterface::drawArc( int x1 , int y1 , int x2 , int y2 , int x3 , int y3 )
+void UserInterface::drawArc( int xCenter , int yCenter , int xInit , int yInit , int xFinal , int yFinal )
 {
-    mainWindow->drawArc( QPoint( x1 , y1 ) , QPoint( x2 , y2 ) , QPoint( x3 , y3 ) );
+   mainWindow->drawArc( QPoint( xCenter , yCenter ) , QPoint( xInit , yInit ) , QPoint( xFinal , yFinal ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void UserInterface::drawLineFinish( QPoint initial , QPoint final )
 {
-    owner->actionDrawLine( initial.x() , initial.y() , final.x() , final.y() );
+   owner->actionDrawLine( initial.x() , initial.y() , final.x() , final.y() );
 }
 
 void UserInterface::drawBezierFinish( QPoint initial , QPoint control , QPoint final )
 {
-    owner->actionDrawBezier( initial.x() , initial.y() , control.x() , control.y() , final.x() , final.y() );
+   owner->actionDrawBezier( initial.x() , initial.y() , control.x() , control.y() , final.x() , final.y() );
 }
 
 void UserInterface::drawArcFinish( QPoint center , QPoint initial , QPoint final )
 {
-    owner->actionDrawArc( center.x() , center.y() , initial.x() , initial.y() , final.x() , final.y() );
+   owner->actionDrawArc( center.x() , center.y() , initial.x() , initial.y() , final.x() , final.y() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void UserInterface::optionNewFile()
 {
-    newDrawPopup = new NewDrawPopup();
-    connect( newDrawPopup , SIGNAL( createNewArchive( QString , int , int ) ) , this , SLOT( createFile( QString , int , int ) ) );
-    newDrawPopup->show();
+   owner->actionNewFile();
 }
 
 void UserInterface::optionOpenFile()
 {
-    QFileDialog dialog( this );
-
-    dialog.setFileMode( QFileDialog::AnyFile );
-    dialog.setViewMode( QFileDialog::Detail );
-    dialog.setAcceptMode( QFileDialog::AcceptOpen );
-    QString file = QFileDialog::getOpenFileName(this);
-
-    owner->actionOpenFile( file.toStdString() );
+   owner->actionOpenFile();
 }
 
 void UserInterface::optionSaveFile() 
 {
-    owner->actionSaveFile();
+   owner->actionSaveFile();
 }
 
 void UserInterface::optionSaveAsFile()
 {
-    owner->actionSaveAsFile();
+   owner->actionSaveAsFile();
 }
 
 void UserInterface::optionQuit()
@@ -90,14 +86,45 @@ void UserInterface::optionQuit()
 
 std::string UserInterface::requestPathFileToSave(std::string fileName)
 {
-    const char* a = fileName.c_str();
-    QString path = QFileDialog::getSaveFileName( this , tr( "Salvar" ) ,
-        a ,
-        tr( "Custom(.tois);;Images (*.png *.xpm *.jpg)"));
+   const char* a = fileName.c_str();
+   QString path = QFileDialog::getSaveFileName( this , tr( "Salvar" ) ,
+      a ,
+      tr( "Custom(.cad);;Images (*.png *.xpm *.jpg)"));
     
-    return path.toStdString();
+   return path.toStdString();
 }
 
+std::string UserInterface::requestPathFileToOpen()
+{
+   QString path = QFileDialog::getOpenFileName( this );
+
+   return path.toStdString();
+}
+
+void UserInterface::showErrorMessage( std::string _message )
+{
+   const char* message = _message.c_str();
+   QMessageBox::warning( this , tr( "Atenção" ) , message ,
+      QMessageBox::StandardButton::Ok );
+}
+
+bool UserInterface::confirmOperation( std::string _message )
+{
+   const char* message = _message.c_str();
+   QMessageBox::StandardButton response;
+   response = QMessageBox::question( this , tr("Atenção") , message ,
+      QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No );
+
+   return ( response == QMessageBox::Yes ) ? true : false ;
+}
+
+void UserInterface::showPopupNewFile()
+{
+   newDrawPopup = new NewDrawPopup();
+   connect( newDrawPopup , SIGNAL( createNewArchive( QString , int , int ) ) , this , SLOT( createFile( QString , int , int ) ) );
+   connect( newDrawPopup , SIGNAL( sigCancel() ) , this , SLOT( cancelCreateFile() ) );
+   newDrawPopup->show();
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -111,7 +138,17 @@ void UserInterface::createDrawArea( int width , int height )
     mainWindow->createNewDrawArea( width , height );
 }
 
+void UserInterface::cancelCreateFile()
+{
+   delete newDrawPopup;
+   newDrawPopup= nullptr;
+}
+
 void UserInterface::createFile( QString name , int _width , int _height )
 {
-    owner->actionNewFile( name.toStdString() , _width , _height );
+   if ( newDrawPopup ) {
+      delete newDrawPopup;
+      newDrawPopup= nullptr;
+   }
+   owner->actionCreateArhive( name.toStdString() , _width , _height );
 }

@@ -40,8 +40,9 @@ public:
     void actionDrawBezier( int x1 , int y1 , int x2 , int y2 , int x3, int y3 );
     void actionDrawArc( int x1 , int y1 , int x2 , int y2 , int x3 , int y3 );
 
-    void actionNewFile( std::string pathAndFile, int width, int height);
-    void actionOpenFile( std::string pathAndFile );
+    void actionCreateArhive( std::string name, int width , int height );
+    void actionNewFile();
+    void actionOpenFile();
     void actionSaveFile();
     void actionSaveAsFile();
     void actionQuit();

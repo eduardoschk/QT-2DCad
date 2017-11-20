@@ -8,38 +8,51 @@
 #include "CommandDrawLine.h"
 #include "CommandDrawArc.h"
 #include "CommandSaveAs.h"
+#include "CommandCreateFile.h"
 #include "CommandDrawBezier.h"
 
 App::App(int argc, char **argv) : QApplication(argc, argv)
 {
-    data= new Data();
-    userInterface= new UserInterface(this);
-    currentCommand= nullptr;
+   data= new Data();
+   userInterface= new UserInterface(this);
+   currentCommand= nullptr;
 }
 
-App::~App() {}
+App::~App() 
+{
+   delete data;
+   delete userInterface;
+   cleanCurrentCmd();
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 void App::run()
 {
-    exec();
+   exec();
+   actionQuit();
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 void App::cleanCurrentCmd()
 {
-    if ( currentCommand )
-        delete currentCommand;
-    currentCommand= nullptr;
+   if ( currentCommand )
+      delete currentCommand;
+   currentCommand= nullptr;
 }
 
 bool App::executeCmd()
 {
-    if ( currentCommand )
-    {
-        currentCommand->exec( *data , *userInterface );
-        return true;
-    }
-    return false;
+   if ( currentCommand )
+   {
+      currentCommand->exec( *data , *userInterface );
+      return true;
+   }
+   return false;
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 void App::actionDrawLine( int x1 , int y1 , int x2 , int y2 )
 {
@@ -62,35 +75,42 @@ void App::actionDrawArc( int x1 , int y1 , int x2 , int y2 , int x3 , int y3 )
     executeCmd();
 }
 
-void App::actionNewFile( std::string pathAndFileName , int width , int height )
+void App::actionCreateArhive( std::string name , int width , int height )
 {
-    cleanCurrentCmd();
-    currentCommand= new CommandNew( pathAndFileName , width , height );
-    executeCmd();
+   cleanCurrentCmd();
+   currentCommand= new CommandCreateFile( name , width , height);
+   executeCmd();
 }
 
-void App::actionOpenFile( std::string pathAndFile )
+void App::actionNewFile()
 {
-    cleanCurrentCmd();
-    currentCommand= new CommandOpen( pathAndFile );
-    executeCmd();
+   cleanCurrentCmd();
+   currentCommand= new CommandNew();
+   executeCmd();
+}
+
+void App::actionOpenFile()
+{
+   cleanCurrentCmd();
+   currentCommand= new CommandOpen();
+   executeCmd();
 }
 
 void App::actionSaveFile()
 {
-    cleanCurrentCmd();
-    currentCommand= new CommandSave();
-    executeCmd();
+   cleanCurrentCmd();
+   currentCommand= new CommandSave();
+   executeCmd();
 }
 
 void App::actionSaveAsFile()
 {
-    cleanCurrentCmd();
-    currentCommand= new CommandSaveAs();
-    executeCmd();
+   cleanCurrentCmd();
+   currentCommand= new CommandSaveAs();
+   executeCmd();
 }
 
 void App::actionQuit()
 {
-    quit();
+   quit();
 }

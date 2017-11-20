@@ -1,12 +1,13 @@
 #include "Line.h"
 #include <QtWidgets>
-#include <iostream>
 
 Line::Line(QPoint & p1, QPoint & p2, float scale )
 {
     initial= p1 / scale;
     final= p2 / scale;
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 QRectF Line::boundingRect() const
 {
@@ -26,42 +27,40 @@ QRectF Line::boundingRect() const
 
 void Line::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->setPen(QPen(Qt::red, 2));
+    int initialX= initial.x();
+    int initialY= initial.y();
 
-    int x= initial.x();
-    int y= initial.y();
-
-    int dy = final.y() - initial.y();
-    int dx = final.x() - initial.x();
+    int distanceY = final.y() - initial.y();
+    int distanceX = final.x() - initial.x();
     int stepX , stepY;
 
-    dy < 0 ? stepY= -1 : stepY= 1;
-    dy *= stepY;
+    distanceY < 0 ? stepY= -1 : stepY= 1;
+    distanceY *= stepY;
 
-    dx < 0 ? stepX= -1 : stepX= 1;
-    dx *= stepX;
+    distanceX < 0 ? stepX= -1 : stepX= 1;
+    distanceX *= stepX;
 
-    if ( dx > dy )
+    if ( distanceX > distanceY )
     {
-        for ( int fraction = dy - dx ; x != final.x() ; painter->drawPoint( x , y ) )
+        for ( int fraction = distanceY - distanceX ; initialX != final.x() ; painter->drawPoint( initialX , initialY ) )
         {
             if ( fraction >= 0 )
             {
-                y += stepY;
-                fraction -= dx;
+                initialY += stepY;
+                fraction -= distanceX;
             }
-            x += stepX;
-            fraction += dy;
+            initialX += stepX;
+            fraction += distanceY;
         }
     }
     else {
-        for ( int fraction = dx - dy ; y != final.y() ; painter->drawPoint( x , y )) {
+        for ( int fraction = distanceX - distanceY ; initialY != final.y() ; painter->drawPoint( initialX , initialY )) {
             if ( fraction >= 0 ) {
-                x += stepX;
-                fraction -= dy;
+                initialX += stepX;
+                fraction -= distanceY;
             }
-            y += stepY;
-            fraction += dx;
+            initialY += stepY;
+            fraction += distanceX;
         }
     }
 

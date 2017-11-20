@@ -1,10 +1,13 @@
 #include "CommandSaveAs.h"
 #include "Data.h"
 #include "UserInterface.h"
-#include "Archive.h"
+#include "File.h"
 #include <string>
 
 void CommandSaveAs::exec( Data& data , UserInterface& ui ) 
 {
-    std::string t = ui.requestPathFileToSave( data.getCurrentArchive()->getArchiveName() );
+   if ( &data.getCurrentFile() ) 
+      data.getCurrentFile().saveAs( ui.requestPathFileToSave( data.getCurrentFile().getFileName() ));
+   else
+      ui.showErrorMessage( "Não existe arquivo para ser salvo" );
 }

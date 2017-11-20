@@ -14,10 +14,10 @@ private:
     Point * initial;
     Point * final;
 public:
-    CommandDrawArc( int x1 , int y1 , int x2 , int y2 , int x3 , int y3 );
-    ~CommandDrawArc();
+    CommandDrawArc( int xCenter , int yCenter , int xInit , int yInit , int xFinal , int yFinal );
+    ~CommandDrawArc() {}
 
-    void exec( Data& data , UserInterface& ui );
+    void exec( Data & data , UserInterface & ui );
 };
 
 #endif // INCLUDED_COMMAND_DRAW_ARC_H

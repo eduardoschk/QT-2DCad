@@ -1,7 +1,4 @@
 #include "mainwindow.h"
-#include "DrawArea.h"
-#include "NewDrawPopup.h"
-#include "UserInterface.h"
 
 #include <QMenuBar>
 #include <QToolBar>
@@ -12,7 +9,9 @@
 #include <QCoreApplication>
 #include <QResizeEvent>
 
-#include <iostream>
+#include "DrawArea.h"
+#include "NewDrawPopup.h"
+#include "UserInterface.h"
 
 enum ZOOM {
     ONE = 1,
@@ -29,6 +28,19 @@ enum ZOOM {
     LAST = TEN,
     DEFAULT = FOUR
 };
+
+int heightZoomWidget= 100;
+int widthButtonZoom= 30;
+
+MainWindow::~MainWindow()
+{
+   if ( drawArea )
+      delete drawArea;
+   delete arc;
+   delete line;
+   delete bezier;
+   delete sliderZoom;
+}
 
 MainWindow::MainWindow( UserInterface * _owner , QWidget *parent )
     : QMainWindow( parent ) , drawArea( nullptr ), owner(_owner)
@@ -64,10 +76,12 @@ void MainWindow::drawArc( QPoint center , QPoint initial , QPoint final )
 
 void MainWindow::setShapeLine()
 {
-    if (drawArea )
-        drawArea->setShapeToDraw( LINE );
-    bezier->setChecked( false );
-    arc->setChecked( false );
+   if (drawArea )
+      drawArea->setShapeToDraw( LINE );
+
+   line->setChecked( true );
+   bezier->setChecked( false );
+   arc->setChecked( false );
 }
 
 void MainWindow::setShapeBezier()
@@ -100,35 +114,35 @@ void MainWindow::plusZoomClicked()
 
 void MainWindow::zoomValueChange( int value )
 {
-    if ( !drawArea )
-        return;
+   if ( drawArea ) {
+      float scale;
 
-    float scale;
+      switch ( value ) {
+      case ONE:   scale= 0.125;   break;
+      case TWO:   scale= 0.25;    break;
+      case THREE: scale= 0.5;     break;
+      case FOUR:  scale= 1;       break;
+      case FIVE:  scale= 2;       break;
+      case SIX:   scale= 3;       break;
+      case SEVEN: scale= 4;       break;
+      case EIGHT: scale= 5;       break;
+      case NINE:  scale= 6;       break;
+      case TEN:   scale= 8;       break;
+      }
 
-    switch ( value ) {
-    case ONE:   scale= 0.125;   break;
-    case TWO:   scale= 0.25;    break;
-    case THREE: scale= 0.5;     break;
-    case FOUR:  scale= 1;       break;
-    case FIVE:  scale= 2;       break;
-    case SIX:   scale= 3;       break;
-    case SEVEN: scale= 4;       break;
-    case EIGHT: scale= 5;       break;
-    case NINE:  scale= 6;       break;
-    case TEN:   scale= 8;       break;
-    }
-
-    drawArea->setScale( scale );
+      drawArea->setScale( scale );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::createNewDrawArea( int _width , int _height )
 {
-    sliderZoom->setValue( DEFAULT );
-    drawArea= new DrawArea( _width , _height , width() , height() - 100 );
-    setCentralWidget( drawArea );
-    configureDrawActions();
+   setShapeLine();
+   sliderZoom->setValue( DEFAULT );
+   drawArea= new DrawArea( _width , _height , width() , height() - heightZoomWidget );
+   setCentralWidget( drawArea );
+   configureDrawActions();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -171,43 +185,43 @@ void MainWindow::configureToolBarShapes()
 
 void MainWindow::configureZoomControlOnStatusBar()
 {
-    QWidget * zoomControl = new QWidget();
-    QHBoxLayout * layoutZoomControl = new QHBoxLayout();
+   QWidget * zoomControl = new QWidget();
+   QHBoxLayout * layoutZoomControl = new QHBoxLayout();
 
-    QPushButton * zoomOut = new QPushButton( QIcon( "C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/zoom-out.png" ) , "" );
-    zoomOut->setFixedWidth( 30 );
+   sliderZoom = new QSlider( Qt::Horizontal );
+   sliderZoom->setMinimum( FIRST );
+   sliderZoom->setMaximum( LAST );
+   sliderZoom->setValue( DEFAULT );
+   sliderZoom->setTickInterval( 1 );
+   sliderZoom->setFocusPolicy( Qt::StrongFocus );
+   sliderZoom->setTickPosition( QSlider::TicksBelow );
 
-    sliderZoom = new QSlider( Qt::Horizontal );
-    sliderZoom->setMinimum( FIRST );
-    sliderZoom->setMaximum( LAST );
-    sliderZoom->setValue( DEFAULT );
-    sliderZoom->setTickInterval( 1 );
-    sliderZoom->setFocusPolicy( Qt::StrongFocus );
-    sliderZoom->setTickPosition( QSlider::TicksBelow );
+   QPushButton * zoomOut = new QPushButton( QIcon( "C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/zoom-out.png" ) , "" );
+   zoomOut->setFixedWidth( widthButtonZoom );
 
-    QPushButton * zoomIn= new QPushButton( QIcon( "C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/zoom-in.png" ) , "" );
-    zoomIn->setFixedWidth( 30 );
+   QPushButton * zoomIn= new QPushButton( QIcon( "C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/zoom-in.png" ) , "" );
+   zoomIn->setFixedWidth( widthButtonZoom );
 
-    layoutZoomControl->addWidget( zoomOut );
-    layoutZoomControl->addWidget( sliderZoom );
-    layoutZoomControl->addWidget( zoomIn );
+   layoutZoomControl->addWidget( zoomOut );
+   layoutZoomControl->addWidget( sliderZoom );
+   layoutZoomControl->addWidget( zoomIn );
 
-    zoomControl->setLayout( layoutZoomControl );
+   zoomControl->setLayout( layoutZoomControl );
 
-    QStatusBar * status = statusBar();
-    status->addPermanentWidget( zoomControl );
+   QStatusBar * status = statusBar();
+   status->addPermanentWidget( zoomControl );
 
 
-    connect( zoomOut , SIGNAL( pressed() ) , this , SLOT( minusZoomClicked() ) );
-    connect( zoomIn , SIGNAL( pressed() ) , this , SLOT( plusZoomClicked() ) );
-    connect( sliderZoom , SIGNAL( valueChanged( int ) ) , this , SLOT( zoomValueChange( int ) ) );
+   connect( zoomOut , SIGNAL( pressed() ) , this , SLOT( minusZoomClicked() ) );
+   connect( zoomIn , SIGNAL( pressed() ) , this , SLOT( plusZoomClicked() ) );
+   connect( sliderZoom , SIGNAL( valueChanged( int ) ) , this , SLOT( zoomValueChange( int ) ) );
 }
 
 void MainWindow::configureDrawActions()
 {
-    connect( drawArea , SIGNAL( drawLineFinish( QPoint , QPoint )) , owner , SLOT( drawLineFinish( QPoint , QPoint )));
-    connect( drawArea , SIGNAL( drawBezierFinish( QPoint , QPoint , QPoint )) , owner , SLOT( drawBezierFinish( QPoint , QPoint , QPoint )));
-    connect( drawArea , SIGNAL( drawArcFinish( QPoint , QPoint , QPoint )) , owner , SLOT( drawArcFinish( QPoint , QPoint , QPoint )));
+   connect( drawArea , SIGNAL( drawLineFinish( QPoint , QPoint )) , owner , SLOT( drawLineFinish( QPoint , QPoint )));
+   connect( drawArea , SIGNAL( drawBezierFinish( QPoint , QPoint , QPoint )) , owner , SLOT( drawBezierFinish( QPoint , QPoint , QPoint )));
+   connect( drawArea , SIGNAL( drawArcFinish( QPoint , QPoint , QPoint )) , owner , SLOT( drawArcFinish( QPoint , QPoint , QPoint )));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

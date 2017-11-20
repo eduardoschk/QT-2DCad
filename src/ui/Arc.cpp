@@ -2,16 +2,11 @@
 #include <Math.h>
 #include <QtWidgets>
 #include <sstream>
-#include <iostream>
 
 #define PI 3.14159265
 
-Arc::Arc(QPoint & _centerPoint, QPoint & _initialPoint, QPoint & _finalPoint, float scale) 
-{
-    center= _centerPoint / scale;
-    initialPoint= _initialPoint / scale;
-    finalPoint= _finalPoint / scale;
-}
+Arc::Arc( QPoint & _centerPoint , QPoint & _initialPoint , QPoint & _finalPoint , float scale ) :
+   center( _centerPoint / scale) , initialPoint( _initialPoint / scale ) , finalPoint( _finalPoint / scale ), raio(calcPitagoras( center , initialPoint )) {}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,212 +15,21 @@ QRectF Arc::boundingRect() const
     return QRectF(0, 0, 600, 600);
 }
 
-QPainterPath Arc::shape() const
-{
-    QPainterPath path;
-    path.addRect(0, 0, 0, 0);
-    return path;
-}
-
 void Arc::paint(QPainter * painter, const QStyleOptionGraphicsItem * item, QWidget * widget)
 {
-    printSupportLines(*painter);
-
-    raio = calcPitagoras(center, initialPoint);
-    float distInitFinal = calcPitagoras(center, finalPoint);
-
-    quadInitPoint = calcQuadrantPoint(initialPoint);
-    quadFinalPoint = calcQuadrantPoint(finalPoint);
-
-    float anguleAnt;
-    float anguleNext;
-
-    painter->setPen(QPen(Qt::red, 2));
-
-    switch (quadInitPoint) {
-    case UM:
-        switch (quadFinalPoint) {
-        case UM: {
-            float angInit = calcAngule(diffCordenates(center.y(), initialPoint.y()), raio);
-            float angFinal = calcAngule(diffCordenates(center.y(), finalPoint.y()), distInitFinal);
-            if (angInit > angFinal) {
-                anguleAnt = calcAngule(diffCordenates(initialPoint.x(), center.x()), raio);
-                anguleNext = calcAngule(diffCordenates(finalPoint.y(), center.y()), distInitFinal);
-
-                drawPoints(*painter,  90 - anguleAnt, anguleNext);
-            }
-            else {
-                anguleAnt = calcAngule(diffCordenates(initialPoint.y(), center.y()), raio);
-                anguleNext = calcAngule(diffCordenates(finalPoint.x(), center.x()), distInitFinal);
-
-                drawPoints( *painter , 90 - anguleNext , anguleAnt );
-            }
-            break;
-        }
-        case DOIS:
-            anguleAnt = calcAngule(diffCordenates(initialPoint.y(), center.y()), raio);
-            anguleNext = calcAngule(diffCordenates(finalPoint.y(), center.y()), distInitFinal);
-
-            drawPoints(*painter, 180 - anguleNext, anguleAnt);
-
-            break;
-        case TRES:
-            anguleAnt = calcAngule(diffCordenates(initialPoint.y(), center.y()), raio);
-            anguleNext = calcAngule(diffCordenates(finalPoint.x(), center.x()), distInitFinal);
-
-            drawPoints( *painter , 270 - anguleNext , anguleAnt );
-
-            break;
-        case QUATRO:
-            anguleAnt = calcAngule(diffCordenates(initialPoint.y(), center.y()), raio);
-            anguleNext = calcAngule(diffCordenates(finalPoint.y(), center.y()), distInitFinal);
-
-            drawPoints( *painter , 360 - anguleNext , anguleAnt );
-
-            break;
-        }
-        break;
-    case DOIS:
-        switch (quadFinalPoint) {
-         case UM:
-            anguleAnt = calcAngule(diffCordenates(initialPoint.y(), center.y()), raio);
-            anguleNext = calcAngule(diffCordenates(finalPoint.y(), center.y()), distInitFinal);
-
-            drawPoints( *painter , 180 - anguleAnt , anguleNext );
-
-            break;
-        case DOIS: {
-             float angInit = calcAngule(diffCordenates(center.y(), initialPoint.y()), raio);
-             float angFinal = calcAngule(diffCordenates(center.y(), finalPoint.y()), distInitFinal);
-
-             if (angInit < angFinal) {
-                 anguleAnt = calcAngule(diffCordenates(initialPoint.y(), center.y()), raio);
-                 anguleNext = calcAngule(diffCordenates(finalPoint.x(), center.x()), distInitFinal);
-
-                 drawPoints( *painter , 180 - anguleAnt , 90 + anguleNext );
-             }
-             else {
-                 anguleAnt = calcAngule(diffCordenates(initialPoint.x(), center.x()), raio);
-                 anguleNext = calcAngule(diffCordenates(finalPoint.y(), center.y()), distInitFinal);
-
-                 drawPoints( *painter , 180 - anguleNext , 90 + anguleAnt );
-             }
-             break;
-         }
-         case TRES:
-             anguleAnt = calcAngule(diffCordenates(initialPoint.x(), center.x()), raio);
-             anguleNext = calcAngule(diffCordenates(finalPoint.x(), center.x()), distInitFinal);
-
-             drawPoints( *painter , 270 - anguleNext , 90 + anguleAnt );
-
-             break;
-         case QUATRO:
-             anguleAnt = calcAngule(diffCordenates(initialPoint.x(), center.x()), raio);
-             anguleNext = calcAngule(diffCordenates(finalPoint.y(), center.y()), distInitFinal);
-
-             drawPoints( *painter , 360 - anguleNext , 90 + anguleAnt );
-
-             break;
-        }
-        break;
-    case TRES:
-        switch (quadFinalPoint) {
-        case UM:
-            anguleAnt = calcAngule(diffCordenates(initialPoint.x(), center.x()), raio);
-            anguleNext = calcAngule(diffCordenates(finalPoint.y(), center.y()), distInitFinal);
-
-            drawPoints( *painter , 270 - anguleAnt , anguleNext );
-
-            break;
-        case DOIS:
-            anguleAnt = calcAngule(diffCordenates(initialPoint.x(), center.x()), raio);
-            anguleNext = calcAngule(diffCordenates(finalPoint.x(), center.x()), distInitFinal);
-
-            drawPoints( *painter , 270 - anguleAnt , 90 + anguleNext );
-
-            break;
-        case TRES: {
-            float angInit = calcAngule(diffCordenates(center.y(), initialPoint.y()), raio);
-            float angFinal = calcAngule(diffCordenates(center.y(), finalPoint.y()), distInitFinal);
-
-            if (angInit < angFinal) {
-                anguleAnt = calcAngule(diffCordenates(initialPoint.y(), center.y()), raio);
-                anguleNext = calcAngule(diffCordenates(finalPoint.x(), center.x()), distInitFinal);
-
-                drawPoints( *painter , 270 - anguleNext , 180 + anguleAnt );
-            }
-            else {
-                anguleAnt = calcAngule(diffCordenates(initialPoint.x(), center.x()), raio);
-                anguleNext = calcAngule(diffCordenates(finalPoint.y(), center.y()), distInitFinal);
-
-                drawPoints( *painter , 270 - anguleAnt , 180 + anguleNext );
-            }
-            break;
-        }
-        case QUATRO:
-            anguleAnt = calcAngule(diffCordenates(initialPoint.y(), center.y()), raio);
-            anguleNext = calcAngule(diffCordenates(finalPoint.y(), center.y()), distInitFinal);
-
-            drawPoints( *painter , 360 - anguleNext , 180 + anguleAnt );
-            break;
-        }
-        break;
-    case QUATRO:
-        switch (quadFinalPoint) {
-        case UM:
-            anguleAnt = calcAngule(diffCordenates(initialPoint.x(), center.x()), raio);
-            anguleNext = calcAngule(diffCordenates(finalPoint.x(), center.x()), distInitFinal);
-
-            drawPoints( *painter , 90 - anguleNext , 0 );
-            drawPoints( *painter, 360, 270 + anguleAnt );
-
-            break;
-        case DOIS:
-            anguleAnt = calcAngule(diffCordenates(initialPoint.x(), center.x()), raio);
-            anguleNext = calcAngule(diffCordenates(finalPoint.y(), center.y()), distInitFinal);
-
-            drawPoints( *painter , 180 - anguleNext , 0 );
-            drawPoints( *painter , 360 , 270 + anguleAnt );
-
-            break;
-        case TRES:
-            anguleAnt = calcAngule(diffCordenates(initialPoint.x(), center.x()), raio);
-            anguleNext = calcAngule(diffCordenates(finalPoint.x(), center.x()), distInitFinal);
-
-            drawPoints( *painter , 270 - anguleNext , 0 );
-            drawPoints( *painter , 360 , 270 + anguleAnt );
-
-            break;
-        case QUATRO: {
-
-            float angInit = calcAngule(diffCordenates(center.y(), initialPoint.y()), raio);
-            float angFinal = calcAngule(diffCordenates(center.y(), finalPoint.y()), distInitFinal);
-
-            if (angInit > angFinal) {
-                anguleAnt = calcAngule(diffCordenates(initialPoint.x(), center.x()), raio);
-                anguleNext = calcAngule(diffCordenates(finalPoint.y(), center.y()), distInitFinal);
-
-                drawPoints( *painter , 360 - anguleNext , 270 + anguleAnt);
-            }
-            else {
-                anguleAnt = calcAngule(diffCordenates(initialPoint.y(), center.y()), raio);
-                anguleNext = calcAngule(diffCordenates(finalPoint.x(), center.x()), distInitFinal);
-
-                drawPoints( *painter , 360 - anguleAnt , 270 + anguleNext );
-            }
-
-            break;
-        }
-        }
-        break;
-    }
+   switch ( calcQuadrantPoint( initialPoint ) ) {
+   case UM:       drawWithInitialPointInFirstQuadrant( *painter , calcPitagoras( center , finalPoint ) );     break;
+   case DOIS:     drawWithInitialPointInSecondQuadrant( *painter , calcPitagoras( center , finalPoint ) );    break;
+   case TRES:     drawWithInitialPointInThirdQuadrant( *painter , calcPitagoras( center , finalPoint ) );     break;
+   case QUATRO:   drawWithInitialPointInFourthQuadrant( *painter , calcPitagoras( center , finalPoint ) );    break;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Arc::drawPoints( QPainter & painter, const float initAngule , const float finalAngule )
 {
-    for ( float ang = fmod(initAngule, 360.00001f) ; ang >= fmod( finalAngule , 360 ); ang -= 0.05f ) {
+    for ( float ang = fmod(initAngule, 361.0f) ; ang >= fmod( finalAngule , 360 ); ang -= 0.05f ) {
         float y = abs( raio * ( sin( ang * PI / 180 ) ) );
         float x = abs( sqrt( pow( raio , 2 ) - pow( y , 2 ) ) );
 
@@ -240,60 +44,214 @@ void Arc::drawPoints( QPainter & painter, const float initAngule , const float f
     }
 }
 
-void Arc::printSupportLines(QPainter & painter)
+///////////////////////////////////////////////////////////////////////////////
+
+void Arc::drawWithInitialPointInFirstQuadrant( QPainter & painter , float distanceInitFinal )
 {
-    std::stringstream ss;
-    ss << "Inicio [" << initialPoint.x() << "|" << initialPoint.y() << "]";
-    std::string initialString = ss.str();
+   float prevAngle , nextAngle;
+   
+   switch ( calcQuadrantPoint( finalPoint ) ) {
+   case UM: {
+      float angInit = calcAngule( diffCordenates( center.y() , initialPoint.y() ) , raio );
+      float angFinal = calcAngule( diffCordenates( center.y() , finalPoint.y() ) , distanceInitFinal );
+      if ( angInit > angFinal ) {
+         prevAngle = calcAngule( diffCordenates( initialPoint.x() , center.x() ) , raio );
+         nextAngle = calcAngule( diffCordenates( finalPoint.y() , center.y() ) , distanceInitFinal );
 
-    ss.str( "" );
-    ss << "Final [" << finalPoint.x() << "|" << finalPoint.y() << "]";
-    std::string finalString = ss.str();
+         drawPoints( painter , 90 - prevAngle , nextAngle );
+      }
+      else {
+         prevAngle = calcAngule( diffCordenates( initialPoint.y() , center.y() ) , raio );
+         nextAngle = calcAngule( diffCordenates( finalPoint.x() , center.x() ) , distanceInitFinal );
 
-    ss.str( "" );
-    ss << "Centro [" << center.x() << "|" << center.y() << "]";
-    std::string centerString = ss.str();
+         drawPoints( painter , 90 - nextAngle , prevAngle );
+      }
+   }
+   break;
+   case DOIS:
+      prevAngle = calcAngule( diffCordenates( initialPoint.y() , center.y() ) , raio );
+      nextAngle = calcAngule( diffCordenates( finalPoint.y() , center.y() ) , distanceInitFinal );
 
-    painter.setPen(QPen(Qt::gray, 1));
-    painter.drawLine(center, initialPoint);
-    painter.drawLine(center, finalPoint);
-    painter.drawLine(finalPoint, initialPoint);
-    painter.setPen(QPen(Qt::black, 3));
-    painter.drawPoint(initialPoint);
-    painter.drawText(initialPoint, QString( initialString.c_str()));
-    painter.drawPoint(finalPoint);
-    painter.drawText(finalPoint, QString( finalString.c_str() ) );
-    painter.drawPoint(center);
-    painter.drawText(center, QString( centerString.c_str() ) );
+      drawPoints( painter , 180 - nextAngle , prevAngle );
+
+   break;
+   case TRES:
+      prevAngle = calcAngule( diffCordenates( initialPoint.y() , center.y() ) , raio );
+      nextAngle = calcAngule( diffCordenates( finalPoint.x() , center.x() ) , distanceInitFinal );
+
+      drawPoints( painter , 270 - nextAngle , prevAngle );
+
+   break;
+   case QUATRO:
+      prevAngle = calcAngule( diffCordenates( initialPoint.y() , center.y() ) , raio );
+      nextAngle = calcAngule( diffCordenates( finalPoint.y() , center.y() ) , distanceInitFinal );
+
+      drawPoints( painter , 360 - nextAngle , prevAngle );
+
+   break;
+   }
+}
+
+void Arc::drawWithInitialPointInSecondQuadrant( QPainter & painter , float distanceInitFinal )
+{
+   float prevAngle , nextAngle;
+
+   switch ( calcQuadrantPoint( finalPoint ) ) {
+   case UM:
+      prevAngle = calcAngule( diffCordenates( initialPoint.y() , center.y() ) , raio );
+      nextAngle = calcAngule( diffCordenates( finalPoint.y() , center.y() ) , distanceInitFinal );
+
+      drawPoints( painter , 180 - prevAngle , nextAngle );
+
+   break;
+   case DOIS: {
+      float angInit = calcAngule( diffCordenates( center.y() , initialPoint.y() ) , raio );
+      float angFinal = calcAngule( diffCordenates( center.y() , finalPoint.y() ) , distanceInitFinal );
+
+      if ( angInit < angFinal ) {
+         prevAngle = calcAngule( diffCordenates( initialPoint.y() , center.y() ) , raio );
+         nextAngle = calcAngule( diffCordenates( finalPoint.x() , center.x() ) , distanceInitFinal );
+
+         drawPoints( painter , 180 - prevAngle , 90 + nextAngle );
+      }
+      else {
+         prevAngle = calcAngule( diffCordenates( initialPoint.x() , center.x() ) , raio );
+         nextAngle = calcAngule( diffCordenates( finalPoint.y() , center.y() ) , distanceInitFinal );
+
+         drawPoints( painter , 180 - nextAngle , 90 + prevAngle );
+      }
+   }
+   break;
+   case TRES:
+      prevAngle = calcAngule( diffCordenates( initialPoint.x() , center.x() ) , raio );
+      nextAngle = calcAngule( diffCordenates( finalPoint.x() , center.x() ) , distanceInitFinal );
+
+      drawPoints( painter , 270 - nextAngle , 90 + prevAngle );
+
+   break;
+   case QUATRO:
+      prevAngle = calcAngule( diffCordenates( initialPoint.x() , center.x() ) , raio );
+      nextAngle = calcAngule( diffCordenates( finalPoint.y() , center.y() ) , distanceInitFinal );
+
+      drawPoints( painter , 360 - nextAngle , 90 + prevAngle );
+
+   break;
+   }
+}
+
+void Arc::drawWithInitialPointInThirdQuadrant( QPainter & painter , float distanceInitFinal )
+{
+   float prevAngle , nextAngle;
+
+   switch ( calcQuadrantPoint( finalPoint ) ) {
+   case UM:
+      prevAngle = calcAngule( diffCordenates( initialPoint.x() , center.x() ) , raio );
+      nextAngle = calcAngule( diffCordenates( finalPoint.y() , center.y() ) , distanceInitFinal );
+
+      drawPoints( painter , 270 - prevAngle , nextAngle );
+
+   break;
+   case DOIS:
+      prevAngle = calcAngule( diffCordenates( initialPoint.x() , center.x() ) , raio );
+      nextAngle = calcAngule( diffCordenates( finalPoint.x() , center.x() ) , distanceInitFinal );
+
+      drawPoints( painter , 270 - prevAngle , 90 + nextAngle );
+
+   break;
+   case TRES: {
+      float angInit = calcAngule( diffCordenates( center.y() , initialPoint.y() ) , raio );
+      float angFinal = calcAngule( diffCordenates( center.y() , finalPoint.y() ) , distanceInitFinal );
+
+      if ( angInit < angFinal ) {
+         prevAngle = calcAngule( diffCordenates( initialPoint.y() , center.y() ) , raio );
+         nextAngle = calcAngule( diffCordenates( finalPoint.x() , center.x() ) , distanceInitFinal );
+
+         drawPoints( painter , 270 - nextAngle , 180 + prevAngle );
+      }
+      else {
+         prevAngle = calcAngule( diffCordenates( initialPoint.x() , center.x() ) , raio );
+         nextAngle = calcAngule( diffCordenates( finalPoint.y() , center.y() ) , distanceInitFinal );
+
+         drawPoints( painter , 270 - prevAngle , 180 + nextAngle );
+      }
+   }
+   break;
+   case QUATRO:
+      prevAngle = calcAngule( diffCordenates( initialPoint.y() , center.y() ) , raio );
+      nextAngle = calcAngule( diffCordenates( finalPoint.y() , center.y() ) , distanceInitFinal );
+
+      drawPoints( painter , 360 - nextAngle , 180 + prevAngle );
+      break;
+   }
+}
+
+void Arc::drawWithInitialPointInFourthQuadrant( QPainter & painter , float distanceInitFinal )
+{
+   float prevAngle , nextAngle;
+
+   switch ( calcQuadrantPoint( finalPoint ) ) {
+   case UM:
+      prevAngle = calcAngule( diffCordenates( initialPoint.x() , center.x() ) , raio );
+      nextAngle = calcAngule( diffCordenates( finalPoint.x() , center.x() ) , distanceInitFinal );
+
+      drawPoints( painter , 90 - nextAngle , 0 );
+      drawPoints( painter , 360 , 270 + prevAngle );
+
+   break;
+   case DOIS:
+      prevAngle = calcAngule( diffCordenates( initialPoint.x() , center.x() ) , raio );
+      nextAngle = calcAngule( diffCordenates( finalPoint.y() , center.y() ) , distanceInitFinal );
+
+      drawPoints( painter , 180 - nextAngle , 0 );
+      drawPoints( painter , 360 , 270 + prevAngle );
+
+   break;
+   case TRES:
+      prevAngle = calcAngule( diffCordenates( initialPoint.x() , center.x() ) , raio );
+      nextAngle = calcAngule( diffCordenates( finalPoint.x() , center.x() ) , distanceInitFinal );
+
+      drawPoints( painter , 270 - nextAngle , 0 );
+      drawPoints( painter , 360 , 270 + prevAngle );
+
+   break;
+   case QUATRO: {
+      float angInit = calcAngule( diffCordenates( center.y() , initialPoint.y() ) , raio );
+      float angFinal = calcAngule( diffCordenates( center.y() , finalPoint.y() ) , distanceInitFinal );
+
+      if ( angInit > angFinal ) {
+         prevAngle = calcAngule( diffCordenates( initialPoint.x() , center.x() ) , raio );
+         nextAngle = calcAngule( diffCordenates( finalPoint.y() , center.y() ) , distanceInitFinal );
+
+         drawPoints( painter , 360 - nextAngle , 270 + prevAngle );
+      }
+      else {
+         prevAngle = calcAngule( diffCordenates( initialPoint.y() , center.y() ) , raio );
+         nextAngle = calcAngule( diffCordenates( finalPoint.x() , center.x() ) , distanceInitFinal );
+
+         drawPoints( painter , 360 - prevAngle , 270 + nextAngle );
+      }
+   }
+   break;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-int Arc::diffCordenates(const int value1, const int value2)
+int Arc::diffCordenates( const int value1 , const int value2 )
 {
-    int greater = fmax(value1, value2);
-    int less = (greater == value1) ? value2 : value1;
-    return greater - less;
+   int greater = fmax( value1 , value2 );
+   int less = ( greater == value1 ) ? value2 : value1;
+   return greater - less;
 }
 
-Arc::QUADRANT Arc::calcQuadrantPoint(const QPoint & point)
+QUADRANT Arc::calcQuadrantPoint( const QPoint & point )
 {
-    if (point.x() > center.x()) {
-        if (point.y() > center.y()) {
-            return QUATRO;
-        }
-        else {
-            return UM;
-        }
-    }
-    else {
-        if (point.y() > center.y()) {
-            return TRES;
-        }
-        else {
-            return DOIS;
-        }
-    }
+   if ( point.x() > center.x() ) {
+      return ( point.y() > center.y() ) ? QUATRO : UM ;
+   }
+   else {
+      return ( point.y() > center.y() ) ? TRES : DOIS ;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

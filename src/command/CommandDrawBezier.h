@@ -10,14 +10,14 @@ class CommandDrawBezier :
     public Command
 {
 private:
+   Point * final;
     Point * initial;
     Point * control;
-    Point * final;
 public:
-    CommandDrawBezier( int x1 , int y1 , int x2 , int y2 , int x3 , int y3 );
+    CommandDrawBezier( int xInit , int yInit , int xControl , int yControl , int xFinal , int yFinal );
     ~CommandDrawBezier() {}
 
-    void exec( Data& data , UserInterface& ui );
+    void exec( Data & data , UserInterface & ui );
 };
 
 #endif // INCLUDED_COMMAND_DRAW_BEZIER_H

@@ -2,9 +2,10 @@
 #ifndef INCLUDED_COMMAND_SAVE_AS_H
 #define INCLUDED_COMMAND_SAVE_AS_H
 
-#include "Command.h"
+#include "CommandIO.h"
+
 class CommandSaveAs :
-    public Command
+    public CommandIO
 {
 public:
     CommandSaveAs() {}

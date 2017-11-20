@@ -7,44 +7,59 @@
 #include <QSpinBox>
 #include <QMessageBox>
 
+NewDrawPopup::~NewDrawPopup()
+{
+   delete nameLabel;
+   delete nameText;
+   delete widthLabel;
+   delete widthText;
+   delete heigthLabel;
+   delete heigthText;
+}
+
 NewDrawPopup::NewDrawPopup()
 {
-    nameLabel = new QLabel("Nome do Arquivo", this);
-    nameText = new QLineEdit(this);
+   configurePopupLayout();
+}
 
-    widthLabel = new QLabel( "Largura do Desenho" , this );
-    widthText = new QSpinBox(this);
-    widthText->setSuffix( " Px" );
-    widthText->setRange( 10 , 10000 );
-    widthText->setValue( 800 );
+void NewDrawPopup::configurePopupLayout()
+{
+   nameLabel = new QLabel( "Nome do Arquivo" , this );
+   nameText = new QLineEdit( this );
 
-    heigthLabel = new QLabel( "Altura do Desenho" , this );
-    heigthText = new QSpinBox( this );
-    heigthText->setSuffix( " Px" );
-    heigthText->setRange(10, 10000 );
-    heigthText->setValue( 600 );
+   widthLabel = new QLabel( "Largura do Desenho" , this );
+   widthText = new QSpinBox( this );
+   widthText->setSuffix( " Px" );
+   widthText->setRange( 10 , 10000 );
+   widthText->setValue( 800 );
 
-    QPushButton * cancelButton = new QPushButton( "Cancelar" , this );
-    QPushButton * createButton = new QPushButton( "Criar" , this );
+   heigthLabel = new QLabel( "Altura do Desenho" , this );
+   heigthText = new QSpinBox( this );
+   heigthText->setSuffix( " Px" );
+   heigthText->setRange( 10 , 10000 );
+   heigthText->setValue( 600 );
 
-    QVBoxLayout * layout = new QVBoxLayout(this);
-    layout->addWidget( nameLabel );
-    layout->addWidget( nameText );
-    layout->addWidget( widthLabel );
-    layout->addWidget( widthText );
-    layout->addWidget( heigthLabel );
-    layout->addWidget( heigthText );
+   QPushButton * cancelButton = new QPushButton( "Cancelar" , this );
+   QPushButton * createButton = new QPushButton( "Criar" , this );
 
-    QHBoxLayout * hLayout = new QHBoxLayout( this );
-    hLayout->addWidget( cancelButton );
-    hLayout->addWidget( createButton );
+   QVBoxLayout * layout = new QVBoxLayout( this );
+   layout->addWidget( nameLabel );
+   layout->addWidget( nameText );
+   layout->addWidget( widthLabel );
+   layout->addWidget( widthText );
+   layout->addWidget( heigthLabel );
+   layout->addWidget( heigthText );
 
-    layout->addLayout(hLayout);
+   QHBoxLayout * hLayout = new QHBoxLayout( this );
+   hLayout->addWidget( cancelButton );
+   hLayout->addWidget( createButton );
 
-    connect( cancelButton , SIGNAL( released() ) , this , SLOT( cancel() ) );
-    connect( createButton , SIGNAL( released() ) , this , SLOT( create() ) );
+   layout->addLayout( hLayout );
 
-    setLayout( layout );
+   connect( cancelButton , SIGNAL( released() ) , this , SLOT( cancel() ) );
+   connect( createButton , SIGNAL( released() ) , this , SLOT( create() ) );
+
+   setLayout( layout );
 }
 
 void NewDrawPopup::show()
@@ -54,18 +69,17 @@ void NewDrawPopup::show()
 
 void NewDrawPopup::cancel()
 {
-    delete this;
+   emit( sigCancel() );
 }
 
 void NewDrawPopup::create()
 {
-    if ( nameText->text().length() > 0 ) {
-        emit( createNewArchive( nameText->text() , widthText->value() , heigthText->value() ) );
-        delete this;
-    }
-    else {
-        QMessageBox::warning( this , tr( "Falha" ) ,
-            tr( "O arquivo necessita ter um nome.\n") ,
-            QMessageBox::Ok );
-    }
+   if ( nameText->text().length() > 0 ) {
+      emit( createNewArchive( nameText->text() , widthText->value() , heigthText->value()));
+   }
+   else {
+      QMessageBox::warning( this , tr( "Falha" ) ,
+         tr( "O arquivo necessita ter um nome.\n") ,
+         QMessageBox::Ok );
+   }
 }

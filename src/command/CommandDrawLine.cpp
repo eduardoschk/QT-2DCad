@@ -1,16 +1,16 @@
 #include "CommandDrawLine.h"
 #include "Data.h"
 #include "Point.h"
-#include "Archive.h"
+#include "File.h"
 #include "LineShape.h"
 
-CommandDrawLine::CommandDrawLine( int x1 , int y1 , int x2 , int y2 )
+CommandDrawLine::CommandDrawLine( int xInit , int yInit , int xFinal , int yFinal )
 {
-    initial= new Point( x1 , y1 );
-    final= new Point( x2 , y2 );
+   initial= new Point( xInit , yInit );
+   final= new Point( xFinal , yFinal );
 }
 
 void CommandDrawLine::exec( Data& data , UserInterface& ui )
 {
-    data.getCurrentArchive()->addShapeOnArchive( new LineShape(initial, final) );
+   data.getCurrentFile().addShapeOnFile( new LineShape(initial, final) );
 }

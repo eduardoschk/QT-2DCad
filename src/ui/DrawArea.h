@@ -36,9 +36,15 @@ private:
     QGraphicsItem * currentItem;
 
     void clearPoints();
-    QPoint corrigeScrollPoint(QPoint point);
+    QPoint correctPointInRelationToScrollbar(QPoint point);
 
     void changedSize();
+
+    void configureScrollBar();
+    void configureDefaultValues();
+    
+    int calcNewDrawingWidth();
+    int calcNewDrawingHeight();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -46,26 +52,25 @@ protected:
     void mouseReleaseEvent(QMouseEvent * event) override;
 
 public:
-    ~DrawArea() {}
+   ~DrawArea();
     DrawArea(int _widthArea, int _heightArea, int _limitWidth, int _limitHeight);
 
     void setScale( float scale );
     void setShapeToDraw(SHAPE_TYPE shape);
-
     void setLimitArea( const QSize & size );
 
     void drawLine( QPoint initial, QPoint final );
-    void drawBezier( QPoint initial , QPoint control , QPoint final );
     void drawArc( QPoint center , QPoint initial , QPoint final );
+    void drawBezier( QPoint initial , QPoint control , QPoint final );
 
 signals:
     void drawLineFinish( QPoint , QPoint );
-    void drawBezierFinish( QPoint , QPoint , QPoint );
     void drawArcFinish( QPoint , QPoint , QPoint );
+    void drawBezierFinish( QPoint , QPoint , QPoint );
 
 public slots:
-    void scrollPress( int i );
-    void scrollRelease(int i);
+    void heightScrollChanged( int value );
+    void widthScrollChanged(int value );
 };
   
 #endif // INCLUDED_DRAW_AREA_H

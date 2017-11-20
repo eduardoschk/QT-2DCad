@@ -1,15 +1,17 @@
 #include "BezierShape.h"
 
-BezierShape::BezierShape() {}
+BezierShape::BezierShape() :
+   initial( nullptr ) , control( nullptr ) , final( nullptr ) {}
 
-BezierShape::BezierShape( Point * _initial , Point * _control , Point * _final )
+BezierShape::BezierShape( Point * _initial , Point * _control , Point * _final ) :
+   initial( _initial ) , control( _control ) , final( _final ) {}
+
+BezierShape::~BezierShape() 
 {
-    initial= _initial;
-    control= _control;
-    final=_final;
+   delete initial;
+   delete control;
+   delete final;
 }
-
-BezierShape::~BezierShape() {}
 
 void BezierShape::setInitial( Point * _initial )
 {
