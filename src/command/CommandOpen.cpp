@@ -7,21 +7,30 @@
 
 void CommandOpen::exec( Data& data , UserInterface& ui )
 {
-   File * file = new File();
-   std::string completedPath= ui.requestPathFileToOpen();
-   file= file->open( completedPath );
+   bool response= true;
+   if ( &data.getCurrentFile() && !data.getCurrentFile().isSaved() )
+      response= ui.confirmOperation( "O arquivo aberto não está com suas atualizações salvas, deseja continuar?" );
 
-   FileParams params= dividerNameOfPath( completedPath );
-   file->setPath( params.path );
-   file->setFileName( params.name );
+   if ( response ) {
+      std::string completedPath= ui.requestPathFileToOpen();
+      
+      if ( completedPath.size() > 0 ) {
+         File * file = new File();
+         file= file->open( completedPath );
 
-   data.setCurrentFile( file );
+         FileParams params= dividerNameOfPath( completedPath );
+         file->setPath( params.path );
+         file->setFileName( params.name );
 
-   ui.createDrawArea( file->getWidth(), file->getHeight() );
+         data.setCurrentFile( file );
 
-   std::deque<Shape*> shapes= file->getShapes();
-   for ( int i= 0 ; i < shapes.size() ; ++i )
-      drawShape(ui, *shapes[i]);
+         ui.createDrawArea( file->getWidth() , file->getHeight() );
+
+         std::deque<Shape*> shapes= file->getShapes();
+         for ( int i= 0 ; i < shapes.size() ; ++i )
+            drawShape( ui , *shapes[i] );
+      }
+   }
 }
 
 void CommandOpen::drawShape( UserInterface & ui , Shape & shape )

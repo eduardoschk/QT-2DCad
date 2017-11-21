@@ -6,13 +6,14 @@ class File;
 
 class Data {
 private:
-    File * currentFile;
-public:
-    Data();
-    ~Data();
+    File* currentFile;
 
-    File & getCurrentFile();
-    void setCurrentFile(File * file);
+public:
+   ~Data();
+   Data() : currentFile(nullptr) {}
+
+   File& getCurrentFile();
+   void setCurrentFile(File* file);
 };
 
 #endif // INCLUDED_DATA_H

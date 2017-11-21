@@ -9,36 +9,35 @@ class MainWindow;
 class NewDrawPopup;
 class App;
 
-class UserInterface 
-    : public QWidget
+class UserInterface : public QWidget
 {
-    Q_OBJECT
+   Q_OBJECT
 private:
-   MainWindow * mainWindow;
-   NewDrawPopup * newDrawPopup;
-   App * owner;
+   MainWindow* mainWindow;
+   NewDrawPopup* newDrawPopup;
+   App& owner;
 
 public:
-   UserInterface( App * _owner, QWidget * parent = 0 );
    ~UserInterface();
-    
-   void setTitleWindow( const char* name );
-   void createDrawArea( int width , int height );
+   UserInterface(App& _owner,QWidget* parent= nullptr);
 
-   void drawLine( int x1 , int y1 , int x2 , int y2 );
-   void drawBezier( int x1 , int y1 , int x2 , int y2 , int x3 , int y3 );
-   void drawArc( int x1 , int y1 , int x2 , int y2 , int x3 , int y3 );
+   void setTitleWindow(const char* name);
+   void createDrawArea(int width,int height);
+
+   void drawLine(int x1,int y1,int x2,int y2);
+   void drawBezier(int x1,int y1,int x2,int y2,int x3,int y3);
+   void drawArc(int x1,int y1,int x2,int y2,int x3,int y3);
 
    void showPopupNewFile();
    std::string requestPathFileToOpen();
-   void showErrorMessage( std::string message );
-   bool confirmOperation( std::string message );
-   std::string requestPathFileToSave( std::string fileName );
+   void showErrorMessage(std::string message);
+   bool confirmOperation(std::string message);
+   std::string requestPathFileToSave(std::string fileName);
 
 public slots:
-   void drawLineFinish(QPoint initial, QPoint final);
-   void drawBezierFinish( QPoint initial , QPoint control, QPoint final );
-   void drawArcFinish( QPoint center, QPoint initial , QPoint final );
+   void drawLineFinish(QPoint initial,QPoint final);
+   void drawBezierFinish(QPoint initial,QPoint control,QPoint final);
+   void drawArcFinish(QPoint center,QPoint initial,QPoint final);
 
    void optionNewFile();
    void optionOpenFile();
@@ -47,7 +46,7 @@ public slots:
    void optionQuit();
 
    void cancelCreateFile();
-   void createFile( QString name , int width , int height );
+   void createFile(QString name,int width,int height);
 };
 
 #endif // INCLUDED_USER_INTERFACE_H

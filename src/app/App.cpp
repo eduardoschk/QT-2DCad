@@ -11,18 +11,15 @@
 #include "CommandCreateFile.h"
 #include "CommandDrawBezier.h"
 
-App::App(int argc, char **argv) : QApplication(argc, argv)
+App::~App()
 {
-   data= new Data();
-   userInterface= new UserInterface(this);
-   currentCommand= nullptr;
+   setCurrentCmd(nullptr);
 }
 
-App::~App() 
+
+App::App(int argc,char **argv) : QApplication(argc,argv),userInterface(*this)
 {
-   delete data;
-   delete userInterface;
-   cleanCurrentCmd();
+   currentCommand= nullptr;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,79 +32,57 @@ void App::run()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void App::cleanCurrentCmd()
+void App::setCurrentCmd(Command* newCm)
 {
-   if ( currentCommand )
+   if (currentCommand)
       delete currentCommand;
-   currentCommand= nullptr;
-}
 
-bool App::executeCmd()
-{
-   if ( currentCommand )
-   {
-      currentCommand->exec( *data , *userInterface );
-      return true;
-   }
-   return false;
+   currentCommand= newCm;
+
+   if (currentCommand)
+      currentCommand->exec(data,userInterface);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void App::actionDrawLine( int x1 , int y1 , int x2 , int y2 )
+void App::actionDrawLine(int x1,int y1,int x2,int y2)
 {
-    cleanCurrentCmd();
-    currentCommand= new CommandDrawLine( x1 , y1 , x2 , y2 );
-    executeCmd();
+   setCurrentCmd(new CommandDrawLine(x1,y1,x2,y2));
 }
 
-void App::actionDrawBezier( int x1 , int y1 , int x2 , int y2 , int x3 , int y3 )
+void App::actionDrawBezier(int x1,int y1,int x2,int y2,int x3,int y3)
 {
-    cleanCurrentCmd();
-    currentCommand= new CommandDrawBezier( x1 , y1 , x2 , y2 , x3 , y3 );
-    executeCmd();
+   setCurrentCmd(new CommandDrawBezier(x1,y1,x2,y2,x3,y3));
 }
 
-void App::actionDrawArc( int x1 , int y1 , int x2 , int y2 , int x3 , int y3 )
+void App::actionDrawArc(int x1,int y1,int x2,int y2,int x3,int y3)
 {
-    cleanCurrentCmd();
-    currentCommand= new CommandDrawArc( x1 , y1 , x2 , y2 , x3 , y3 );
-    executeCmd();
+   setCurrentCmd(new CommandDrawArc(x1,y1,x2,y2,x3,y3));
 }
 
-void App::actionCreateArhive( std::string name , int width , int height )
+void App::actionCreateFile(std::string name,int width,int height)
 {
-   cleanCurrentCmd();
-   currentCommand= new CommandCreateFile( name , width , height);
-   executeCmd();
+   setCurrentCmd(new CommandCreateFile(name,width,height));
 }
 
 void App::actionNewFile()
 {
-   cleanCurrentCmd();
-   currentCommand= new CommandNew();
-   executeCmd();
+   setCurrentCmd(new CommandNew());
 }
 
 void App::actionOpenFile()
 {
-   cleanCurrentCmd();
-   currentCommand= new CommandOpen();
-   executeCmd();
+   setCurrentCmd(new CommandOpen());
 }
 
 void App::actionSaveFile()
 {
-   cleanCurrentCmd();
-   currentCommand= new CommandSave();
-   executeCmd();
+   setCurrentCmd(new CommandSave());
 }
 
 void App::actionSaveAsFile()
 {
-   cleanCurrentCmd();
-   currentCommand= new CommandSaveAs();
-   executeCmd();
+   setCurrentCmd(new CommandSaveAs());
 }
 
 void App::actionQuit()

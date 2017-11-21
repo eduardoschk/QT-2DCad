@@ -5,7 +5,6 @@
 #include "BezierShape.h"
 #include "ArcShape.h"
 #include <fstream>
-#include <iostream>
 #include <sstream>
 
 char initFile = '\n';

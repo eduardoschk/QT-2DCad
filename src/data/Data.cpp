@@ -1,20 +1,21 @@
 #include "Data.h"
+#include "File.h"
 
-Data::Data() : currentFile(nullptr) {}
 Data::~Data() 
 {
-   if ( currentFile )
+   if (currentFile)
       delete currentFile;
 }
 
-File & Data::getCurrentFile()
+File& Data::getCurrentFile()
 {
    return *currentFile;
 }
 
-void Data::setCurrentFile( File * archive )
+void Data::setCurrentFile(File* archive)
 {
-   if ( currentFile )
+   if (currentFile)
       delete currentFile;
+
    currentFile= archive;
 }

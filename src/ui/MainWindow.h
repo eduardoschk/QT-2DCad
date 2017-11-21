@@ -10,8 +10,7 @@ class QSlider;
 class QLabel;
 class UserInterface;
 
-class MainWindow 
-   : public QMainWindow
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 private:

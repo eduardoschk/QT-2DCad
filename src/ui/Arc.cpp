@@ -29,19 +29,19 @@ void Arc::paint(QPainter * painter, const QStyleOptionGraphicsItem * item, QWidg
 
 void Arc::drawPoints( QPainter & painter, const float initAngule , const float finalAngule )
 {
-    for ( float ang = fmod(initAngule, 361.0f) ; ang >= fmod( finalAngule , 360 ); ang -= 0.05f ) {
-        float y = abs( raio * ( sin( ang * PI / 180 ) ) );
-        float x = abs( sqrt( pow( raio , 2 ) - pow( y , 2 ) ) );
+   for ( float ang = fmod(initAngule, 361.0f) ; ang >= fmod( finalAngule , 360 ); ang -= 0.5f ) {
+      float y = abs( raio * ( sin ( ang * PI / 180 ) ) );
+      float x = abs( sqrt( pow( raio , 2 ) - pow( y , 2 ) ) );
 
-        if ( ang >= 0 && ang <= 90 ) 
-            painter.drawPoint( QPoint( center.x() + x , center.y() - y ) );
-        else if ( ang >= 90 && ang <= 180 )
-            painter.drawPoint( QPoint( center.x() - x , center.y() - y ) );
-        else if ( ang >= 180 && ang <= 270 ) 
-            painter.drawPoint( QPoint( center.x() - x , center.y() + y ) );
-        else if ( ang >= 270 && ang <= 360 ) 
-            painter.drawPoint( QPoint( center.x() + x , center.y() + y ) );
-    }
+      if ( ang >= 0 && ang <= 90 ) 
+         painter.drawPoint( QPoint( center.x() + x , center.y() - y ) );
+      else if ( ang >= 90 && ang <= 180 )
+         painter.drawPoint( QPoint( center.x() - x , center.y() - y ) );
+      else if ( ang >= 180 && ang <= 270 ) 
+         painter.drawPoint( QPoint( center.x() - x , center.y() + y ) );
+      else if ( ang >= 270 && ang <= 360 ) 
+         painter.drawPoint( QPoint( center.x() + x , center.y() + y ) );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

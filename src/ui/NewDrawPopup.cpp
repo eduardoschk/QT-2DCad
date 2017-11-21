@@ -24,6 +24,7 @@ NewDrawPopup::NewDrawPopup()
 
 void NewDrawPopup::configurePopupLayout()
 {
+   setModal(true);
    nameLabel = new QLabel( "Nome do Arquivo" , this );
    nameText = new QLineEdit( this );
 
@@ -56,15 +57,10 @@ void NewDrawPopup::configurePopupLayout()
 
    layout->addLayout( hLayout );
 
-   connect( cancelButton , SIGNAL( released() ) , this , SLOT( cancel() ) );
-   connect( createButton , SIGNAL( released() ) , this , SLOT( create() ) );
+   connect( cancelButton , SIGNAL( released() ) , this , SLOT( reject() ) );
+   connect( createButton , SIGNAL( released() ) , this , SLOT( accept() ) );
 
    setLayout( layout );
-}
-
-void NewDrawPopup::show()
-{
-    setVisible( true );
 }
 
 void NewDrawPopup::cancel()

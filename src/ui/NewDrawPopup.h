@@ -8,29 +8,26 @@ class QLabel;
 class QLineEdit;
 class QSpinBox;
 
-class NewDrawPopup 
-    : public QDialog
+class NewDrawPopup : public QDialog
 {
     Q_OBJECT
 private:
-    QLabel * nameLabel;
-    QLineEdit * nameText;
-    QLabel * widthLabel;
-    QSpinBox * widthText;
-    QLabel * heigthLabel;
-    QSpinBox * heigthText;
+   QLabel * nameLabel;
+   QLineEdit * nameText;
+   QLabel * widthLabel;
+   QSpinBox * widthText;
+   QLabel * heigthLabel;
+   QSpinBox * heigthText;
 
-    void configurePopupLayout();
+   void configurePopupLayout();
 
  private slots:
-    void cancel();
-    void create();
+   void cancel();
+   void create();
 
 public:
-    NewDrawPopup();
-    ~NewDrawPopup();
-
-    void show();
+   ~NewDrawPopup();
+   NewDrawPopup();
 
  Q_SIGNALS:
     void sigCancel();
