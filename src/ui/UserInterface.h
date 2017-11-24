@@ -4,40 +4,50 @@
 
 #include <QWidget>
 #include <string>
+#include "MainWindow.h"
+#include "NewFileStructure.h"
 
-class MainWindow;
-class NewDrawPopup;
 class App;
 
 class UserInterface : public QWidget
 {
    Q_OBJECT
 private:
-   MainWindow* mainWindow;
-   NewDrawPopup* newDrawPopup;
-   App& owner;
+   MainWindow mainWindow;
+   App& app;
 
 public:
-   ~UserInterface();
-   UserInterface(App& _owner,QWidget* parent= nullptr);
+   ~UserInterface() {}
+   UserInterface(App& _app,QWidget* parent= nullptr);
 
    void setTitleWindow(const char* name);
    void createDrawArea(int width,int height);
 
-   void drawLine(int x1,int y1,int x2,int y2);
-   void drawBezier(int x1,int y1,int x2,int y2,int x3,int y3);
-   void drawArc(int x1,int y1,int x2,int y2,int x3,int y3);
+   void drawTempLine(int xInit,int yInit,int xFinal,int yFinal);
+   void drawTempArc(int xCenter,int yCenter,int xInit,int yInit,int xFinal,int yFinal);
+   void drawTempBezier(int xInit,int yInit,int xControl,int yControl,int xFinal,int yFinal);
 
-   void showPopupNewFile();
+   void drawLine(int xInit,int yInit,int xFinal,int yFinal);
+   void drawArc(int xCenter,int yCenter,int xInit,int yInit,int xFinal,int yFinal);
+   void drawBezier(int xInit,int yInit,int xControl,int yControl,int xFinal,int yFinal);
+
+   void setDrawingScale(float scale);
+
+   NEW_FILE_STRUCTURE showPopupNewFile();
+
    std::string requestPathFileToOpen();
    void showErrorMessage(std::string message);
    bool confirmOperation(std::string message);
    std::string requestPathFileToSave(std::string fileName);
 
 public slots:
-   void drawLineFinish(QPoint initial,QPoint final);
-   void drawBezierFinish(QPoint initial,QPoint control,QPoint final);
-   void drawArcFinish(QPoint center,QPoint initial,QPoint final);
+   void setShapeArc();
+   void setShapeLine();
+   void setShapeBezier();
+
+   void mouseMoveEventInDrawArea(QPoint point);
+   void mousePressEventInDrawArea(QPoint point);
+   void mouseReleaseEventInDrawArea(QPoint point);
 
    void optionNewFile();
    void optionOpenFile();
@@ -45,8 +55,7 @@ public slots:
    void optionSaveAsFile();
    void optionQuit();
 
-   void cancelCreateFile();
-   void createFile(QString name,int width,int height);
+   void zoomValueChange(int value);
 };
 
 #endif // INCLUDED_USER_INTERFACE_H

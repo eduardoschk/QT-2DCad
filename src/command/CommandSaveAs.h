@@ -4,14 +4,13 @@
 
 #include "CommandIO.h"
 
-class CommandSaveAs :
-    public CommandIO
+class CommandSaveAs : public CommandIO
 {
 public:
     CommandSaveAs() {}
     ~CommandSaveAs() {}
 
-    void exec( Data& data , UserInterface& ui );
+    void exec(Data& data , UserInterface& ui );
 };
 
 #endif // INCLUDED_COMMAND_SAVE_AS_H

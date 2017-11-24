@@ -3,19 +3,14 @@
 #define INCLUDED_SHAPE_H
 
 #include <deque>
-
-enum IDENTIFY {
-    LINE = 100 ,
-    BEZIER = 101,
-    ARC = 110
-};
+#include "ShapeIdentifier.h"
 
 class Point;
 
 class Shape
 {
 protected:
-   IDENTIFY id;
+   SHAPE_ID::IDENTIFIER id;
 public:
    Shape() {}
    virtual ~Shape() {}

@@ -4,81 +4,122 @@
 #include <QPoint>
 #include <QMessageBox>
 
+#include "App.h"
 #include "MainWindow.h"
 #include "NewDrawPopup.h"
-#include "App.h"
 
-UserInterface::UserInterface(App& _owner,QWidget * parent) : QWidget(parent),owner(_owner),newDrawPopup(nullptr)
+UserInterface::UserInterface(App& _owner,QWidget * parent) : QWidget(parent),app(_owner),mainWindow(*this) {}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void UserInterface::drawTempLine(int xInit,int yInit,int xFinal,int yFinal)
 {
-   mainWindow= new MainWindow(this);
+   mainWindow.drawTempLine(QPoint(xInit,yInit),QPoint(xFinal,yFinal));
 }
 
-UserInterface::~UserInterface()
+void UserInterface::drawTempBezier(int xInit,int yInit,int xControl,int yControl,int xFinal,int yFinal)
 {
-   if (newDrawPopup)
-      delete newDrawPopup;
-   delete mainWindow;
+   mainWindow.drawTempBezier(QPoint(xInit,yInit),QPoint(xControl,yControl),QPoint(xFinal,yFinal));
+}
+
+void UserInterface::drawTempArc(int xCenter,int yCenter,int xInit,int yInit,int xFinal,int yFinal)
+{
+   mainWindow.drawTempArc(QPoint(xCenter,yCenter),QPoint(xInit,yInit),QPoint(xFinal,yFinal));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void UserInterface::drawLine(int xInit,int yInit,int xFinal,int yFinal)
 {
-   mainWindow->drawLine(QPoint(xInit,yInit),QPoint(xFinal,yFinal));
+   mainWindow.drawLine(QPoint(xInit,yInit),QPoint(xFinal,yFinal));
 }
 
 void UserInterface::drawBezier(int xInit,int yInit,int xControl,int yControl,int xFinal,int yFinal)
 {
-   mainWindow->drawBezier(QPoint(xInit,yInit),QPoint(xControl,yControl),QPoint(xFinal,yFinal));
+   mainWindow.drawBezier(QPoint(xInit,yInit),QPoint(xControl,yControl),QPoint(xFinal,yFinal));
 }
 
 void UserInterface::drawArc(int xCenter,int yCenter,int xInit,int yInit,int xFinal,int yFinal)
 {
-   mainWindow->drawArc(QPoint(xCenter,yCenter),QPoint(xInit,yInit),QPoint(xFinal,yFinal));
+   mainWindow.drawArc(QPoint(xCenter,yCenter),QPoint(xInit,yInit),QPoint(xFinal,yFinal));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UserInterface::drawLineFinish(QPoint initial,QPoint final)
+void UserInterface::setShapeArc()
 {
-   owner.actionDrawLine(initial.x(),initial.y(),final.x(),final.y());
+   app.actionSetShapeArc();
+   mainWindow.setShapArc();
 }
 
-void UserInterface::drawBezierFinish(QPoint initial,QPoint control,QPoint final)
+void UserInterface::setShapeLine()
 {
-   owner.actionDrawBezier(initial.x(),initial.y(),control.x(),control.y(),final.x(),final.y());
+   app.actionSetShapeLine();
+   mainWindow.setShapeLine();
 }
 
-void UserInterface::drawArcFinish(QPoint center,QPoint initial,QPoint final)
+void UserInterface::setShapeBezier()
 {
-   owner.actionDrawArc(center.x(),center.y(),initial.x(),initial.y(),final.x(),final.y());
+   app.actionSetShapeBezier();
+   mainWindow.setShapeBezier();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void UserInterface::setDrawingScale(float scale)
+{
+   mainWindow.setDrawingScale(scale);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void UserInterface::mouseMoveEventInDrawArea(QPoint point)
+{
+   app.actionMouseMoveInDrawArea(point.x(), point.y());
+}
+
+void UserInterface::mousePressEventInDrawArea(QPoint point)
+{
+   app.actionMousePressInDrawArea(point.x(),point.y());
+}
+
+void UserInterface::mouseReleaseEventInDrawArea(QPoint point)
+{
+   app.actionMouseReleaseInDrawArea(point.x(),point.y());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void UserInterface::optionNewFile()
 {
-   owner.actionNewFile();
+   app.actionNewFile();
 }
 
 void UserInterface::optionOpenFile()
 {
-   owner.actionOpenFile();
+   app.actionOpenFile();
 }
 
 void UserInterface::optionSaveFile()
 {
-   owner.actionSaveFile();
+   app.actionSaveFile();
 }
 
 void UserInterface::optionSaveAsFile()
 {
-   owner.actionSaveAsFile();
+   app.actionSaveAsFile();
 }
 
 void UserInterface::optionQuit()
 {
-   owner.actionQuit();
+   app.actionQuit();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void UserInterface::zoomValueChange(int value)
+{
+   app.actionZoomValueChange(value);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -88,7 +129,7 @@ std::string UserInterface::requestPathFileToSave(std::string fileName)
    const char* a = fileName.c_str();
    QString path = QFileDialog::getSaveFileName(this,tr("Salvar"),
       a,
-      tr("Custom(.cad);;Images (*.png *.xpm *.jpg)"));
+      tr("Custom(.cad);"));
 
    return path.toStdString();
 }
@@ -117,37 +158,24 @@ bool UserInterface::confirmOperation(std::string _message)
    return (response == QMessageBox::Yes) ? true : false ;
 }
 
-void UserInterface::showPopupNewFile()
+NEW_FILE_STRUCTURE UserInterface::showPopupNewFile()
 {
-   newDrawPopup = new NewDrawPopup();
-   connect(newDrawPopup,SIGNAL(createNewArchive(QString,int,int)),this,SLOT(createFile(QString,int,int)));
-   connect(newDrawPopup,SIGNAL(sigCancel()),this,SLOT(cancelCreateFile()));
-   newDrawPopup->show();
+   NEW_FILE_STRUCTURE nfs;
+   
+   NewDrawPopup ndp(&nfs);
+   ndp.exec();
+   
+   return nfs;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void UserInterface::setTitleWindow(const char* name)
 {
-   mainWindow->setWindowTitle(name);
+   mainWindow.setWindowTitle(name);
 }
 
 void UserInterface::createDrawArea(int width,int height)
 {
-   mainWindow->createNewDrawArea(width,height);
-}
-
-void UserInterface::cancelCreateFile()
-{
-   delete newDrawPopup;
-   newDrawPopup= nullptr;
-}
-
-void UserInterface::createFile(QString name,int _width,int _height)
-{
-   if (newDrawPopup) {
-      delete newDrawPopup;
-      newDrawPopup= nullptr;
-   }
-   owner.actionCreateFile(name.toStdString(),_width,_height);
+   mainWindow.createNewDrawArea(width,height);
 }

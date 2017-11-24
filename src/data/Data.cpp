@@ -1,5 +1,6 @@
 #include "Data.h"
 #include "File.h"
+#include "IOFile.h"
 
 Data::~Data() 
 {
@@ -7,10 +8,13 @@ Data::~Data()
       delete currentFile;
 }
 
-File& Data::getCurrentFile()
+Data::Data()
 {
-   return *currentFile;
+   currentFile= nullptr;
+   currentTypeShape= SHAPE_TYPE::LINE;
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 void Data::setCurrentFile(File* archive)
 {
@@ -18,4 +22,22 @@ void Data::setCurrentFile(File* archive)
       delete currentFile;
 
    currentFile= archive;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool Data::save()
+{
+   currentFile->setSaved(IOFile().save(*currentFile));
+   return currentFile->isSaved();
+}
+
+void Data::saveAs(std::string completedPath)
+{
+   return IOFile().saveAs(completedPath, *currentFile);
+}
+
+File* Data::open(std::string pathAndFile)
+{
+   return IOFile().open(pathAndFile);
 }

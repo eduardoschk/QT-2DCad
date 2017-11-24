@@ -4,9 +4,10 @@
 
 #include <deque>
 #include <string>
+#include "Point.h"
+#include "ShapeTypes.h"
 
 class Shape;
-class Point;
 
 class File
 {
@@ -20,41 +21,28 @@ private:
 
    bool saved;
 
-   void writeShape( std::ofstream & stream, Shape & shape );
-   void writePoint( std::ofstream & stream, Point & point );
-
-   Shape* readShape( std::ifstream & stream );
-   Point* readPoint( std::ifstream & stream );
-   Shape* readArcShape( std::ifstream & stream );
-   Shape* readLineShape( std::ifstream & stream );
-   Shape* readBezierShape( std::ifstream & stream );
-
-   void save( std::ofstream & stream);
-
 public:
    File() : saved(false) {}
-   File(std::string _fileName, int _width, int _height);
+   File(std::string _fileName,int _width,int _height);
    ~File();
 
-   void save();
-   void saveAs( std::string completedPath );
-   File* open( std::string pathAndFile );
+   std::string getFileName() { return fileName; }
+   void setFileName(std::string name) { fileName= name; }
 
-   std::string getFileName();
-   void setFileName( std::string name );
+   bool alreadySaved() { return pathDirectory.size() > 0; }
+   std::string getPath() { return pathDirectory; }
+   void setPath(std::string path) { pathDirectory= path; }
 
-   std::string getPath();
-   void setPath( std::string path );
+   int getWidth() { return width; }
+   void setWidth(int _width) { width= _width; }
 
-   int getWidth();
-   void setWidth( int _width );
+   int getHeight() { return height; }
+   void setHeight(int _height) { height= _height; }
 
-   int getHeight();
-   void setHeight( int _height );
+   std::deque<Shape*> getShapes() { return shapes; }
+   void addShapeOnFile(Shape* newShape);
 
-   std::deque<Shape*> getShapes();
-   void addShapeOnFile( Shape * newShape );
-
+   void setSaved(bool status) { saved= status; }
    bool isSaved() { return saved; }
 };
 

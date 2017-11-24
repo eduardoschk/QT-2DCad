@@ -8,33 +8,19 @@
 #include <QPushButton>
 #include <QCoreApplication>
 #include <QResizeEvent>
+#include <QSlider>
 
 #include "DrawArea.h"
 #include "NewDrawPopup.h"
 #include "UserInterface.h"
+#include "ZoomControl.h"
 
-enum ZOOM {
-    ONE = 1,
-    TWO ,
-    THREE,
-    FOUR,
-    FIVE,
-    SIX,
-    SEVEN,
-    EIGHT,
-    NINE ,
-    TEN ,
-    FIRST = ONE,
-    LAST = TEN,
-    DEFAULT = FOUR
-};
-
-int heightZoomWidget= 100;
-int widthButtonZoom= 30;
+int HEIGHT_ZOOM_WIDGET= 100;
+int WIDTH_ZOOM_WIDGET= 30;
 
 MainWindow::~MainWindow()
 {
-   if ( drawArea )
+   if (drawArea)
       delete drawArea;
    delete arc;
    delete line;
@@ -42,192 +28,186 @@ MainWindow::~MainWindow()
    delete sliderZoom;
 }
 
-MainWindow::MainWindow( UserInterface * _owner , QWidget *parent )
-    : QMainWindow( parent ) , drawArea( nullptr ), owner(_owner)
+MainWindow::MainWindow(UserInterface& _ui,QWidget* parent) : QMainWindow(parent),drawArea(nullptr),ui(_ui)
 {
-    setBackgroundRole( QPalette::Dark );
-    setAutoFillBackground( true );
+   setBackgroundRole(QPalette::Dark);
+   setAutoFillBackground(true);
 
-    configureMenuBar( *menuBar() );
-    configureToolBarShapes();
-    configureZoomControlOnStatusBar();
+   configureMenuBar(*menuBar());
+   configureToolBarShapes();
+   configureZoomControlOnStatusBar();
 
-    showMaximized();
+   showMaximized();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::drawLine( QPoint initial , QPoint final )
+void MainWindow::drawTempLine(QPoint initial,QPoint final)
 {
-    drawArea->drawLine( initial , final );
+   drawArea->drawTempLine(initial,final);
 }
 
-void MainWindow::drawBezier( QPoint initial , QPoint control , QPoint final )
+void MainWindow::drawTempBezier(QPoint initial,QPoint control,QPoint final)
 {
-    drawArea->drawBezier( initial , control , final );
+   drawArea->drawTempBezier(initial,control,final);
 }
 
-void MainWindow::drawArc( QPoint center , QPoint initial , QPoint final )
+void MainWindow::drawTempArc(QPoint center,QPoint initial,QPoint final)
 {
-    drawArea->drawArc( center , initial , final );
+   drawArea->drawTempArc(center,initial,final);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MainWindow::drawLine(QPoint initial,QPoint final)
+{
+   drawArea->drawLine(initial,final);
+}
+
+void MainWindow::drawBezier(QPoint initial,QPoint control,QPoint final)
+{
+   drawArea->drawBezier(initial,control,final);
+}
+
+void MainWindow::drawArc(QPoint center,QPoint initial,QPoint final)
+{
+   drawArea->drawArc(center,initial,final);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::setShapeLine()
 {
-   if (drawArea )
-      drawArea->setShapeToDraw( LINE );
-
-   line->setChecked( true );
-   bezier->setChecked( false );
-   arc->setChecked( false );
+   line->setChecked(true);
+   arc->setChecked(false);
+   bezier->setChecked(false);
 }
 
 void MainWindow::setShapeBezier()
 {
-    if ( drawArea )
-        drawArea->setShapeToDraw( BEZIER );
-    line->setChecked( false );
-    arc->setChecked( false );
+   arc->setChecked(false);
+   line->setChecked(false);
+   bezier->setChecked(true);
 }
 
 void MainWindow::setShapArc()
 {
-    if ( drawArea )
-        drawArea->setShapeToDraw( ARC );
-    bezier->setChecked( false );
-    line->setChecked( false );
+   arc->setChecked(true);
+   line->setChecked(false);
+   bezier->setChecked(false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::minusZoomClicked()
 {
-    sliderZoom->setValue( sliderZoom->value() - 1);
+   sliderZoom->setValue(sliderZoom->value() - 1);
 }
 
 void MainWindow::plusZoomClicked()
 {
-    sliderZoom->setValue( sliderZoom->value() + 1 );
+   sliderZoom->setValue(sliderZoom->value() + 1);
 }
 
-void MainWindow::zoomValueChange( int value )
+void MainWindow::setDrawingScale(float scale)
 {
-   if ( drawArea ) {
-      float scale;
-
-      switch ( value ) {
-      case ONE:   scale= 0.125;   break;
-      case TWO:   scale= 0.25;    break;
-      case THREE: scale= 0.5;     break;
-      case FOUR:  scale= 1;       break;
-      case FIVE:  scale= 2;       break;
-      case SIX:   scale= 3;       break;
-      case SEVEN: scale= 4;       break;
-      case EIGHT: scale= 5;       break;
-      case NINE:  scale= 6;       break;
-      case TEN:   scale= 8;       break;
-      }
-
-      drawArea->setScale( scale );
-   }
+   if (drawArea)
+      drawArea->setScale(scale);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::createNewDrawArea( int _width , int _height )
+void MainWindow::createNewDrawArea(int _width,int _height)
 {
    setShapeLine();
-   sliderZoom->setValue( DEFAULT );
-   drawArea= new DrawArea( _width , _height , width() , height() - heightZoomWidget );
-   setCentralWidget( drawArea );
+   sliderZoom->setValue(ZOOM::DEFAULT);
+   drawArea= new DrawArea(_width,_height,width(),height() - HEIGHT_ZOOM_WIDGET);
+   setCentralWidget(drawArea);
    configureDrawActions();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::configureMenuBar( QMenuBar & menu )
+void MainWindow::configureMenuBar(QMenuBar& menu)
 {
-    QMenu * arquivo = menu.addMenu( "Arquivo" );
-    QAction * newAction = arquivo->addAction( "Novo" );
-    QAction * openAction = arquivo->addAction( "Abrir" );
-    QAction * saveAction = arquivo->addAction( "Salvar" );
-    QAction * saveAsAction = arquivo->addAction( "Salvar Como.." );
-    arquivo->addSeparator();
-    QAction * exitAction = arquivo->addAction( "Sair" );
+   QMenu* arquivo= menu.addMenu("Arquivo");
+   QAction* newAction= arquivo->addAction("Novo");
+   QAction* openAction= arquivo->addAction("Abrir");
+   QAction* saveAction= arquivo->addAction("Salvar");
+   QAction* saveAsAction= arquivo->addAction("Salvar Como..");
+   arquivo->addSeparator();
+   QAction* exitAction= arquivo->addAction("Sair");
 
 
-    connect( newAction , &QAction::triggered , owner , &UserInterface::optionNewFile );
-    connect( openAction , &QAction::triggered , owner , &UserInterface::optionOpenFile );
-    connect( saveAction , &QAction::triggered , owner , &UserInterface::optionSaveFile );
-    connect( saveAsAction , &QAction::triggered , owner , &UserInterface::optionSaveAsFile );
-    connect( exitAction , &QAction::triggered , owner , &UserInterface::optionQuit );
+   connect(newAction,&QAction::triggered,&ui,&UserInterface::optionNewFile);
+   connect(openAction,&QAction::triggered,&ui,&UserInterface::optionOpenFile);
+   connect(saveAction,&QAction::triggered,&ui,&UserInterface::optionSaveFile);
+   connect(saveAsAction,&QAction::triggered,&ui,&UserInterface::optionSaveAsFile);
+   connect(exitAction,&QAction::triggered,&ui,&UserInterface::optionQuit);
 }
 
 void MainWindow::configureToolBarShapes()
 {
-    QToolBar * tool = new QToolBar();
-    addToolBar( tool );
-    line =   tool->addAction( QIcon( "C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/line.png" ) , "Linha" );
-    bezier = tool->addAction( QIcon( "C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/bezier.png" ) , "Bezier" );
-    arc =    tool->addAction( QIcon( "C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/arc.png" ) , "Arco" );
+   QToolBar* tool= new QToolBar(this);
+   addToolBar(tool);
+   line=   tool->addAction(QIcon("C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/line.png"),"Linha");
+   bezier= tool->addAction(QIcon("C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/bezier.png"),"Bezier");
+   arc=    tool->addAction(QIcon("C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/arc.png"),"Arco");
 
-    line->setCheckable( true );
-    bezier->setCheckable( true );
-    arc->setCheckable( true );
-    line->setChecked( true );
+   line->setChecked(true);
+   arc->setCheckable(true);
+   line->setCheckable(true);
+   bezier->setCheckable(true);
 
-    connect( line , &QAction::triggered , this , &MainWindow::setShapeLine );
-    connect( bezier , &QAction::triggered , this , &MainWindow::setShapeBezier );
-    connect( arc , &QAction::triggered , this , &MainWindow::setShapArc );
+   connect(arc,&QAction::triggered,&ui,&UserInterface::setShapeArc);
+   connect(line,&QAction::triggered,&ui,&UserInterface::setShapeLine);
+   connect(bezier,&QAction::triggered,&ui,&UserInterface::setShapeBezier);
 }
 
 void MainWindow::configureZoomControlOnStatusBar()
 {
-   QWidget * zoomControl = new QWidget();
-   QHBoxLayout * layoutZoomControl = new QHBoxLayout();
+   QWidget* zoomControl= new QWidget(this);
+   QHBoxLayout* layoutZoomControl= new QHBoxLayout(this);
 
-   sliderZoom = new QSlider( Qt::Horizontal );
-   sliderZoom->setMinimum( FIRST );
-   sliderZoom->setMaximum( LAST );
-   sliderZoom->setValue( DEFAULT );
-   sliderZoom->setTickInterval( 1 );
-   sliderZoom->setFocusPolicy( Qt::StrongFocus );
-   sliderZoom->setTickPosition( QSlider::TicksBelow );
+   sliderZoom= new QSlider(Qt::Horizontal);
+   sliderZoom->setMinimum(ZOOM::FIRST);
+   sliderZoom->setMaximum(ZOOM::LAST);
+   sliderZoom->setValue(ZOOM::DEFAULT);
+   sliderZoom->setTickInterval(1);
+   sliderZoom->setFocusPolicy(Qt::StrongFocus);
+   sliderZoom->setTickPosition(QSlider::TicksBelow);
 
-   QPushButton * zoomOut = new QPushButton( QIcon( "C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/zoom-out.png" ) , "" );
-   zoomOut->setFixedWidth( widthButtonZoom );
+   QPushButton* zoomOut= new QPushButton(QIcon("C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/zoom-out.png"),"",this);
+   zoomOut->setFixedWidth(WIDTH_ZOOM_WIDGET);
 
-   QPushButton * zoomIn= new QPushButton( QIcon( "C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/zoom-in.png" ) , "" );
-   zoomIn->setFixedWidth( widthButtonZoom );
+   QPushButton* zoomIn= new QPushButton(QIcon("C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/zoom-in.png"),"",this);
+   zoomIn->setFixedWidth(WIDTH_ZOOM_WIDGET);
 
-   layoutZoomControl->addWidget( zoomOut );
-   layoutZoomControl->addWidget( sliderZoom );
-   layoutZoomControl->addWidget( zoomIn );
+   layoutZoomControl->addWidget(zoomOut);
+   layoutZoomControl->addWidget(sliderZoom);
+   layoutZoomControl->addWidget(zoomIn);
 
-   zoomControl->setLayout( layoutZoomControl );
+   zoomControl->setLayout(layoutZoomControl);
 
-   QStatusBar * status = statusBar();
-   status->addPermanentWidget( zoomControl );
+   QStatusBar* status= statusBar();
+   status->addPermanentWidget(zoomControl);
 
-
-   connect( zoomOut , SIGNAL( pressed() ) , this , SLOT( minusZoomClicked() ) );
-   connect( zoomIn , SIGNAL( pressed() ) , this , SLOT( plusZoomClicked() ) );
-   connect( sliderZoom , SIGNAL( valueChanged( int ) ) , this , SLOT( zoomValueChange( int ) ) );
+   connect(zoomOut,SIGNAL(pressed()),this,SLOT(minusZoomClicked()));
+   connect(zoomIn,SIGNAL(pressed()),this,SLOT(plusZoomClicked()));
+   connect(sliderZoom,SIGNAL(valueChanged(int)),&ui,SLOT(zoomValueChange(int)));
 }
 
 void MainWindow::configureDrawActions()
 {
-   connect( drawArea , SIGNAL( drawLineFinish( QPoint , QPoint )) , owner , SLOT( drawLineFinish( QPoint , QPoint )));
-   connect( drawArea , SIGNAL( drawBezierFinish( QPoint , QPoint , QPoint )) , owner , SLOT( drawBezierFinish( QPoint , QPoint , QPoint )));
-   connect( drawArea , SIGNAL( drawArcFinish( QPoint , QPoint , QPoint )) , owner , SLOT( drawArcFinish( QPoint , QPoint , QPoint )));
+   connect(drawArea,SIGNAL(mouseMove(QPoint)),&ui,SLOT(mouseMoveEventInDrawArea(QPoint)));
+   connect(drawArea,SIGNAL(mousePress(QPoint)),&ui,SLOT(mousePressEventInDrawArea(QPoint)));
+   connect(drawArea,SIGNAL(mouseRelease(QPoint)),&ui,SLOT(mouseReleaseEventInDrawArea(QPoint)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::resizeEvent( QResizeEvent * event )
+void MainWindow::resizeEvent(QResizeEvent* event)
 {
-    if ( drawArea )
-        drawArea->setLimitArea(event->size());
+   if (drawArea)
+      drawArea->setLimitArea(event->size());
 }

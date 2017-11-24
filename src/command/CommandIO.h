@@ -5,18 +5,18 @@
 #include <string>
 #include "Command.h"
 
-struct FileParams {
+struct FileParams
+{
    std::string path;
    std::string name;
 };
 
-class CommandIO :
-   public Command
+class CommandIO : public Command
 {
 protected:
-   FileParams dividerNameOfPath( std::string completedPath );
+   FileParams dividerNameOfPath(std::string completedPath);
 public:
-   virtual void exec( Data& data , UserInterface& ui ) = 0;
+   virtual void exec(Data& data,UserInterface& ui) = 0;
 };
 
 #endif // INCLUDED_COMMAND_IO_H

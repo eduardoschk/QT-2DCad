@@ -5,22 +5,17 @@
 #include "Shape.h"
 class Point;
 
-class LineShape :
-    public Shape
+class LineShape : public Shape
 {
 private:
-    Point * initial;
-    Point * final;
+   Point* initial;
+   Point* final;
 public:
-    LineShape();
-    LineShape(Point * _initial, Point * _final);
-    virtual ~LineShape();
+   LineShape(Point* _initial,Point* _final);
+   ~LineShape();
 
-    void setInitial( Point * _initial );
-    void setFinal( Point * _final );
-
-    int getId();
-    std::deque<Point*> getPoints();
+   int getId();
+   std::deque<Point*> getPoints();
 };
 
 #endif // INCLUDED_LINE_SHAPE_H

@@ -2,18 +2,15 @@
 #ifndef INCLUDED_COMMAND_NEW_H
 #define INCLUDED_COMMAND_NEW_H
 
-#include <string>
-
 #include "Command.h"
 
-class CommandNew :
-    public Command
+class CommandNew : public Command
 {
 public:
-    CommandNew() {}
-    ~CommandNew() {}
+   CommandNew() {}
+   ~CommandNew() {}
 
-    void exec( Data& data , UserInterface& ui );
+   void exec(Data& data,UserInterface& ui);
 };
 
 #endif // INCLUDED_COMMAND_NEW_H

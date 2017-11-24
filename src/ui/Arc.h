@@ -4,38 +4,38 @@
 
 #include <QGraphicsItem>
 
-enum QUADRANT { UM , DOIS , TRES , QUATRO };
+enum QUADRANT { UM,DOIS,TRES,QUATRO };
 
-class Arc :
-    public QGraphicsItem
+class Arc : public QGraphicsItem
 {
 private:
-    QPoint center;
-    QPoint initialPoint;
-    QPoint finalPoint;
+   QPoint center;
+   QPoint initialPoint;
+   QPoint finalPoint;
 
-    float raio;
+   float raio;
 
-    void printSupportLines( QPainter & painter );
-    void drawPoints( QPainter & painter , const float initAngule , const float finalAngule );
+   QUADRANT calcQuadrantPoint(const QPoint& point);
+   int diffCordenates(const int coord1,const int coord2);
 
-    int diffCordenates( const int value1 , const int value2 );
-    QUADRANT calcQuadrantPoint( const QPoint & point );
+   void drawPoints(QPainter& painter,const float initAngule,const float finalAngule);
 
-    void drawWithInitialPointInFirstQuadrant( QPainter & painter , float distanceInitFinal );
-    void drawWithInitialPointInSecondQuadrant( QPainter & painter , float distanceInitFinal );
-    void drawWithInitialPointInThirdQuadrant( QPainter & painter , float distanceInitFinal );
-    void drawWithInitialPointInFourthQuadrant( QPainter & painter , float distanceInitFinal );
+   QPoint calcPointOnAngle(float angle);
 
-    float calcAngule( float catetoOposto , float hipo );
-    double calcPitagoras( const QPoint & point1 , const QPoint & point2 );
+   void drawWithInitialPointInFirstQuadrant(QPainter& painter,float distanceInitFinal);
+   void drawWithInitialPointInSecondQuadrant(QPainter& painter,float distanceInitFinal);
+   void drawWithInitialPointInThirdQuadrant(QPainter& painter,float distanceInitFinal);
+   void drawWithInitialPointInFourthQuadrant(QPainter& painter,float distanceInitFinal);
+
+   float calcAngule(float catetoOposto,float hipo);
+   double calcPitagoras(const QPoint& point1,const QPoint& point2);
 
 public:
-    ~Arc() {}
-    Arc(QPoint & _centerPoint, QPoint & _initialPoint, QPoint & _finalPoint, float scale);
+   ~Arc() {}
+   Arc(QPoint& _centerPoint,QPoint& _initialPoint,QPoint& _finalPoint);
 
-    QRectF boundingRect() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget) override;
+   QRectF boundingRect() const override;
+   void paint(QPainter* painter,const QStyleOptionGraphicsItem* item,QWidget* widget) override;
 };
 
 #endif // INCLUDED_ARC_H

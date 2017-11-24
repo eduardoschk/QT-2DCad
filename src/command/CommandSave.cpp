@@ -3,21 +3,21 @@
 #include "UserInterface.h"
 #include "File.h"
 
-void CommandSave::exec( Data& data , UserInterface& ui ) 
+void CommandSave::exec(Data& data,UserInterface& ui)
 {
-   if ( &data.getCurrentFile() ) {
-      if ( data.getCurrentFile().getPath().size() == 0 ) {
-         std::string path= ui.requestPathFileToSave( data.getCurrentFile().getFileName() );
-         if ( path.size() > 0 ) {
-            FileParams pathAndFile= dividerNameOfPath( path );
-            data.getCurrentFile().setPath( pathAndFile.path );
-            data.getCurrentFile().setFileName( pathAndFile.name );
-            data.getCurrentFile().save();
+   if (data.hasFile()) {
+      if (!data.getCurrentFile().alreadySaved()) {
+         std::string path= ui.requestPathFileToSave(data.getCurrentFile().getFileName());
+         if (path.size() > 0) {
+            FileParams pathAndFile= dividerNameOfPath(path);
+            data.getCurrentFile().setPath(pathAndFile.path);
+            data.getCurrentFile().setFileName(pathAndFile.name);
+            data.save();
          }
       }
-      else 
-         data.getCurrentFile().save();
+      else
+         data.save();
    }
    else
-      ui.showErrorMessage( "Não existe arquivo para ser salvo" );
+      ui.showErrorMessage("Não existe arquivo para ser salvo");
 }

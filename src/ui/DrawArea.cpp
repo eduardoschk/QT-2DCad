@@ -8,72 +8,73 @@
 #include "Bezier.h"
 #include "Arc.h"
 
-int sizeScroll= 10;
+int SIZE_SCROLL= 10;
 
-DrawArea::~DrawArea()
+DrawArea::~DrawArea() 
 {
-   for ( int i= 0 ; i < itens.size() ; ++i )
-      delete itens[i];
-   itens.clear();
+   for (int i= 0 ; i < itens.size() ; ++i)
+      delete itens[i];;
    delete scene;
-   if ( hScrollBar )
+   if (hScrollBar)
       delete hScrollBar;
-   if ( vScrollBar )
+   if (vScrollBar)
       delete vScrollBar;
-   if ( currentItem )
-      delete currentItem;
 }
 
-DrawArea::DrawArea( int _widthArea , int _heightArea , int _limitWidth , int _limitHeight ) :
-   widthDraw( _widthArea ) , heightDraw( _heightArea ) ,
-   scene( new QGraphicsScene( this ) ) ,
-   limitWidth( _limitWidth ) , limitHeight( _limitHeight )
+DrawArea::DrawArea(int _widthArea,int _heightArea,int _limitWidth,int _limitHeight)
 {
+   tempItem= nullptr;
+   widthDraw= _widthArea;
+   heightDraw= _heightArea;
+   limitWidth=_limitWidth;
+   limitHeight= _limitHeight;
+
+   scene= new QGraphicsScene(this);
+
    configureDefaultValues();
    configureScrollBar();
 
-   scene->setSceneRect( QRect( QPoint( 0 , 0 ) , QPoint( widthDraw , heightDraw ) ) );
+   scene->setSceneRect(QRect(QPoint(0,0),QPoint(widthDraw,heightDraw)));
    changedSize();
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 void DrawArea::configureDefaultValues()
 {
    scale= 1;
 
-   setScene( scene );
+   setScene(scene);
 
-   currentShape= LINE;
-   currentItem= nullptr;
-
-   setAutoFillBackground( true );
-   setBackgroundRole( QPalette::Base );
-
-   widthHorizontalScrollBar= heigthVerticalScrollBar= 0;
+   setAutoFillBackground(true);
+   setBackgroundRole(QPalette::Base);
 }
 
 void DrawArea::configureScrollBar()
 {
-   hScrollBar = horizontalScrollBar();
-   vScrollBar = verticalScrollBar();
+   widthHorizontalScrollBar= heigthVerticalScrollBar= 0;
 
-   connect( hScrollBar , SIGNAL( valueChanged( int ) ) , this , SLOT( widthScrollChanged( int ) ) );
-   connect( vScrollBar , SIGNAL( valueChanged( int ) ) , this , SLOT( heightScrollChanged( int ) ) );
+   hScrollBar= horizontalScrollBar();
+   vScrollBar= verticalScrollBar();
+
+   connect(hScrollBar,SIGNAL(valueChanged(int)),this,SLOT(widthScrollChanged(int)));
+   connect(vScrollBar,SIGNAL(valueChanged(int)),this,SLOT(heightScrollChanged(int)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DrawArea::setScale( float _scale )
+void DrawArea::setScale(float _scale)
 {
-    scale = _scale;
-    QMatrix ma;
-    ma.scale( qreal( scale ) , qreal( scale ) );
-    setMatrix( ma );        
-    changedSize();
+   QMatrix ma;
+   scale = _scale;
+   ma.scale(qreal(scale),qreal(scale));
+   setMatrix(ma);
+   changedSize();
 }
 
-QPoint DrawArea::correctPointInRelationToScrollbar( QPoint point )
+QPoint DrawArea::correctPointInRelationToScrollbar(QPoint point)
 {
-    return point+= QPoint(widthHorizontalScrollBar, heigthVerticalScrollBar);
+   return point+= QPoint(widthHorizontalScrollBar,heigthVerticalScrollBar);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -83,123 +84,113 @@ void DrawArea::changedSize()
    int widthReal= calcNewDrawingWidth();
    int heigthReal= calcNewDrawingHeight();
 
-    setFixedSize( widthReal , heigthReal );
+   setFixedSize(widthReal,heigthReal);
 }
 
 int DrawArea::calcNewDrawingWidth()
 {
-   return ( sizeScroll + widthDraw * scale > limitWidth) ? limitWidth : ( sizeScroll + widthDraw * scale );
+   return (SIZE_SCROLL + widthDraw * scale > limitWidth) ? limitWidth : (SIZE_SCROLL + widthDraw * scale);
 }
 
 int DrawArea::calcNewDrawingHeight()
 {
-   return ( sizeScroll + heightDraw * scale > limitHeight ) ? ( limitHeight - sizeScroll ) : ( sizeScroll + heightDraw * scale ) ;
+   return (SIZE_SCROLL + heightDraw * scale > limitHeight) ? (limitHeight - SIZE_SCROLL) : (SIZE_SCROLL + heightDraw * scale) ;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DrawArea::heightScrollChanged( int value )
+void DrawArea::heightScrollChanged(int value)
 {
    heigthVerticalScrollBar = value;
 }
 
-void DrawArea::widthScrollChanged( int value )
+void DrawArea::widthScrollChanged(int value)
 {
    widthHorizontalScrollBar = value;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DrawArea::mousePressEvent( QMouseEvent * event )
+void DrawArea::mousePressEvent(QMouseEvent* event)
 {
-   if ( currentShape == SHAPE_TYPE::LINE ) {
-      points[0] = event->pos();
-   }
-   else {
-      if ( points[0].isNull() )
-         points[0] = event->pos();
-      else
-         points[1] = event->pos();
-   }
-   setMouseTracking( true );
+   emit(mousePress(correctPointInRelationToScrollbar(event->pos()) / scale));
+   setMouseTracking(true);
    event->accept();
 }
 
-void DrawArea::mouseMoveEvent(QMouseEvent * event)
+void DrawArea::mouseMoveEvent(QMouseEvent* event)
 {
-    QPoint p = event->pos();
-    if (currentItem)
-        delete currentItem;
-
-    switch ( currentShape ) 
-    {
-    case LINE:      currentItem = new Line( correctPointInRelationToScrollbar( points[0] ) , correctPointInRelationToScrollbar( event->pos() ) , scale );                                           break;
-    case BEZIER:    currentItem = new Bezier( correctPointInRelationToScrollbar( points[0] ) , correctPointInRelationToScrollbar( points[1] ) , correctPointInRelationToScrollbar( event->pos() ) , scale );       break;
-    case ARC:       currentItem = new Arc( correctPointInRelationToScrollbar( points[0] ) , correctPointInRelationToScrollbar( points[1] ) , correctPointInRelationToScrollbar( event->pos() ) , scale );          break;
-    }
-
-    scene->addItem(currentItem);
-    scene->update();
-    event->accept();
+   emit(mouseMove(correctPointInRelationToScrollbar(event->pos()) / scale));
+   event->accept();
 }
 
-void DrawArea::mouseReleaseEvent(QMouseEvent * event)
+void DrawArea::mouseReleaseEvent(QMouseEvent* event)
 {
-    if ( currentShape == SHAPE_TYPE::LINE ) {
-        itens.push_back( currentItem );
-        QPoint p = event->pos();
-        emit( drawLineFinish( points[0] , event->pos() ) );
-        clearPoints();
-    }
-    else {
-        if ( !points[1].isNull() ) {
-            itens.push_back( currentItem );
-            if (currentShape == SHAPE_TYPE::ARC )
-                emit( drawArcFinish( points[0] , points[1] , event->pos() ) );
-            else
-                emit( drawBezierFinish( points[0] , points[1] , event->pos() ) );
-            clearPoints();
-        }
-    }
-    setMouseTracking( false );
+   emit(mouseRelease(correctPointInRelationToScrollbar(event->pos()) / scale));
+   setMouseTracking(false);
+   event->accept();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DrawArea::clearPoints()
+void DrawArea::setLimitArea(const QSize size)
 {
-    currentItem = nullptr;
-    points[0]=  points[1]= QPoint();
-}
-
-void DrawArea::setShapeToDraw( SHAPE_TYPE shape )
-{
-    clearPoints();
-    currentShape= shape;
-}
-
-void DrawArea::setLimitArea( const QSize & size )
-{
-    limitWidth= size.width();
-    limitHeight= size.height();
+   limitWidth= size.width();
+   limitHeight= size.height();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DrawArea::drawLine( QPoint initial , QPoint final )
+void DrawArea::cleanTempItem()
 {
-    scene->addItem( new Line( correctPointInRelationToScrollbar( initial ) , correctPointInRelationToScrollbar( final ) , scale ));
-    scene->update();
+   if (tempItem) {
+      delete tempItem;
+      tempItem= nullptr;
+   }
 }
 
-void DrawArea::drawBezier( QPoint initial , QPoint control , QPoint final )
+///////////////////////////////////////////////////////////////////////////////
+
+void DrawArea::drawTempLine(QPoint initial,QPoint final)
 {
-    scene->addItem( new Bezier( correctPointInRelationToScrollbar( initial ) , correctPointInRelationToScrollbar( control ) , correctPointInRelationToScrollbar( final ) , scale ) );
-    scene->update();
+   cleanTempItem();
+   tempItem= new Line(initial, final);
+   scene->addItem(tempItem);
 }
 
-void DrawArea::drawArc( QPoint center , QPoint initial , QPoint final )
+void DrawArea::drawTempBezier(QPoint initial,QPoint control,QPoint final)
 {
-    scene->addItem( new Arc( correctPointInRelationToScrollbar( center ) , correctPointInRelationToScrollbar( initial ) , correctPointInRelationToScrollbar( final ) , scale ) );
-    scene->update();
+   cleanTempItem();
+   tempItem= new Bezier(initial,control,final);
+   scene->addItem(tempItem);
+}
+
+void DrawArea::drawTempArc(QPoint center,QPoint initial,QPoint final)
+{
+   cleanTempItem();
+   tempItem= new Arc(center,initial,final);
+   scene->addItem(tempItem);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DrawArea::drawLine(QPoint initial,QPoint final)
+{
+   itens.push_back(new Line(initial, final));
+   scene->addItem(itens.back());
+   scene->update();
+}
+
+void DrawArea::drawBezier(QPoint initial,QPoint control,QPoint final)
+{
+   itens.push_back(new Bezier(initial,control,final));
+   scene->addItem(itens.back());
+   scene->update();
+}
+
+void DrawArea::drawArc(QPoint center,QPoint initial,QPoint final)
+{
+   itens.push_back(new Arc(center,initial,final));
+   scene->addItem(itens.back());
+   scene->update();
 }

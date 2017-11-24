@@ -5,11 +5,14 @@
 #include "CommandNew.h"
 #include "CommandOpen.h"
 #include "CommandSave.h"
-#include "CommandDrawLine.h"
-#include "CommandDrawArc.h"
 #include "CommandSaveAs.h"
-#include "CommandCreateFile.h"
-#include "CommandDrawBezier.h"
+#include "CommandSetShapeArc.h"
+#include "CommandSetShapeLine.h"
+#include "CommandSetShapeBezier.h"
+#include "CommandZoomValueChange.h"
+#include "CommandMouseMoveInDrawArea.h"
+#include "CommandMousePressInDrawArea.h"
+#include "CommandMouseReleaseInDrawArea.h"
 
 App::~App()
 {
@@ -45,25 +48,39 @@ void App::setCurrentCmd(Command* newCm)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void App::actionDrawLine(int x1,int y1,int x2,int y2)
+void App::actionSetShapeArc()
 {
-   setCurrentCmd(new CommandDrawLine(x1,y1,x2,y2));
+   setCurrentCmd(new CommandSetShapeArc());
 }
 
-void App::actionDrawBezier(int x1,int y1,int x2,int y2,int x3,int y3)
+void App::actionSetShapeLine()
 {
-   setCurrentCmd(new CommandDrawBezier(x1,y1,x2,y2,x3,y3));
+   setCurrentCmd(new CommandSetShapeLine());
 }
 
-void App::actionDrawArc(int x1,int y1,int x2,int y2,int x3,int y3)
+void App::actionSetShapeBezier()
 {
-   setCurrentCmd(new CommandDrawArc(x1,y1,x2,y2,x3,y3));
+   setCurrentCmd(new CommandSetShapeBezier());
 }
 
-void App::actionCreateFile(std::string name,int width,int height)
+///////////////////////////////////////////////////////////////////////////////
+
+void App::actionMousePressInDrawArea(int x,int y)
 {
-   setCurrentCmd(new CommandCreateFile(name,width,height));
+   setCurrentCmd(new CommandMousePressInDrawArea(Point(x,y)));
 }
+
+void App::actionMouseMoveInDrawArea(int x,int y)
+{
+   setCurrentCmd(new CommandMouseMoveInDrawArea(Point(x,y)));
+}
+
+void App::actionMouseReleaseInDrawArea(int x,int y)
+{
+   setCurrentCmd(new CommandMouseReleaseInDrawArea(Point(x,y)));
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 void App::actionNewFile()
 {
@@ -88,4 +105,9 @@ void App::actionSaveAsFile()
 void App::actionQuit()
 {
    quit();
+}
+
+void App::actionZoomValueChange(int value)
+{
+   setCurrentCmd(new CommandZoomValueChange(value));
 }

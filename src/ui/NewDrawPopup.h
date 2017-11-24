@@ -3,35 +3,29 @@
 #define INCLUDED_NEW_DRAW_POPUP_H
 
 #include <QDialog>
+#include "NewFileStructure.h"
 
-class QLabel;
-class QLineEdit;
 class QSpinBox;
+class QLineEdit;
 
 class NewDrawPopup : public QDialog
 {
     Q_OBJECT
 private:
-   QLabel * nameLabel;
-   QLineEdit * nameText;
-   QLabel * widthLabel;
-   QSpinBox * widthText;
-   QLabel * heigthLabel;
-   QSpinBox * heigthText;
+   QLineEdit* nameText;
+   QSpinBox* widthText;
+   QSpinBox* heightText;
+
+   NEW_FILE_STRUCTURE* nfs;
 
    void configurePopupLayout();
 
- private slots:
-   void cancel();
-   void create();
-
 public:
    ~NewDrawPopup();
-   NewDrawPopup();
+   NewDrawPopup(NEW_FILE_STRUCTURE* _nfs);
 
- Q_SIGNALS:
-    void sigCancel();
-    void createNewArchive( QString , int, int );
+private slots:
+   void accept();
 };
 
 #endif // INCLUDED_NEW_DRAW_POPUP_H

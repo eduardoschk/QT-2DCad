@@ -12,40 +12,45 @@ class UserInterface;
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+   Q_OBJECT
 private:
-   UserInterface * owner;
-   DrawArea * drawArea;
-   QSlider * sliderZoom;
+   UserInterface& ui;
+   DrawArea* drawArea;
 
-   QAction * line;
-   QAction * bezier;
-   QAction * arc;
+   QAction* line;
+   QAction* bezier;
+   QAction* arc;
+   QSlider* sliderZoom;
 
    void configureDrawActions();
    void configureToolBarShapes();
    void configureZoomControlOnStatusBar();
-   void configureMenuBar( QMenuBar & menuBar );
-   void resizeEvent( QResizeEvent *event ) override;
+   void configureMenuBar(QMenuBar& menuBar);
+   void resizeEvent(QResizeEvent* event) override;
 
 public:
    ~MainWindow();
-   MainWindow( UserInterface * _owner, QWidget * parent = 0);
+   MainWindow(UserInterface& _ui,QWidget* parent= nullptr);
 
-   void createNewDrawArea( int _width , int _heigth );
+   void createNewDrawArea(int _width,int _heigth);
 
-   void drawLine( QPoint initial , QPoint final );
-   void drawArc( QPoint center , QPoint initial , QPoint final );
-   void drawBezier( QPoint initial , QPoint control , QPoint final );
+   void drawTempLine(QPoint initial,QPoint final);
+   void drawTempArc(QPoint center,QPoint initial,QPoint final);
+   void drawTempBezier(QPoint initial,QPoint control,QPoint final);
 
-public slots:
+   void drawLine(QPoint initial,QPoint final);
+   void drawArc(QPoint center,QPoint initial,QPoint final);
+   void drawBezier(QPoint initial,QPoint control,QPoint final);
+
+   void setShapArc();
    void setShapeLine();
    void setShapeBezier();
-   void setShapArc();
 
+   void setDrawingScale(float scale);
+
+public slots:
    void minusZoomClicked();
    void plusZoomClicked();
-   void zoomValueChange( int value );
 };
 
 #endif // INCLUDED_MAIN_WINDOW_H
