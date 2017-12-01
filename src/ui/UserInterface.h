@@ -23,13 +23,11 @@ public:
    void setTitleWindow(const char* name);
    void createDrawArea(int width,int height);
 
-   void drawTempLine(int xInit,int yInit,int xFinal,int yFinal);
-   void drawTempArc(int xCenter,int yCenter,int xInit,int yInit,int xFinal,int yFinal);
-   void drawTempBezier(int xInit,int yInit,int xControl,int yControl,int xFinal,int yFinal);
+   void eraseDraw(int id);
 
-   void drawLine(int xInit,int yInit,int xFinal,int yFinal);
-   void drawArc(int xCenter,int yCenter,int xInit,int yInit,int xFinal,int yFinal);
-   void drawBezier(int xInit,int yInit,int xControl,int yControl,int xFinal,int yFinal);
+   void drawLine(int id,int xInit,int yInit,int xFinal,int yFinal);
+   void drawArc(int id,int xCenter,int yCenter,int xInit,int yInit,int xFinal,int yFinal);
+   void drawBezier(int id,int xInit,int yInit,int xControl,int yControl,int xFinal,int yFinal);
 
    void setDrawingScale(float scale);
 

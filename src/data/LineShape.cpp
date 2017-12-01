@@ -1,23 +1,19 @@
 #include "LineShape.h"
 #include "Point.h"
 
-LineShape::LineShape(Point* _initial,Point* _final)
+LineShape::LineShape(int _id,Point* _initial,Point* _final) : Shape(_id)
 {
    initial= _initial;
    final= _final;
 }
 
-LineShape::~LineShape()
-{
-   delete final;
-   delete initial;
-}
+LineShape::~LineShape() {}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-int LineShape::getId()
+int LineShape::getType()
 {
-   return SHAPE_ID::LINE;
+   return SHAPE_TYPE::LINE;
 }
 
 std::deque<Point*> LineShape::getPoints()

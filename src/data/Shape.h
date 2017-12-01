@@ -3,19 +3,21 @@
 #define INCLUDED_SHAPE_H
 
 #include <deque>
-#include "ShapeIdentifier.h"
+#include "ShapeTypes.h"
 
 class Point;
 
 class Shape
 {
 protected:
-   SHAPE_ID::IDENTIFIER id;
+   int id;
+   SHAPE_TYPE::TYPE shapeType;
 public:
-   Shape() {}
    virtual ~Shape() {}
+   Shape(int _id) : id(_id) {}
 
-   virtual int getId() = 0;
+   int getId() { return id; }
+   virtual int getType() = 0;
    virtual std::deque<Point*> getPoints() = 0;
 };
 

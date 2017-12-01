@@ -13,11 +13,11 @@ private:
    void writeShape(std::ofstream& stream,Shape& shape);
    void writePoint(std::ofstream& stream,Point& point);
 
-   Shape* readShape(std::ifstream& stream);
+   Shape* readShape(int id,std::ifstream& stream);
    Point* readPoint(std::ifstream& stream);
-   Shape* readArcShape(std::ifstream& stream);
-   Shape* readLineShape(std::ifstream& stream);
-   Shape* readBezierShape(std::ifstream& stream);
+   Shape* readArcShape(int id,std::ifstream& stream);
+   Shape* readLineShape(int id,std::ifstream& stream);
+   Shape* readBezierShape(int id,std::ifstream& stream);
 
    void save(std::ofstream& stream,File& file);
 public:

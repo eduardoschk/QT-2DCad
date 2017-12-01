@@ -3,7 +3,7 @@
 #define INCLUDED_LINE_SHAPE_H
 
 #include "Shape.h"
-class Point;
+#include "Point.h"
 
 class LineShape : public Shape
 {
@@ -11,10 +11,10 @@ private:
    Point* initial;
    Point* final;
 public:
-   LineShape(Point* _initial,Point* _final);
+   LineShape(int _id,Point* _initial,Point* _final);
    ~LineShape();
 
-   int getId();
+   int getType();
    std::deque<Point*> getPoints();
 };
 

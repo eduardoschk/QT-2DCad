@@ -5,9 +5,9 @@
 namespace SHAPE_TYPE {
    enum TYPE
    {
-      LINE,
-      BEZIER,
-      ARC
+      LINE = 100,
+      BEZIER = 101,
+      ARC = 110
    };
 };
 

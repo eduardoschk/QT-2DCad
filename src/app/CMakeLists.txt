@@ -3,6 +3,7 @@ file(GLOB SOURCE_FILES "*.cpp" "*.h")
 include_directories("${PROJECT_SOURCE_DIR}/src/ui")
 include_directories("${PROJECT_SOURCE_DIR}/src/data")
 include_directories("${PROJECT_SOURCE_DIR}/src/command")
+include_directories("${PROJECT_SOURCE_DIR}/src/definitions")
 
 ##############################
 #############QT###############

@@ -5,8 +5,8 @@
 #include <QApplication>
 #include <string>
 
-#include "UserInterface.h"
 #include "Data.h"
+#include "UserInterface.h"
 
 class Command;
 
@@ -25,9 +25,9 @@ public:
 
    void run();
 
-   void actionSetShapeArc();
-   void actionSetShapeLine();
-   void actionSetShapeBezier();
+   void actionDrawArc();
+   void actionDrawLine();
+   void actionDrawBezier();
 
    void actionMousePressInDrawArea(int x,int y);
    void actionMouseMoveInDrawArea(int x,int y);

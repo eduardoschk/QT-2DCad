@@ -1,25 +1,20 @@
 #include "ArcShape.h"
 #include "Point.h"
 
-ArcShape::ArcShape(Point* _center,Point* _initial,Point* _final)
+ArcShape::ArcShape(int _id,Point* _center,Point* _initial,Point* _final) : Shape(_id)
 {
    final= _final;
    center= _center;
    initial= _initial;
 }
 
-ArcShape::~ArcShape()
-{
-   delete final;
-   delete center;
-   delete initial;
-}
+ArcShape::~ArcShape() {}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-int ArcShape::getId()
+int ArcShape::getType()
 {
-   return SHAPE_ID::ARC;
+   return SHAPE_TYPE::ARC;
 }
 
 std::deque<Point*> ArcShape::getPoints()

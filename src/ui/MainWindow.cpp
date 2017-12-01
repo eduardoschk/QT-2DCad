@@ -42,36 +42,24 @@ MainWindow::MainWindow(UserInterface& _ui,QWidget* parent) : QMainWindow(parent)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::drawTempLine(QPoint initial,QPoint final)
+void MainWindow::eraseDraw(int id)
 {
-   drawArea->drawTempLine(initial,final);
+   drawArea->eraseItem(id);
 }
 
-void MainWindow::drawTempBezier(QPoint initial,QPoint control,QPoint final)
+void MainWindow::drawLine(int id,QPoint initial,QPoint final)
 {
-   drawArea->drawTempBezier(initial,control,final);
+   drawArea->drawLine(id,initial,final);
 }
 
-void MainWindow::drawTempArc(QPoint center,QPoint initial,QPoint final)
+void MainWindow::drawBezier(int id,QPoint initial,QPoint control,QPoint final)
 {
-   drawArea->drawTempArc(center,initial,final);
+   drawArea->drawBezier(id,initial,control,final);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
-void MainWindow::drawLine(QPoint initial,QPoint final)
+void MainWindow::drawArc(int id,QPoint center,QPoint initial,QPoint final)
 {
-   drawArea->drawLine(initial,final);
-}
-
-void MainWindow::drawBezier(QPoint initial,QPoint control,QPoint final)
-{
-   drawArea->drawBezier(initial,control,final);
-}
-
-void MainWindow::drawArc(QPoint center,QPoint initial,QPoint final)
-{
-   drawArea->drawArc(center,initial,final);
+   drawArea->drawArc(id,center,initial,final);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -150,9 +138,9 @@ void MainWindow::configureToolBarShapes()
 {
    QToolBar* tool= new QToolBar(this);
    addToolBar(tool);
-   line=   tool->addAction(QIcon("C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/line.png"),"Linha");
-   bezier= tool->addAction(QIcon("C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/bezier.png"),"Bezier");
-   arc=    tool->addAction(QIcon("C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/arc.png"),"Arco");
+   line=   tool->addAction(QIcon("C:/Users/eduardo.kreuch/Documents/Old Exercises/Exercise 7 - CAD/img/icons/line.png"),"Linha");
+   bezier= tool->addAction(QIcon("C:/Users/eduardo.kreuch/Documents/Old Exercises/Exercise 7 - CAD/img/icons/bezier.png"),"Bezier");
+   arc=    tool->addAction(QIcon("C:/Users/eduardo.kreuch/Documents/Old Exercises/Exercise 7 - CAD/img/icons/arc.png"),"Arco");
 
    line->setChecked(true);
    arc->setCheckable(true);
@@ -177,10 +165,10 @@ void MainWindow::configureZoomControlOnStatusBar()
    sliderZoom->setFocusPolicy(Qt::StrongFocus);
    sliderZoom->setTickPosition(QSlider::TicksBelow);
 
-   QPushButton* zoomOut= new QPushButton(QIcon("C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/zoom-out.png"),"",this);
+   QPushButton* zoomOut= new QPushButton(QIcon("C:/Users/eduardo.kreuch/Documents/Old Exercises/Exercise 7 - CAD/img/icons/zoom-out.png"),"",this);
    zoomOut->setFixedWidth(WIDTH_ZOOM_WIDGET);
 
-   QPushButton* zoomIn= new QPushButton(QIcon("C:/Users/eduardo.kreuch/Documents/Exercise 7 - CAD/img/icons/zoom-in.png"),"",this);
+   QPushButton* zoomIn= new QPushButton(QIcon("C:/Users/eduardo.kreuch/Documents/Old Exercises/Exercise 7 - CAD/img/icons/zoom-in.png"),"",this);
    zoomIn->setFixedWidth(WIDTH_ZOOM_WIDGET);
 
    layoutZoomControl->addWidget(zoomOut);

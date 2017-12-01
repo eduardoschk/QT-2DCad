@@ -60,5 +60,4 @@ void Line::paint(QPainter* painter,const QStyleOptionGraphicsItem* option,QWidge
          fraction += distanceX;
       }
    }
-
 }

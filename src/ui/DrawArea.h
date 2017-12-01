@@ -2,7 +2,7 @@
 #ifndef INCLUDED_DRAW_AREA_H
 #define INCLUDED_DRAW_AREA_H
 
-#include <deque>
+#include <map>
 #include <QGraphicsView>
 
 class DrawArea : public QGraphicsView
@@ -16,8 +16,7 @@ private:
    float scale;
 
    QGraphicsScene* scene;
-   QGraphicsItem* tempItem;
-   std::deque<QGraphicsItem*> itens;
+   std::map<int,QGraphicsItem*> itens;
 
    QScrollBar* hScrollBar;
    int widthHorizontalScrollBar;
@@ -34,8 +33,6 @@ private:
    int calcNewDrawingWidth();
    int calcNewDrawingHeight();
 
-   void cleanTempItem();
-
 protected:
    void mousePressEvent(QMouseEvent* event) override;
    void mouseMoveEvent(QMouseEvent* event) override;
@@ -48,20 +45,18 @@ public:
    void setScale(float scale);
    void setLimitArea(const QSize size);
 
-   void drawTempLine(QPoint initial,QPoint final);
-   void drawTempArc(QPoint center,QPoint initial,QPoint final);
-   void drawTempBezier(QPoint initial,QPoint control,QPoint final);
+   void eraseItem(int id);
 
-   void drawLine(QPoint initial,QPoint final);
-   void drawArc(QPoint center,QPoint initial,QPoint final);
-   void drawBezier(QPoint initial,QPoint control,QPoint final);
+   void drawLine(int id,QPoint initial,QPoint final);
+   void drawArc(int id,QPoint center,QPoint initial,QPoint final);
+   void drawBezier(int id,QPoint initial,QPoint control,QPoint final);
 
 signals:
    void mousePress(QPoint);
    void mouseMove(QPoint);
    void mouseRelease(QPoint);
 
-   public slots:
+public slots:
    void heightScrollChanged(int value);
    void widthScrollChanged(int value);
 };

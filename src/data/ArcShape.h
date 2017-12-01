@@ -3,6 +3,7 @@
 #define INCLUDED_ARC_SHAPE_H
 
 #include "Shape.h"
+#include "Point.h"
 
 class ArcShape : public Shape
 {
@@ -11,10 +12,10 @@ private:
    Point* initial;
    Point* final;
 public:
-   ArcShape(Point* _center,Point* _initial,Point* _final);
+   ArcShape(int _id, Point* _center,Point* _initial,Point* _final);
    ~ArcShape();
 
-   int getId();
+   int getType();
    std::deque<Point*> getPoints();
 
 };

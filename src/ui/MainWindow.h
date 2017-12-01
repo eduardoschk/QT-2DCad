@@ -34,13 +34,11 @@ public:
 
    void createNewDrawArea(int _width,int _heigth);
 
-   void drawTempLine(QPoint initial,QPoint final);
-   void drawTempArc(QPoint center,QPoint initial,QPoint final);
-   void drawTempBezier(QPoint initial,QPoint control,QPoint final);
+   void eraseDraw(int id);
 
-   void drawLine(QPoint initial,QPoint final);
-   void drawArc(QPoint center,QPoint initial,QPoint final);
-   void drawBezier(QPoint initial,QPoint control,QPoint final);
+   void drawLine(int id,QPoint initial,QPoint final);
+   void drawArc(int id,QPoint center,QPoint initial,QPoint final);
+   void drawBezier(int id,QPoint initial,QPoint control,QPoint final);
 
    void setShapArc();
    void setShapeLine();

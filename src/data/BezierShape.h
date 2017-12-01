@@ -2,6 +2,7 @@
 #ifndef INCLUDED_BEZIER_SHAPE_H
 #define INCLUDED_BEZIER_SHAPE_H
 
+#include "Point.h"
 #include "Shape.h"
 
 class BezierShape : public Shape
@@ -11,10 +12,10 @@ private:
    Point* control;
    Point* final;
 public:
-   BezierShape(Point* _initial,Point* _control,Point* _final);
+   BezierShape(int _id,Point* _initial,Point* _control,Point* _final);
    ~BezierShape();
 
-   int getId();
+   int getType();
    std::deque<Point*> getPoints();
 };
 

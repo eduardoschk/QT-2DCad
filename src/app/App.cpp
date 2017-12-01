@@ -1,24 +1,20 @@
 #include "App.h"
-#include "UserInterface.h"
 #include "Data.h"
+#include "UserInterface.h"
 #include "Command.h"
 #include "CommandNew.h"
 #include "CommandOpen.h"
 #include "CommandSave.h"
 #include "CommandSaveAs.h"
-#include "CommandSetShapeArc.h"
-#include "CommandSetShapeLine.h"
-#include "CommandSetShapeBezier.h"
+#include "CommandDrawArc.h"
+#include "CommandDrawLine.h"
+#include "CommandDrawBezier.h"
 #include "CommandZoomValueChange.h"
-#include "CommandMouseMoveInDrawArea.h"
-#include "CommandMousePressInDrawArea.h"
-#include "CommandMouseReleaseInDrawArea.h"
 
 App::~App()
 {
    setCurrentCmd(nullptr);
 }
-
 
 App::App(int argc,char **argv) : QApplication(argc,argv),userInterface(*this)
 {
@@ -30,7 +26,6 @@ App::App(int argc,char **argv) : QApplication(argc,argv),userInterface(*this)
 void App::run()
 {
    exec();
-   actionQuit();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,36 +43,42 @@ void App::setCurrentCmd(Command* newCm)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void App::actionSetShapeArc()
+void App::actionDrawArc()
 {
-   setCurrentCmd(new CommandSetShapeArc());
+   setCurrentCmd(new CommandDrawArc());
 }
 
-void App::actionSetShapeLine()
+void App::actionDrawLine()
 {
-   setCurrentCmd(new CommandSetShapeLine());
+   setCurrentCmd(new CommandDrawLine());
 }
 
-void App::actionSetShapeBezier()
+void App::actionDrawBezier()
 {
-   setCurrentCmd(new CommandSetShapeBezier());
+   setCurrentCmd(new CommandDrawBezier());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void App::actionMousePressInDrawArea(int x,int y)
 {
-   setCurrentCmd(new CommandMousePressInDrawArea(Point(x,y)));
+   CommandDraw* draw= dynamic_cast<CommandDraw*>(currentCommand);
+   if (draw) 
+      draw->posMousePress(x,y,data,userInterface);
 }
 
 void App::actionMouseMoveInDrawArea(int x,int y)
 {
-   setCurrentCmd(new CommandMouseMoveInDrawArea(Point(x,y)));
+   CommandDraw* draw= dynamic_cast<CommandDraw*>(currentCommand);
+   if (draw)
+      draw->posMouseMove(x,y,data,userInterface);
 }
 
 void App::actionMouseReleaseInDrawArea(int x,int y)
 {
-   setCurrentCmd(new CommandMouseReleaseInDrawArea(Point(x,y)));
+   CommandDraw* draw= dynamic_cast<CommandDraw*>(currentCommand);
+   if (draw)
+      draw->posMouseRelease(x,y,data,userInterface);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

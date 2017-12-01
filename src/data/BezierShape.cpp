@@ -1,25 +1,20 @@
 #include "BezierShape.h"
 #include "Point.h"
 
-BezierShape::BezierShape(Point* _initial,Point* _control,Point* _final) 
+BezierShape::BezierShape(int _id,Point* _initial,Point* _control,Point* _final) : Shape(_id)
 {
    initial= _initial;
    control= _control;
    final= _final;
 }
 
-BezierShape::~BezierShape()
-{
-   delete initial;
-   delete control;
-   delete final;
-}
+BezierShape::~BezierShape() {}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-int BezierShape::getId()
+int BezierShape::getType()
 {
-   return SHAPE_ID::BEZIER;
+   return SHAPE_TYPE::BEZIER;
 }
 
 std::deque<Point*> BezierShape::getPoints()

@@ -12,8 +12,6 @@ int SIZE_SCROLL= 10;
 
 DrawArea::~DrawArea() 
 {
-   for (int i= 0 ; i < itens.size() ; ++i)
-      delete itens[i];;
    delete scene;
    if (hScrollBar)
       delete hScrollBar;
@@ -23,7 +21,6 @@ DrawArea::~DrawArea()
 
 DrawArea::DrawArea(int _widthArea,int _heightArea,int _limitWidth,int _limitHeight)
 {
-   tempItem= nullptr;
    widthDraw= _widthArea;
    heightDraw= _heightArea;
    limitWidth=_limitWidth;
@@ -141,56 +138,29 @@ void DrawArea::setLimitArea(const QSize size)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DrawArea::cleanTempItem()
+void DrawArea::eraseItem(int id)
 {
-   if (tempItem) {
-      delete tempItem;
-      tempItem= nullptr;
-   }
+   delete itens[id];
+   itens.erase(itens.find(id));
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
-void DrawArea::drawTempLine(QPoint initial,QPoint final)
+void DrawArea::drawLine(int id,QPoint initial,QPoint final)
 {
-   cleanTempItem();
-   tempItem= new Line(initial, final);
-   scene->addItem(tempItem);
-}
-
-void DrawArea::drawTempBezier(QPoint initial,QPoint control,QPoint final)
-{
-   cleanTempItem();
-   tempItem= new Bezier(initial,control,final);
-   scene->addItem(tempItem);
-}
-
-void DrawArea::drawTempArc(QPoint center,QPoint initial,QPoint final)
-{
-   cleanTempItem();
-   tempItem= new Arc(center,initial,final);
-   scene->addItem(tempItem);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DrawArea::drawLine(QPoint initial,QPoint final)
-{
-   itens.push_back(new Line(initial, final));
-   scene->addItem(itens.back());
+   itens.insert(std::pair<int,QGraphicsItem*>(id,new Line(initial,final)));
+   scene->addItem(itens[id]);
    scene->update();
 }
 
-void DrawArea::drawBezier(QPoint initial,QPoint control,QPoint final)
+void DrawArea::drawBezier(int id,QPoint initial,QPoint control,QPoint final)
 {
-   itens.push_back(new Bezier(initial,control,final));
-   scene->addItem(itens.back());
+   itens.insert(std::pair<int,QGraphicsItem*>(id,new Bezier(initial,control,final)));
+   scene->addItem(itens[id]);
    scene->update();
 }
 
-void DrawArea::drawArc(QPoint center,QPoint initial,QPoint final)
+void DrawArea::drawArc(int id,QPoint center,QPoint initial,QPoint final)
 {
-   itens.push_back(new Arc(center,initial,final));
-   scene->addItem(itens.back());
+   itens.insert(std::pair<int,QGraphicsItem*>(id,new Arc(center,initial,final)));
+   scene->addItem(itens[id]);
    scene->update();
 }

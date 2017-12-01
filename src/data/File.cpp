@@ -18,8 +18,24 @@ File::File(std::string _fileName,int _width,int _height)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void File::addShapeOnFile(Shape * newShape)
+int File::generateIdShape()
+{
+   return shapes.size();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+std::deque<Shape*> File::getShapes()
+{
+   std::deque<Shape*> shapes;
+   std::deque<Shape*>::iterator iter;
+   for (iter= shapes.begin() ; iter != shapes.end() ; ++iter)
+      shapes.push_back(*iter);
+   return shapes;
+}
+
+void File::addShapeOnFile(Shape* newShape)
 {
    saved= false;
-   shapes.push_back(newShape);
+   shapes.insert(std::pair<int,Shape*>(newShape->getId(),newShape));
 }

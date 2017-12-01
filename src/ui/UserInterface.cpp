@@ -1,66 +1,54 @@
-#include "UserInterface.h"
-#include <QFileDialog>
-#include <QString>
 #include <QPoint>
+#include <QString>
 #include <QMessageBox>
+#include <QFileDialog>
 
 #include "App.h"
 #include "MainWindow.h"
 #include "NewDrawPopup.h"
+#include "UserInterface.h"
 
-UserInterface::UserInterface(App& _owner,QWidget * parent) : QWidget(parent),app(_owner),mainWindow(*this) {}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void UserInterface::drawTempLine(int xInit,int yInit,int xFinal,int yFinal)
-{
-   mainWindow.drawTempLine(QPoint(xInit,yInit),QPoint(xFinal,yFinal));
-}
-
-void UserInterface::drawTempBezier(int xInit,int yInit,int xControl,int yControl,int xFinal,int yFinal)
-{
-   mainWindow.drawTempBezier(QPoint(xInit,yInit),QPoint(xControl,yControl),QPoint(xFinal,yFinal));
-}
-
-void UserInterface::drawTempArc(int xCenter,int yCenter,int xInit,int yInit,int xFinal,int yFinal)
-{
-   mainWindow.drawTempArc(QPoint(xCenter,yCenter),QPoint(xInit,yInit),QPoint(xFinal,yFinal));
-}
+UserInterface::UserInterface(App& _owner,QWidget * parent) : QWidget(parent),app(_owner),mainWindow(*this)  {}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UserInterface::drawLine(int xInit,int yInit,int xFinal,int yFinal)
+void UserInterface::eraseDraw(int id)
 {
-   mainWindow.drawLine(QPoint(xInit,yInit),QPoint(xFinal,yFinal));
+   mainWindow.eraseDraw(id);
 }
 
-void UserInterface::drawBezier(int xInit,int yInit,int xControl,int yControl,int xFinal,int yFinal)
+void UserInterface::drawLine(int id,int xInit,int yInit,int xFinal,int yFinal)
 {
-   mainWindow.drawBezier(QPoint(xInit,yInit),QPoint(xControl,yControl),QPoint(xFinal,yFinal));
+   mainWindow.drawLine(id,QPoint(xInit,yInit),QPoint(xFinal,yFinal));
 }
 
-void UserInterface::drawArc(int xCenter,int yCenter,int xInit,int yInit,int xFinal,int yFinal)
+void UserInterface::drawBezier(int id,int xInit,int yInit,int xControl,int yControl,int xFinal,int yFinal)
 {
-   mainWindow.drawArc(QPoint(xCenter,yCenter),QPoint(xInit,yInit),QPoint(xFinal,yFinal));
+   mainWindow.drawBezier(id,QPoint(xInit,yInit),QPoint(xControl,yControl),QPoint(xFinal,yFinal));
+}
+
+void UserInterface::drawArc(int id,int xCenter,int yCenter,int xInit,int yInit,int xFinal,int yFinal)
+{
+   mainWindow.drawArc(id,QPoint(xCenter,yCenter),QPoint(xInit,yInit),QPoint(xFinal,yFinal));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void UserInterface::setShapeArc()
 {
-   app.actionSetShapeArc();
+   app.actionDrawArc();
    mainWindow.setShapArc();
 }
 
 void UserInterface::setShapeLine()
 {
-   app.actionSetShapeLine();
+   app.actionDrawLine();
    mainWindow.setShapeLine();
 }
 
 void UserInterface::setShapeBezier()
 {
-   app.actionSetShapeBezier();
+   app.actionDrawBezier();
    mainWindow.setShapeBezier();
 }
 
