@@ -9,9 +9,6 @@
 #include "LineShape.h"
 #include "BezierShape.h"
 
-char initFile = '\n';
-char finalShape = '\n';
-
 bool IOFile::save(File& file)
 {
    std::stringstream ss;
@@ -38,17 +35,17 @@ void IOFile::saveAs(std::string completedPath,File& file)
 
 void IOFile::save(std::ofstream& stream,File& file)
 {
-   int countShapes= (int)file.getShapes().size();
+   std::deque<Shape*> shapes= file.getShapes();
    int width= file.getWidth();
    int height= file.getHeight();
+   int countShapes= (int)shapes.size();
 
-   stream.write((char*)&initFile,sizeof(char));
    stream.write((char*)&width,sizeof(int));
    stream.write((char*)&height,sizeof(int));
    stream.write((char*)&countShapes,sizeof(int));
 
    for (int i= 0; i < countShapes ; ++i)
-      writeShape(stream,*file.getShapes()[i]);
+      writeShape(stream,*shapes[i]);
    stream.flush();
 }
 
@@ -59,9 +56,8 @@ File* IOFile::open(std::string pathAndFile)
    stream.seekg(0);
 
    File* file= new File();
-   int _initFile,_width,_height,_countShapes;
+   int _width,_height,_countShapes;
 
-   stream.read((char*)&_initFile,sizeof(char));
    stream.read((char*)&_width,sizeof(int));
    stream.read((char*)&_height,sizeof(int));
    stream.read((char*)&_countShapes,sizeof(int));
@@ -81,16 +77,12 @@ void IOFile::writeShape(std::ofstream& stream,Shape& shape)
 {
    int type= shape.getType();
    
-   std::deque<Point*> pointsOfShape = shape.getPoints();
-   int size= (int)pointsOfShape.size();
+   std::deque<Point*> pointsOfShape= shape.getPoints();
 
    stream.write((char*)&type,sizeof(int));
-   stream.write((char*)&size,sizeof(int));
 
    for (int i= 0 ; i < pointsOfShape.size() ; ++i)
       writePoint(stream,*pointsOfShape[i]);
-
-   stream.write((char*)&finalShape,sizeof(char));
 }
 
 void IOFile::writePoint(std::ofstream& stream,Point& point)
@@ -115,7 +107,7 @@ Shape* IOFile::readShape(int id,std::ifstream& stream)
 
 Point* IOFile::readPoint(std::ifstream& stream)
 {
-   Point * p= new Point();
+   Point* p= new Point();
    stream.read((char*)&p->x,sizeof(int));
    stream.read((char*)&p->y,sizeof(int));
    return p;
@@ -123,50 +115,26 @@ Point* IOFile::readPoint(std::ifstream& stream)
 
 Shape* IOFile::readArcShape(int id,std::ifstream& stream)
 {
-   int size;
-   stream.read((char*)&size,sizeof(int));
-
    Point* center= readPoint(stream);
    Point* initial= readPoint(stream);
    Point* final= readPoint(stream);
 
-   ArcShape* arc= new ArcShape(id,center,initial,final);
-
-   char finalChar= ' ';
-   while (finalChar != finalShape)
-      stream.read((char*)&finalChar,sizeof(char));
-   return arc;
+   return new ArcShape(id,center,initial,final);
 }
 
 Shape* IOFile::readLineShape(int id,std::ifstream& stream)
 {
-   int size;
-   stream.read((char*)&size,sizeof(int));
-
    Point* initial= readPoint(stream);
    Point* final= readPoint(stream);
 
-   LineShape* line= new LineShape(id,initial,final);
-
-   char finalChar= ' ';
-   while (finalChar != finalShape)
-      stream.read((char*)&finalChar,sizeof(char));
-   return line;
+   return new LineShape(id,initial,final);
 }
 
 Shape* IOFile::readBezierShape(int id,std::ifstream& stream)
 {
-   int size;
-   stream.read((char*)&size,sizeof(int));
-
    Point* initial= readPoint(stream);
    Point* control= readPoint(stream);
    Point* final= readPoint(stream);
 
-   BezierShape* bezier= new BezierShape(id,initial,control,final);
-
-   char finalChar= ' ';
-   while (finalChar != finalShape)
-      stream.read((char*)&finalChar,sizeof(char));
-   return bezier;
+   return new BezierShape(id,initial,control,final);
 }

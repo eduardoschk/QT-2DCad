@@ -1,11 +1,10 @@
-file(GLOB SOURCE_FILES "*.cpp" "*.h")
+file(GLOB SOURCE_FILES "*.cpp" "*.h") 
 
 include_directories("${PROJECT_SOURCE_DIR}/src/ui")
 include_directories("${PROJECT_SOURCE_DIR}/src/data")
 include_directories("${PROJECT_SOURCE_DIR}/src/command")
 include_directories("${PROJECT_SOURCE_DIR}/src/definitions")
 
-##############################
 #############QT###############
 
 find_package(Qt5Widgets CONFIG
@@ -16,7 +15,7 @@ list(APPEND THIRD_PARTY_LIBS Qt5::Widgets Qt5::Core)
 
 ###########ENDQT#############
 
-add_executable(CAD ${SOURCE_FILES})
+add_executable(CAD ${SOURCE_FILES} resources.qrc)
 set_target_properties(CAD PROPERTIES ENABLE_EXPORTS 1)
 
 target_link_libraries(CAD data)

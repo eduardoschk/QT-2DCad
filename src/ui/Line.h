@@ -11,11 +11,11 @@ private:
    QPoint final;
 
 public:
-    Line(QPoint& p1,QPoint& p2);
-    ~Line() {}
+   ~Line() {}
+   Line(QPoint& p1,QPoint& p2);
 
-    QRectF boundingRect() const override;
-    void paint(QPainter* painter,const QStyleOptionGraphicsItem* item,QWidget* widget) override;
+   QRectF boundingRect() const override;
+   void paint(QPainter* painter,const QStyleOptionGraphicsItem* item,QWidget* widget) override;
 };
 
 #endif // INCLUDED_LINE_H

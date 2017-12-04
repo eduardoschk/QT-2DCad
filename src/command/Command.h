@@ -7,8 +7,8 @@ class UserInterface;
 
 class Command {
 public:
+   virtual ~Command() {}
     Command() {}
-    virtual ~Command() {}
 
     virtual void exec(Data& data, UserInterface& ui) = 0;
 };

@@ -7,8 +7,8 @@
 class CommandNew : public Command
 {
 public:
-   CommandNew() {}
    ~CommandNew() {}
+   CommandNew() {}
 
    void exec(Data& data,UserInterface& ui);
 };

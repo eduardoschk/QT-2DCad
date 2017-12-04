@@ -11,8 +11,8 @@ private:
    Point* initial;
    Point* final;
 public:
-   LineShape(int _id,Point* _initial,Point* _final);
    ~LineShape();
+   LineShape(int _id,Point* _initial,Point* _final);
 
    int getType();
    std::deque<Point*> getPoints();

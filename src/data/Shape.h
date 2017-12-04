@@ -11,7 +11,6 @@ class Shape
 {
 protected:
    int id;
-   SHAPE_TYPE::TYPE shapeType;
 public:
    virtual ~Shape() {}
    Shape(int _id) : id(_id) {}

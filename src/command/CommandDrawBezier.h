@@ -6,9 +6,19 @@
 
 class CommandDrawBezier : public CommandDraw
 {
+private:
+   int id;
+   Point* initial;
+   Point* control;
+   Point* final;
+
+   void draw(UserInterface& ui);
+   void saveShapeOnFile(Data& data);
+   void prepareToNewDraw(Data& data);
+
 public:
    ~CommandDrawBezier() {}
-   CommandDrawBezier() {}
+   CommandDrawBezier() : initial(nullptr),control(nullptr),final(nullptr) {}
 
    void exec(Data& data,UserInterface& ui);
 
@@ -16,8 +26,6 @@ public:
    void posMouseMove(int x,int y,Data& data,UserInterface& ui);
    void posMouseRelease(int x,int y,Data& data,UserInterface& ui);
 
-   void draw(UserInterface& ui);
-   void saveShapeOnFile(Data& data);
 };
 
 #endif // INCLUDED_SET_SHAPE_BEZIER_H

@@ -11,8 +11,8 @@ class CommandOpen : public CommandIO
 private:
    void drawShape(UserInterface& ui,Shape& shape);
 public:
-   CommandOpen() {}
    ~CommandOpen() {}
+   CommandOpen() {}
 
    void exec(Data& data,UserInterface& ui);
 };

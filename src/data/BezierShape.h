@@ -12,8 +12,8 @@ private:
    Point* control;
    Point* final;
 public:
-   BezierShape(int _id,Point* _initial,Point* _control,Point* _final);
    ~BezierShape();
+   BezierShape(int _id,Point* _initial,Point* _control,Point* _final);
 
    int getType();
    std::deque<Point*> getPoints();

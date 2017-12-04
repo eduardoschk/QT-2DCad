@@ -18,18 +18,22 @@ private:
 
 public:
    ~UserInterface() {}
-   UserInterface(App& _app,QWidget* parent= nullptr);
+   UserInterface(App& _app,QWidget* parent= nullptr) : QWidget(parent),app(_app),mainWindow(*this) {}
 
-   void setTitleWindow(const char* name);
-   void createDrawArea(int width,int height);
+   void setShapeArc() { mainWindow.setShapArc(); }
+   void setShapeLine() { mainWindow.setShapeLine(); }
+   void setShapeBezier() { mainWindow.setShapeBezier(); }
 
-   void eraseDraw(int id);
+   void setDrawingScale(float scale) { mainWindow.setDrawingScale(scale); }
 
-   void drawLine(int id,int xInit,int yInit,int xFinal,int yFinal);
-   void drawArc(int id,int xCenter,int yCenter,int xInit,int yInit,int xFinal,int yFinal);
-   void drawBezier(int id,int xInit,int yInit,int xControl,int yControl,int xFinal,int yFinal);
+   void setTitleWindow(const char* name) { mainWindow.setWindowTitle(name); }
+   void createDrawArea(int width,int height) { mainWindow.createNewDrawArea(width,height); }
 
-   void setDrawingScale(float scale);
+   void eraseDraw(int id) { mainWindow.eraseDraw(id); }
+
+   void drawLine(int id,int xInit,int yInit,int xFinal,int yFinal) { mainWindow.drawLine(id,QPoint(xInit,yInit),QPoint(xFinal,yFinal)); }
+   void drawArc(int id,int xCenter,int yCenter,int xInit,int yInit,int xFinal,int yFinal) { mainWindow.drawArc(id,QPoint(xCenter,yCenter),QPoint(xInit,yInit),QPoint(xFinal,yFinal)); }
+   void drawBezier(int id,int xInit,int yInit,int xControl,int yControl,int xFinal,int yFinal) { mainWindow.drawBezier(id,QPoint(xInit,yInit),QPoint(xControl,yControl),QPoint(xFinal,yFinal)); }
 
    NEW_FILE_STRUCTURE showPopupNewFile();
 
@@ -39,9 +43,9 @@ public:
    std::string requestPathFileToSave(std::string fileName);
 
 public slots:
-   void setShapeArc();
-   void setShapeLine();
-   void setShapeBezier();
+void optionShapeArc();
+   void optionShapeLine();
+   void optionShapeBezier();
 
    void mouseMoveEventInDrawArea(QPoint point);
    void mousePressEventInDrawArea(QPoint point);

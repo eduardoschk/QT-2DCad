@@ -27,11 +27,11 @@ int File::generateIdShape()
 
 std::deque<Shape*> File::getShapes()
 {
-   std::deque<Shape*> shapes;
-   std::deque<Shape*>::iterator iter;
+   std::deque<Shape*> dequeShapes;
+   std::map<int,Shape*>::iterator iter;
    for (iter= shapes.begin() ; iter != shapes.end() ; ++iter)
-      shapes.push_back(*iter);
-   return shapes;
+      dequeShapes.push_back(iter->second);
+   return dequeShapes;
 }
 
 void File::addShapeOnFile(Shape* newShape)

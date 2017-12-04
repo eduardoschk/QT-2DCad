@@ -110,5 +110,5 @@ void App::actionQuit()
 
 void App::actionZoomValueChange(int value)
 {
-   setCurrentCmd(new CommandZoomValueChange(value));
+   CommandZoomValueChange(value).exec(data,userInterface);
 }

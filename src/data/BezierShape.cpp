@@ -1,14 +1,19 @@
 #include "BezierShape.h"
 #include "Point.h"
 
+BezierShape::~BezierShape()
+{
+   delete final;
+   delete initial;
+   delete control;
+}
+
 BezierShape::BezierShape(int _id,Point* _initial,Point* _control,Point* _final) : Shape(_id)
 {
    initial= _initial;
    control= _control;
    final= _final;
 }
-
-BezierShape::~BezierShape() {}
 
 ///////////////////////////////////////////////////////////////////////////////
 

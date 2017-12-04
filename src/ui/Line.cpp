@@ -27,6 +27,9 @@ QRectF Line::boundingRect() const
 
 void Line::paint(QPainter* painter,const QStyleOptionGraphicsItem* option,QWidget* widget)
 {
+   QPainterPath path;
+   path.moveTo(initial);
+
    int x= initial.x();
    int y= initial.y();
 
@@ -41,7 +44,7 @@ void Line::paint(QPainter* painter,const QStyleOptionGraphicsItem* option,QWidge
    distanceX *= stepX;
 
    if (distanceX > distanceY) {
-      for (int fraction = distanceY - distanceX ; x != final.x() ; painter->drawPoint(x,y)) {
+      for (int fraction= distanceY - distanceX ; x != final.x() ; path.lineTo(x,y)) {
          if (fraction >= 0) {
             y += stepY;
             fraction -= distanceX;
@@ -51,7 +54,7 @@ void Line::paint(QPainter* painter,const QStyleOptionGraphicsItem* option,QWidge
       }
    }
    else {
-      for (int fraction = distanceX - distanceY ; y != final.y() ; painter->drawPoint(x,y)) {
+      for (int fraction = distanceX - distanceY ; y != final.y() ; path.lineTo(x,y)) {
          if (fraction >= 0) {
             x += stepX;
             fraction -= distanceY;
@@ -60,4 +63,5 @@ void Line::paint(QPainter* painter,const QStyleOptionGraphicsItem* option,QWidge
          fraction += distanceX;
       }
    }
+   painter->drawPath(path);
 }

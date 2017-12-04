@@ -1,13 +1,17 @@
 #include "LineShape.h"
 #include "Point.h"
 
-LineShape::LineShape(int _id,Point* _initial,Point* _final) : Shape(_id)
+LineShape::~LineShape()
 {
-   initial= _initial;
-   final= _final;
+   delete final;
+   delete initial;
 }
 
-LineShape::~LineShape() {}
+LineShape::LineShape(int _id,Point* _initial,Point* _final) : Shape(_id)
+{
+   final= _final;
+   initial= _initial;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 

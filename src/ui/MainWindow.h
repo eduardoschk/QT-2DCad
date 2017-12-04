@@ -2,12 +2,12 @@
 #ifndef INCLUDED_MAIN_WINDOW_H
 #define INCLUDED_MAIN_WINDOW_H
 
-#include <QMainWindow>
 #include <string.h>
+#include <QMainWindow>
 
-class DrawArea;
-class QSlider;
 class QLabel;
+class QSlider;
+class DrawArea;
 class UserInterface;
 
 class MainWindow : public QMainWindow
@@ -17,9 +17,9 @@ private:
    UserInterface& ui;
    DrawArea* drawArea;
 
+   QAction* arc;
    QAction* line;
    QAction* bezier;
-   QAction* arc;
    QSlider* sliderZoom;
 
    void configureDrawActions();

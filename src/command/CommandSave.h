@@ -7,8 +7,8 @@
 class CommandSave : public CommandIO
 {
 public:
-   CommandSave() {}
    ~CommandSave() {}
+   CommandSave() {}
 
    void exec(Data& data,UserInterface& ui);
 };
