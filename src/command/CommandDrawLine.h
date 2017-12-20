@@ -3,6 +3,7 @@
 #define INCLUDED_COMMAND_SET_SHAPE_LINE_H
 
 #include "CommandDraw.h"
+#include "Point.h"
 
 class LineShape;
 
@@ -10,8 +11,8 @@ class CommandDrawLine : public CommandDraw
 {
 private:
    int id;
-   Point* initial;
-   Point* final;
+   Point initial;
+   Point final;
 
    void draw(UserInterface& ui);
    void saveShapeOnFile(Data& data);
@@ -19,7 +20,7 @@ private:
 
 public:
    ~CommandDrawLine() {}
-   CommandDrawLine() : initial(nullptr),final(nullptr) {}
+   CommandDrawLine() {}
 
    void exec(Data& data,UserInterface& ui);
 

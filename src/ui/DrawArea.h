@@ -8,7 +8,7 @@
 class DrawArea : public QGraphicsView
 {
    Q_OBJECT
-private:
+public:
    int widthDraw;
    int heightDraw;
    int limitWidth;

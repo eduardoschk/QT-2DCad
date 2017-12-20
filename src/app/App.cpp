@@ -43,17 +43,17 @@ void App::setCurrentCmd(Command* newCm)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void App::actionDrawArc()
+void App::startCommandDrawArc()
 {
    setCurrentCmd(new CommandDrawArc());
 }
 
-void App::actionDrawLine()
+void App::startCommandDrawLine()
 {
    setCurrentCmd(new CommandDrawLine());
 }
 
-void App::actionDrawBezier()
+void App::startCommandDrawBezier()
 {
    setCurrentCmd(new CommandDrawBezier());
 }

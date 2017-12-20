@@ -11,7 +11,6 @@ Data::~Data()
 Data::Data()
 {
    currentFile= nullptr;
-   currentTypeShape= SHAPE_TYPE::LINE;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

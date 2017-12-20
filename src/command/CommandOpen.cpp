@@ -34,11 +34,11 @@ void CommandOpen::exec(Data& data,UserInterface& ui)
 
 void CommandOpen::drawShape(UserInterface& ui,Shape& shape)
 {
-   std::deque<Point*> points= shape.getPoints();
+   std::deque<Point> points= shape.getPoints();
 
    switch (shape.getType()) {
-      case SHAPE_TYPE::LINE:     ui.drawLine(shape.getId(),points[0]->x,points[0]->y,points[1]->x,points[1]->y);                               break;
-      case SHAPE_TYPE::BEZIER:   ui.drawBezier(shape.getId(),points[0]->x,points[0]->y,points[1]->x,points[1]->y,points[2]->x,points[2]->y);   break;
-      case SHAPE_TYPE::ARC:      ui.drawArc(shape.getId(),points[0]->x,points[0]->y,points[1]->x,points[1]->y,points[2]->x,points[2]->y);      break;
+      case SHAPE_TYPE::LINE:     ui.drawLine(shape.getId(),points[0].x,points[0].y,points[1].x,points[1].y);                               break;
+      case SHAPE_TYPE::BEZIER:   ui.drawBezier(shape.getId(),points[0].x,points[0].y,points[1].x,points[1].y,points[2].x,points[2].y);   break;
+      case SHAPE_TYPE::ARC:      ui.drawArc(shape.getId(),points[0].x,points[0].y,points[1].x,points[1].y,points[2].x,points[2].y);      break;
    }
 }

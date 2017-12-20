@@ -16,7 +16,7 @@ public:
    BezierShape(int _id,Point* _initial,Point* _control,Point* _final);
 
    int getType();
-   std::deque<Point*> getPoints();
+   std::deque<Point> getPoints();
 };
 
 #endif // INCLUDED_BEZIER_SHAPE_H

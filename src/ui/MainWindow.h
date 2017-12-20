@@ -13,7 +13,7 @@ class UserInterface;
 class MainWindow : public QMainWindow
 {
    Q_OBJECT
-private:
+public:
    UserInterface& ui;
    DrawArea* drawArea;
 

@@ -5,7 +5,6 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QSpinBox>
-#include <QMessageBox>
 #include "NewFileStructure.h"
 
 int MIN_RANGE= 10;

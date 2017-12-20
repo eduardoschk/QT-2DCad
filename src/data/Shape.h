@@ -17,7 +17,7 @@ public:
 
    int getId() { return id; }
    virtual int getType() = 0;
-   virtual std::deque<Point*> getPoints() = 0;
+   virtual std::deque<Point> getPoints() = 0;
 };
 
 #endif //INCLUDED_SHAPE_H

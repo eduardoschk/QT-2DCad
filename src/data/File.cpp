@@ -20,7 +20,7 @@ File::File(std::string _fileName,int _width,int _height)
 
 int File::generateIdShape()
 {
-   return shapes.size();
+   return (int)shapes.size();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

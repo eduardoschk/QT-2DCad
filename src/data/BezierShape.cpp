@@ -22,11 +22,11 @@ int BezierShape::getType()
    return SHAPE_TYPE::BEZIER;
 }
 
-std::deque<Point*> BezierShape::getPoints()
+std::deque<Point> BezierShape::getPoints()
 {
-   std::deque<Point*> points;
-   points.push_back(initial);
-   points.push_back(control);
-   points.push_back(final);
+   std::deque<Point> points;
+   //points.push_back(initial);
+   //points.push_back(control);
+   //points.push_back(final);
    return points;
 }

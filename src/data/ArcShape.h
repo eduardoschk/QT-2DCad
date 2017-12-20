@@ -16,7 +16,7 @@ public:
    ArcShape(int _id, Point* _center,Point* _initial,Point* _final);
 
    int getType();
-   std::deque<Point*> getPoints();
+   std::deque<Point> getPoints();
 
 };
 

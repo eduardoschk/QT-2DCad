@@ -17,6 +17,7 @@ DrawArea::~DrawArea()
       delete hScrollBar;
    if (vScrollBar)
       delete vScrollBar;
+   
 }
 
 DrawArea::DrawArea(int _widthArea,int _heightArea,int _limitWidth,int _limitHeight)
@@ -140,8 +141,12 @@ void DrawArea::setLimitArea(const QSize size)
 
 void DrawArea::eraseItem(int id)
 {
-   delete itens[id];
-   itens.erase(itens.find(id));
+   auto ifind= itens.find(id);
+   if (ifind != itens.end()) {
+      auto id= ifind->second;
+      delete id;
+      itens.erase(ifind);
+   }
 }
 
 void DrawArea::drawLine(int id,QPoint initial,QPoint final)

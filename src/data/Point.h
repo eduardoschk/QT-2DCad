@@ -4,14 +4,13 @@
 
 class Point {
 public:
-    int x;
-    int y;
+    int x,y;
 
     ~Point() {}
     Point() : x( 0 ) , y( 0 ) {}
     Point( int _x , int _y ) : x( _x ) , y( _y ) {}
 
-    bool isNull() { return x > 0 && y > 0; }
+    bool isNull() { return (x > 0) && (y > 0); }
 };
 
 #endif // INCLUDED_POINT_H

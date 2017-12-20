@@ -77,12 +77,12 @@ void IOFile::writeShape(std::ofstream& stream,Shape& shape)
 {
    int type= shape.getType();
    
-   std::deque<Point*> pointsOfShape= shape.getPoints();
+   std::deque<Point> pointsOfShape= shape.getPoints();
 
    stream.write((char*)&type,sizeof(int));
 
    for (int i= 0 ; i < pointsOfShape.size() ; ++i)
-      writePoint(stream,*pointsOfShape[i]);
+      writePoint(stream,pointsOfShape[i]);
 }
 
 void IOFile::writePoint(std::ofstream& stream,Point& point)
@@ -103,6 +103,7 @@ Shape* IOFile::readShape(int id,std::ifstream& stream)
       case SHAPE_TYPE::BEZIER: return readBezierShape(id,stream);
       case SHAPE_TYPE::ARC:    return readArcShape(id,stream);
    }
+   return nullptr;
 }
 
 Point* IOFile::readPoint(std::ifstream& stream)
@@ -127,7 +128,7 @@ Shape* IOFile::readLineShape(int id,std::ifstream& stream)
    Point* initial= readPoint(stream);
    Point* final= readPoint(stream);
 
-   return new LineShape(id,initial,final);
+   return new LineShape(id,*initial,*final);
 }
 
 Shape* IOFile::readBezierShape(int id,std::ifstream& stream)

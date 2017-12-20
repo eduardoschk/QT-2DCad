@@ -54,19 +54,19 @@ NEW_FILE_STRUCTURE UserInterface::showPopupNewFile()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UserInterface::optionShapeArc() 
+void UserInterface::startCreateArc()
 { 
-   app.actionDrawArc(); 
+   app.startCommandDrawArc();
 }
 
-void UserInterface::optionShapeLine() 
+void UserInterface::startCreateLine()
 { 
-   app.actionDrawLine(); 
+   app.startCommandDrawLine();
 }
 
-void UserInterface::optionShapeBezier() 
+void UserInterface::startCreateBezier()
 { 
-   app.actionDrawBezier(); 
+   app.startCommandDrawBezier();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

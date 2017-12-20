@@ -12,7 +12,7 @@ class App;
 class UserInterface : public QWidget
 {
    Q_OBJECT
-private:
+public:
    MainWindow mainWindow;
    App& app;
 
@@ -43,9 +43,9 @@ public:
    std::string requestPathFileToSave(std::string fileName);
 
 public slots:
-void optionShapeArc();
-   void optionShapeLine();
-   void optionShapeBezier();
+   void startCreateArc();
+   void startCreateLine();
+   void startCreateBezier();
 
    void mouseMoveEventInDrawArea(QPoint point);
    void mousePressEventInDrawArea(QPoint point);

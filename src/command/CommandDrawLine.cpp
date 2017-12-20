@@ -15,23 +15,19 @@ void CommandDrawLine::exec(Data& data,UserInterface& ui)
 
 void CommandDrawLine::posMousePress(int x,int y,Data&,UserInterface&)
 {
-   initial= new Point(x,y);
+   initial= Point(x,y);
 }
 
 void CommandDrawLine::posMouseMove(int x,int y,Data&,UserInterface& ui)
 {
-   if (final)
-      delete final;
-   final= new Point(x,y);
-
+   final= Point(x,y);
+   
    draw(ui);
 }
 
 void CommandDrawLine::posMouseRelease(int x,int y,Data& data,UserInterface& ui)
 {
-   if (final)
-      delete final;
-   final= new Point(x,y);
+   final= Point(x,y);
 
    draw(ui);
    saveShapeOnFile(data);
@@ -41,14 +37,13 @@ void CommandDrawLine::posMouseRelease(int x,int y,Data& data,UserInterface& ui)
 
 void CommandDrawLine::prepareToNewDraw(Data& data)
 {
-   initial= final= nullptr;
    id= data.getCurrentFile().generateIdShape();
 }
 
 void CommandDrawLine::draw(UserInterface& ui)
 { 
    ui.eraseDraw(id);
-   ui.drawLine(id,initial->x,initial->y,final->x,final->y);
+   ui.drawLine(id,initial.x,initial.y,final.x,final.y);
 }
 
 void CommandDrawLine::saveShapeOnFile(Data& data)

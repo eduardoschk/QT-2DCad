@@ -128,9 +128,9 @@ void MainWindow::configureToolBarShapes()
    line->setCheckable(true);
    bezier->setCheckable(true);
 
-   connect(arc,&QAction::triggered,&ui,&UserInterface::optionShapeArc);
-   connect(line,&QAction::triggered,&ui,&UserInterface::optionShapeLine);
-   connect(bezier,&QAction::triggered,&ui,&UserInterface::optionShapeBezier);
+   connect(arc,&QAction::triggered,&ui,&UserInterface::startCreateArc);
+   connect(line,&QAction::triggered,&ui,&UserInterface::startCreateLine);
+   connect(bezier,&QAction::triggered,&ui,&UserInterface::startCreateBezier);
 }
 
 void MainWindow::configureZoomControlOnStatusBar()

@@ -25,9 +25,9 @@ public:
 
    void run();
 
-   void actionDrawArc();
-   void actionDrawLine();
-   void actionDrawBezier();
+   void startCommandDrawArc();
+   void startCommandDrawLine();
+   void startCommandDrawBezier();
 
    void actionMousePressInDrawArea(int x,int y);
    void actionMouseMoveInDrawArea(int x,int y);
