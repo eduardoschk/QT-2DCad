@@ -33,13 +33,13 @@ public:
    void actionMouseMoveInDrawArea(int x,int y);
    void actionMouseReleaseInDrawArea(int x,int y);
 
-   void actionQuit();
-   void actionNewFile();
-   void actionOpenFile();
-   void actionSaveFile();
-   void actionSaveAsFile();
+   void startCommandQuit();
+   void startCommandNewFile();
+   void startCommandOpenFile();
+   void startCommandSaveFile();
+   void startCommandSaveAsFile();
 
-   void actionZoomValueChange(int value);
+   void startCommandZoomValueChange(int value);
 };
 
 #endif // INCLUDED_APP_H

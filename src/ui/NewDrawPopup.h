@@ -11,7 +11,7 @@ class QLineEdit;
 class NewDrawPopup : public QDialog
 {
     Q_OBJECT
-private:
+public:
    QLineEdit* nameText;
    QSpinBox* widthText;
    QSpinBox* heightText;

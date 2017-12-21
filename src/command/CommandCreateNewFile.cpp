@@ -1,15 +1,15 @@
-#include "CommandNew.h"
+#include "CommandCreateNewFile.h"
 #include "Data.h"
 #include "File.h"
 #include "UserInterface.h"
 #include "NewFileStructure.h"
 
-void CommandNew::exec(Data& data,UserInterface& ui)
+void CommandCreateNewFile::exec(Data& data,UserInterface& ui)
 {
    bool response= true;
    if (data.hasFile()) {
       if (!data.getCurrentFile().isSaved())
-         response= ui.confirmOperation("Existe um arquivo aberto e ele não está salvo, deseja continuar mesmo assim?");
+         response= ui.confirmOperation("Existe um file aberto e ele não está salvo, deseja continuar mesmo assim?");
    }
 
    if (response) {

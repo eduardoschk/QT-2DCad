@@ -20,11 +20,15 @@ public:
    ~UserInterface() {}
    UserInterface(App& _app,QWidget* parent= nullptr) : QWidget(parent),app(_app),mainWindow(*this) {}
 
-   void setShapeArc() { mainWindow.setShapArc(); }
-   void setShapeLine() { mainWindow.setShapeLine(); }
-   void setShapeBezier() { mainWindow.setShapeBezier(); }
+   void markOffAllOptions() { mainWindow.markOffAllOptions();  }
+   void markArcOptionAsSelected() { mainWindow.markArcOptionAsSelected(); }
+   void markLineOptionAsSelected() { mainWindow.markLineOptionAsSelected(); }
+   void markBezierOptionAsSelected() { mainWindow.markBezierOptionAsSelected(); }
 
    void setDrawingScale(float scale) { mainWindow.setDrawingScale(scale); }
+
+   void activateMouseTracking() { mainWindow.activateMouseTracking(); }
+   void disableMouseTracking() { mainWindow.disableMouseTracking(); }
 
    void setTitleWindow(const char* name) { mainWindow.setWindowTitle(name); }
    void createDrawArea(int width,int height) { mainWindow.createNewDrawArea(width,height); }
@@ -51,13 +55,13 @@ public slots:
    void mousePressEventInDrawArea(QPoint point);
    void mouseReleaseEventInDrawArea(QPoint point);
 
-   void optionNewFile();
-   void optionOpenFile();
-   void optionSaveFile();
-   void optionSaveAsFile();
-   void optionQuit();
+   void startOptionNewFile();
+   void startOptionOpenFile();
+   void startOptionSaveFile();
+   void startOptionSaveAsFile();
+   void startOptionQuit();
 
-   void zoomValueChange(int value);
+   void startZoomValueChange(int value);
 };
 
 #endif // INCLUDED_USER_INTERFACE_H

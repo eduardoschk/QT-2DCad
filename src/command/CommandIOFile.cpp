@@ -1,10 +1,10 @@
-#include "CommandIO.h"
+#include "CommandIOFile.h"
 
-FileParams CommandIO::dividerNameOfPath(std::string completedPath)
+FileParams CommandIOFile::dividerNameOfPath(std::string completedPath)
 {
    int indexOf= 0;
    for (int i= 0 ; i < completedPath.size() ; ++i) {
-      if (completedPath.at(i) == '/')
+      if (completedPath.at(i) == '/' )
          indexOf= i;
    }
    FileParams file;

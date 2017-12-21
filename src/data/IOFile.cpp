@@ -106,36 +106,36 @@ Shape* IOFile::readShape(int id,std::ifstream& stream)
    return nullptr;
 }
 
-Point* IOFile::readPoint(std::ifstream& stream)
+Point IOFile::readPoint(std::ifstream& stream)
 {
-   Point* p= new Point();
-   stream.read((char*)&p->x,sizeof(int));
-   stream.read((char*)&p->y,sizeof(int));
+   Point p= Point();
+   stream.read((char*)&p.x,sizeof(int));
+   stream.read((char*)&p.y,sizeof(int));
    return p;
 }
 
 Shape* IOFile::readArcShape(int id,std::ifstream& stream)
 {
-   Point* center= readPoint(stream);
-   Point* initial= readPoint(stream);
-   Point* final= readPoint(stream);
+   Point center= readPoint(stream);
+   Point initial= readPoint(stream);
+   Point final= readPoint(stream);
 
    return new ArcShape(id,center,initial,final);
 }
 
 Shape* IOFile::readLineShape(int id,std::ifstream& stream)
 {
-   Point* initial= readPoint(stream);
-   Point* final= readPoint(stream);
+   Point initial= readPoint(stream);
+   Point final= readPoint(stream);
 
-   return new LineShape(id,*initial,*final);
+   return new LineShape(id,initial,final);
 }
 
 Shape* IOFile::readBezierShape(int id,std::ifstream& stream)
 {
-   Point* initial= readPoint(stream);
-   Point* control= readPoint(stream);
-   Point* final= readPoint(stream);
+   Point initial= readPoint(stream);
+   Point control= readPoint(stream);
+   Point final= readPoint(stream);
 
    return new BezierShape(id,initial,control,final);
 }

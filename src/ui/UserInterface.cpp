@@ -28,7 +28,7 @@ std::string UserInterface::requestPathFileToOpen()
 void UserInterface::showErrorMessage(std::string _message)
 {
    const char* message = _message.c_str();
-   QMessageBox::warning(this,tr("Atenção"),message,
+   QMessageBox::warning(this,QString::fromLatin1("Atenção"),QString::fromLatin1(message),
       QMessageBox::StandardButton::Ok);
 }
 
@@ -36,7 +36,7 @@ bool UserInterface::confirmOperation(std::string _message)
 {
    const char* message = _message.c_str();
    QMessageBox::StandardButton response;
-   response = QMessageBox::question(this,tr("Atenção"),message,
+   response = QMessageBox::question(this,QString::fromLatin1("Atenção"),QString::fromLatin1(message),
       QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No);
 
    return (response == QMessageBox::Yes) ? true : false ;
@@ -88,34 +88,34 @@ void UserInterface::mouseReleaseEventInDrawArea(QPoint point)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UserInterface::optionNewFile() 
+void UserInterface::startOptionNewFile() 
 { 
-   app.actionNewFile(); 
+   app.startCommandNewFile(); 
 }
 
-void UserInterface::optionOpenFile()
+void UserInterface::startOptionOpenFile()
 { 
-   app.actionOpenFile(); 
+   app.startCommandOpenFile(); 
 }
 
-void UserInterface::optionSaveFile()
+void UserInterface::startOptionSaveFile()
 { 
-   app.actionSaveFile(); 
+   app.startCommandSaveFile();
 }
 
-void UserInterface::optionSaveAsFile() 
+void UserInterface::startOptionSaveAsFile()
 { 
-   app.actionSaveAsFile(); 
+   app.startCommandSaveAsFile();
 }
 
-void UserInterface::optionQuit() 
+void UserInterface::startOptionQuit()
 { 
-   app.actionQuit(); 
+   app.startCommandQuit();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UserInterface::zoomValueChange(int value) 
+void UserInterface::startZoomValueChange(int value)
 { 
-   app.actionZoomValueChange(value); 
+   app.startCommandZoomValueChange(value);
 }

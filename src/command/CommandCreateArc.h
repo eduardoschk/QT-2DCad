@@ -1,24 +1,24 @@
 #pragma once
-#ifndef INCLUDED_COMMAND_SET_SHAPE_ARC_H
-#define INCLUDED_COMMAND_SET_SHAPE_ARC_H
+#ifndef INCLUDED_COMMAND_CREATE_ARC_H
+#define INCLUDED_COMMAND_CREATE_ARC_H
 
-#include "CommandDraw.h"
+#include "CommandCreateDraw.h"
 
-class CommandDrawArc : public CommandDraw
+class CommandCreateArc : public CommandCreateDraw
 {
 private:
    int id;
-   Point* center;
-   Point* initial;
-   Point* final;
+   Point center;
+   Point initial;
+   Point final;
 
    void draw(UserInterface& ui);
    void saveShapeOnFile(Data& data);
    void prepareToNewDraw(Data& data);
 
 public:
-   ~CommandDrawArc() {}
-   CommandDrawArc() : center(nullptr),initial(nullptr),final(nullptr) {}
+   ~CommandCreateArc() {}
+   CommandCreateArc() {}
 
    void exec(Data& data,UserInterface& ui);
 
@@ -28,4 +28,4 @@ public:
 
 };
 
-#endif // INCLUDED_COMMAND_SET_SHAPE_ARC_H
+#endif // INCLUDED_COMMAND_CREATE_ARC_H

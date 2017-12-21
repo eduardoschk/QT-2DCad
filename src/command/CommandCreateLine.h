@@ -1,31 +1,32 @@
 #pragma once
-#ifndef INCLUDED_SET_SHAPE_BEZIER_H
-#define INCLUDED_SET_SHAPE_BEZIER_H
+#ifndef INCLUDED_COMMAND_CREATE_LINE_H
+#define INCLUDED_COMMAND_CREATE_LINE_H
 
-#include "CommandDraw.h"
+#include "CommandCreateDraw.h"
+#include "Point.h"
 
-class CommandDrawBezier : public CommandDraw
+class LineShape;
+
+class CommandCreateLine : public CommandCreateDraw
 {
 private:
    int id;
-   Point* initial;
-   Point* control;
-   Point* final;
+   Point initial;
+   Point final;
 
    void draw(UserInterface& ui);
    void saveShapeOnFile(Data& data);
    void prepareToNewDraw(Data& data);
 
 public:
-   ~CommandDrawBezier() {}
-   CommandDrawBezier() : initial(nullptr),control(nullptr),final(nullptr) {}
+   ~CommandCreateLine() {}
+   CommandCreateLine() {}
 
    void exec(Data& data,UserInterface& ui);
 
    void posMousePress(int x,int y,Data& data,UserInterface& ui);
    void posMouseMove(int x,int y,Data& data,UserInterface& ui);
    void posMouseRelease(int x,int y,Data& data,UserInterface& ui);
-
 };
 
-#endif // INCLUDED_SET_SHAPE_BEZIER_H
+#endif // INCLUDED_COMMAND_SET_SHAPE_LINE_H

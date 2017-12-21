@@ -19,7 +19,6 @@ void CommandZoomValueChange::exec(Data& data,UserInterface& ui)
          case ZOOM::NINE:  scale= 6;       break;
          case ZOOM::TEN:   scale= 8;       break;
       }
-
       ui.setDrawingScale(scale);
    }
 }

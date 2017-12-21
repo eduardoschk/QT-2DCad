@@ -17,10 +17,10 @@ public:
    UserInterface& ui;
    DrawArea* drawArea;
 
-   QAction* arc;
-   QAction* line;
-   QAction* bezier;
-   QSlider* sliderZoom;
+   QAction* qActionArc;
+   QAction* qActionLine;
+   QAction* qActionBezier;
+   QSlider* qSliderZoom;
 
    void configureDrawActions();
    void configureToolBarShapes();
@@ -34,15 +34,19 @@ public:
 
    void createNewDrawArea(int _width,int _heigth);
 
+   void activateMouseTracking();
+   void disableMouseTracking();
+
    void eraseDraw(int id);
 
    void drawLine(int id,QPoint initial,QPoint final);
    void drawArc(int id,QPoint center,QPoint initial,QPoint final);
    void drawBezier(int id,QPoint initial,QPoint control,QPoint final);
 
-   void setShapArc();
-   void setShapeLine();
-   void setShapeBezier();
+   void markOffAllOptions();
+   void markArcOptionAsSelected();
+   void markLineOptionAsSelected();
+   void markBezierOptionAsSelected();
 
    void setDrawingScale(float scale);
 

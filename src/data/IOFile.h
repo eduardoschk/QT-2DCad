@@ -14,7 +14,7 @@ private:
    void writePoint(std::ofstream& stream,Point& point);
 
    Shape* readShape(int id,std::ifstream& stream);
-   Point* readPoint(std::ifstream& stream);
+   Point readPoint(std::ifstream& stream);
    Shape* readArcShape(int id,std::ifstream& stream);
    Shape* readLineShape(int id,std::ifstream& stream);
    Shape* readBezierShape(int id,std::ifstream& stream);

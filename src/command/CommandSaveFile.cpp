@@ -1,9 +1,9 @@
-#include "CommandSave.h"
+#include "CommandSaveFile.h"
 #include "Data.h"
 #include "UserInterface.h"
 #include "File.h"
 
-void CommandSave::exec(Data& data,UserInterface& ui)
+void CommandSaveFile::exec(Data& data,UserInterface& ui)
 {
    if (data.hasFile()) {
       if (!data.getCurrentFile().alreadySaved()) {

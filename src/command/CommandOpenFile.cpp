@@ -1,11 +1,11 @@
-#include "CommandOpen.h"
+#include "CommandOpenFile.h"
 #include "Data.h"
 #include "UserInterface.h"
 #include "File.h"
 #include "Shape.h"
 #include "Point.h"
 
-void CommandOpen::exec(Data& data,UserInterface& ui)
+void CommandOpenFile::exec(Data& data,UserInterface& ui)
 {
    bool response= true;
    if (data.hasFile() && !data.getCurrentFile().isSaved())
@@ -32,7 +32,7 @@ void CommandOpen::exec(Data& data,UserInterface& ui)
    }
 }
 
-void CommandOpen::drawShape(UserInterface& ui,Shape& shape)
+void CommandOpenFile::drawShape(UserInterface& ui,Shape& shape)
 {
    std::deque<Point> points= shape.getPoints();
 

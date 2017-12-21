@@ -1,6 +1,6 @@
 #pragma once
-#ifndef INCLUDED_ARCHIVE_H
-#define INCLUDED_ARCHIVE_H
+#ifndef INCLUDED_FILE_H
+#define INCLUDED_FILE_H
 
 #include <map>
 #include <deque>
@@ -49,4 +49,4 @@ public:
    bool alreadySaved() { return pathDirectory.size() > 0; }
 };
 
-#endif // INCLUDED_ARCHIVE_H
+#endif // INCLUDED_FILE_H

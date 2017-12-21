@@ -24,7 +24,7 @@ DrawArea::DrawArea(int _widthArea,int _heightArea,int _limitWidth,int _limitHeig
 {
    widthDraw= _widthArea;
    heightDraw= _heightArea;
-   limitWidth=_limitWidth;
+   limitWidth= _limitWidth;
    limitHeight= _limitHeight;
 
    scene= new QGraphicsScene(this);
@@ -99,12 +99,12 @@ int DrawArea::calcNewDrawingHeight()
 
 void DrawArea::heightScrollChanged(int value)
 {
-   heigthVerticalScrollBar = value;
+   heigthVerticalScrollBar= value;
 }
 
 void DrawArea::widthScrollChanged(int value)
 {
-   widthHorizontalScrollBar = value;
+   widthHorizontalScrollBar= value;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -112,7 +112,6 @@ void DrawArea::widthScrollChanged(int value)
 void DrawArea::mousePressEvent(QMouseEvent* event)
 {
    emit(mousePress(correctPointInRelationToScrollbar(event->pos()) / scale));
-   setMouseTracking(true);
    event->accept();
 }
 
@@ -125,7 +124,6 @@ void DrawArea::mouseMoveEvent(QMouseEvent* event)
 void DrawArea::mouseReleaseEvent(QMouseEvent* event)
 {
    emit(mouseRelease(correctPointInRelationToScrollbar(event->pos()) / scale));
-   setMouseTracking(false);
    event->accept();
 }
 

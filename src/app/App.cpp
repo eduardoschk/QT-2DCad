@@ -2,17 +2,18 @@
 #include "Data.h"
 #include "UserInterface.h"
 #include "Command.h"
-#include "CommandNew.h"
-#include "CommandOpen.h"
-#include "CommandSave.h"
-#include "CommandSaveAs.h"
-#include "CommandDrawArc.h"
-#include "CommandDrawLine.h"
-#include "CommandDrawBezier.h"
+#include "CommandCreateNewFile.h"
+#include "CommandOpenFile.h"
+#include "CommandSaveFile.h"
+#include "CommandSaveAsFile.h"
+#include "CommandCreateArc.h"
+#include "CommandCreateLine.h"
+#include "CommandCreateBezier.h"
 #include "CommandZoomValueChange.h"
 
 App::~App()
 {
+   closeAllWindows();
    setCurrentCmd(nullptr);
 }
 
@@ -45,70 +46,70 @@ void App::setCurrentCmd(Command* newCm)
 
 void App::startCommandDrawArc()
 {
-   setCurrentCmd(new CommandDrawArc());
+   setCurrentCmd(new CommandCreateArc());
 }
 
 void App::startCommandDrawLine()
 {
-   setCurrentCmd(new CommandDrawLine());
+   setCurrentCmd(new CommandCreateLine());
 }
 
 void App::startCommandDrawBezier()
 {
-   setCurrentCmd(new CommandDrawBezier());
+   setCurrentCmd(new CommandCreateBezier());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void App::actionMousePressInDrawArea(int x,int y)
 {
-   CommandDraw* draw= dynamic_cast<CommandDraw*>(currentCommand);
-   if (draw) 
-      draw->posMousePress(x,y,data,userInterface);
+   CommandCreateDraw* isDrawCommand= dynamic_cast<CommandCreateDraw*>(currentCommand);
+   if (isDrawCommand)
+      isDrawCommand->posMousePress(x,y,data,userInterface);
 }
 
 void App::actionMouseMoveInDrawArea(int x,int y)
 {
-   CommandDraw* draw= dynamic_cast<CommandDraw*>(currentCommand);
-   if (draw)
-      draw->posMouseMove(x,y,data,userInterface);
+   CommandCreateDraw* isDrawCommand= dynamic_cast<CommandCreateDraw*>(currentCommand);
+   if (isDrawCommand)
+      isDrawCommand->posMouseMove(x,y,data,userInterface);
 }
 
 void App::actionMouseReleaseInDrawArea(int x,int y)
 {
-   CommandDraw* draw= dynamic_cast<CommandDraw*>(currentCommand);
-   if (draw)
-      draw->posMouseRelease(x,y,data,userInterface);
+   CommandCreateDraw* isDrawCommand= dynamic_cast<CommandCreateDraw*>(currentCommand);
+   if (isDrawCommand)
+      isDrawCommand->posMouseRelease(x,y,data,userInterface);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void App::actionNewFile()
+void App::startCommandNewFile()
 {
-   setCurrentCmd(new CommandNew());
+   setCurrentCmd(new CommandCreateNewFile());
 }
 
-void App::actionOpenFile()
+void App::startCommandOpenFile()
 {
-   setCurrentCmd(new CommandOpen());
+   setCurrentCmd(new CommandOpenFile());
 }
 
-void App::actionSaveFile()
+void App::startCommandSaveFile()
 {
-   setCurrentCmd(new CommandSave());
+   setCurrentCmd(new CommandSaveFile());
 }
 
-void App::actionSaveAsFile()
+void App::startCommandSaveAsFile()
 {
-   setCurrentCmd(new CommandSaveAs());
+   setCurrentCmd(new CommandSaveAsFile());
 }
 
-void App::actionQuit()
+void App::startCommandQuit()
 {
    quit();
 }
 
-void App::actionZoomValueChange(int value)
+void App::startCommandZoomValueChange(int value)
 {
    CommandZoomValueChange(value).exec(data,userInterface);
 }

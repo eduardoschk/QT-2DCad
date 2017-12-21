@@ -12,12 +12,7 @@ int MAX_RANGE= 10000;
 int DEFAULT_WIDTH= 800;
 int DEFAULT_HEIGHT= 600;
 
-NewDrawPopup::~NewDrawPopup()
-{
-   delete nameText;
-   delete widthText;
-   delete heightText;
-}        
+NewDrawPopup::~NewDrawPopup() {}        
 
 NewDrawPopup::NewDrawPopup(NEW_FILE_STRUCTURE* _nfs)
 {
@@ -46,6 +41,7 @@ void NewDrawPopup::configurePopupLayout()
 
    QPushButton* cancelButton= new QPushButton("Cancelar",this);
    QPushButton* createButton= new QPushButton("Criar",this);
+   createButton->setDefault(true);
 
    QVBoxLayout* layout= new QVBoxLayout(this);
    layout->addWidget(nameLabel);

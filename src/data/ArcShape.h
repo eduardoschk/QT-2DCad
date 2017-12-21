@@ -8,12 +8,12 @@
 class ArcShape : public Shape
 {
 private:
-   Point* center;
-   Point* initial;
-   Point* final;
+   Point center;
+   Point initial;
+   Point final;
 public:
    ~ArcShape();
-   ArcShape(int _id, Point* _center,Point* _initial,Point* _final);
+   ArcShape(int _id, Point _center,Point _initial,Point _final);
 
    int getType();
    std::deque<Point> getPoints();
