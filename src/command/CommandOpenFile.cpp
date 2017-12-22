@@ -22,14 +22,17 @@ void CommandOpenFile::exec(Data& data,UserInterface& ui)
          file->setFileName(params.name);
 
          data.setCurrentFile(file);
-
-         ui.createDrawArea(file->getWidth(),file->getHeight());
-
-         std::deque<Shape*> shapes= file->getShapes();
-         for (int i= 0 ; i < shapes.size() ; ++i)
-            drawShape(ui,*shapes[i]);
+         drawOpenFile(ui,*file);
       }
    }
+}
+
+void CommandOpenFile::drawOpenFile(UserInterface& ui,File& opennedFile)
+{
+   ui.createDrawArea(opennedFile.getWidth(),opennedFile.getHeight());
+   std::deque<Shape*> shapes= opennedFile.getShapes();
+   for (int i= 0 ; i < shapes.size() ; ++i)
+      drawShape(ui,*shapes[i]);
 }
 
 void CommandOpenFile::drawShape(UserInterface& ui,Shape& shape)

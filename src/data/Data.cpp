@@ -1,4 +1,5 @@
 #include "Data.h"
+
 #include "File.h"
 #include "IOFile.h"
 
@@ -15,12 +16,11 @@ Data::Data()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Data::setCurrentFile(File* archive)
+void Data::setCurrentFile(File* file)
 {
    if (currentFile)
       delete currentFile;
-
-   currentFile= archive;
+   currentFile= file;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

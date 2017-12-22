@@ -5,8 +5,6 @@
 #include <string>
 #include <deque>
 
-#include "Point.h"
-#include "ShapeTypes.h"
 #include "DataViewController.h"
 
 class File;

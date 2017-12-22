@@ -4,12 +4,14 @@
 
 #include "CommandIOFile.h"
 
+class File;
 class Shape;
 
 class CommandOpenFile : public CommandIOFile
 {
 private:
    void drawShape(UserInterface& ui,Shape& shape);
+   void drawOpenFile(UserInterface& ui,File& openedFile);
 public:
    ~CommandOpenFile() {}
    CommandOpenFile() {}

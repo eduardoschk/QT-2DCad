@@ -6,6 +6,7 @@ class DataViewController
 {
 private:
    int currentScaleZoom;
+   const int footerHeight= 100;
    int previewStartingPointWidth;
    int previewStartingPointHeight;
 public:

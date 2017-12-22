@@ -15,8 +15,8 @@ void CommandCreateNewFile::exec(Data& data,UserInterface& ui)
    if (response) {
       NEW_FILE_STRUCTURE nfs= ui.showPopupNewFile();
       if (nfs.isValid()) {
-         File* archive= new File(nfs.name,nfs.width,nfs.height);
-         data.setCurrentFile(archive);
+         File* file= new File(nfs.name,nfs.width,nfs.height);
+         data.setCurrentFile(file);
 
          ui.createDrawArea(nfs.width,nfs.height);
          ui.setTitleWindow(nfs.name.c_str());

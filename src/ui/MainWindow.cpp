@@ -15,7 +15,7 @@
 #include "UserInterface.h"
 
 int HEIGHT_ZOOM_WIDGET= 100;
-int WIDTH_ZOOM_WIDGET= 30;
+int WIDTH_ZOOM_BUTTON= 30;
 
 MainWindow::~MainWindow()
 {
@@ -163,10 +163,10 @@ void MainWindow::configureZoomControlOnStatusBar()
    qSliderZoom->setTickPosition(QSlider::TicksBelow);
 
    QPushButton* zoomOut= new QPushButton(QIcon(":/zoom-out.png"),"",this);
-   zoomOut->setFixedWidth(WIDTH_ZOOM_WIDGET);
+   zoomOut->setFixedWidth(WIDTH_ZOOM_BUTTON);
 
    QPushButton* zoomIn= new QPushButton(QIcon(":/zoom-in.png"),"",this);
-   zoomIn->setFixedWidth(WIDTH_ZOOM_WIDGET);
+   zoomIn->setFixedWidth(WIDTH_ZOOM_BUTTON);
 
    layoutZoomControl->addWidget(zoomOut);
    layoutZoomControl->addWidget(qSliderZoom);
