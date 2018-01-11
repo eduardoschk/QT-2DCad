@@ -1,9 +1,10 @@
 #include "CommandOpenFile.h"
 #include "Data.h"
-#include "UserInterface.h"
 #include "File.h"
 #include "Shape.h"
 #include "Point.h"
+#include "ZoomControl.h"
+#include "UserInterface.h"
 
 void CommandOpenFile::exec(Data& data,UserInterface& ui)
 {
@@ -16,6 +17,7 @@ void CommandOpenFile::exec(Data& data,UserInterface& ui)
 
       if (completedPath.size() > 0) {
          File* file= data.open(completedPath);
+         file->getDataViewController().setWindowSize(ui.getSizeWindow());
 
          FileParams params= dividerNameOfPath(completedPath);
          file->setPath(params.path);
@@ -29,7 +31,8 @@ void CommandOpenFile::exec(Data& data,UserInterface& ui)
 
 void CommandOpenFile::drawOpenFile(UserInterface& ui,File& opennedFile)
 {
-   ui.createDrawArea(opennedFile.getWidth(),opennedFile.getHeight());
+   ui.setZoomScaleWidget(ZOOM::DEFAULT);
+   ui.createDrawArea(opennedFile.getDataViewController().getViewPortSize());
    std::deque<Shape*> shapes= opennedFile.getShapes();
    for (int i= 0 ; i < shapes.size() ; ++i)
       drawShape(ui,*shapes[i]);
@@ -37,11 +40,6 @@ void CommandOpenFile::drawOpenFile(UserInterface& ui,File& opennedFile)
 
 void CommandOpenFile::drawShape(UserInterface& ui,Shape& shape)
 {
-   std::deque<Point> points= shape.getPoints();
-
-   switch (shape.getType()) {
-      case SHAPE_TYPE::LINE:     ui.drawLine(shape.getId(),points[0].x,points[0].y,points[1].x,points[1].y);                               break;
-      case SHAPE_TYPE::BEZIER:   ui.drawBezier(shape.getId(),points[0].x,points[0].y,points[1].x,points[1].y,points[2].x,points[2].y);   break;
-      case SHAPE_TYPE::ARC:      ui.drawArc(shape.getId(),points[0].x,points[0].y,points[1].x,points[1].y,points[2].x,points[2].y);      break;
-   }
+   for (Point point : shape.getPointsToDraw(1))
+      ui.drawPoint(shape.getId(),point);
 }

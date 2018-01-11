@@ -8,14 +8,18 @@
 class QLabel;
 class QSlider;
 class DrawArea;
+class QScrollBar;
 class UserInterface;
 
 class MainWindow : public QMainWindow
 {
    Q_OBJECT
-public:
+private:
    UserInterface& ui;
+   QWidget viewPort;
    DrawArea* drawArea;
+   QScrollBar* verticalScroll;
+   QScrollBar* horizontalScroll;
 
    QAction* qActionArc;
    QAction* qActionLine;
@@ -32,27 +36,31 @@ public:
    ~MainWindow();
    MainWindow(UserInterface& _ui,QWidget* parent= nullptr);
 
-   void createNewDrawArea(int _width,int _heigth);
+   void createNewDrawArea(QSize size);
 
    void activateMouseTracking();
    void disableMouseTracking();
 
-   void eraseDraw(int id);
-
-   void drawLine(int id,QPoint initial,QPoint final);
-   void drawArc(int id,QPoint center,QPoint initial,QPoint final);
-   void drawBezier(int id,QPoint initial,QPoint control,QPoint final);
+   void clearArea();
+   void eraseShape(int idShape);
+   void drawPoint(int idShape,QPoint point);
+   void drawPoints(int idShape,std::vector<QPoint> points);
 
    void markOffAllOptions();
    void markArcOptionAsSelected();
    void markLineOptionAsSelected();
    void markBezierOptionAsSelected();
 
-   void setDrawingScale(float scale);
+   QSize getSizeWindow();
+   void setSizeDrawArea(QSize size);
+   void setZoomScaleWidget(int value);
+   void createVerticalScrollBar(int limit);
+   void createHorizontalScrollBar(int limit);
 
 public slots:
    void minusZoomClicked();
    void plusZoomClicked();
+
 };
 
 #endif // INCLUDED_MAIN_WINDOW_H

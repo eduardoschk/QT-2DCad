@@ -1,9 +1,9 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-    <file alias="arc.png">C:/Users/eduardo.kreuch/Documents/Old Exercises/Exercise 7 - CAD/img/icons/arc.png</file>
-    <file alias="bezier.png">C:/Users/eduardo.kreuch/Documents/Old Exercises/Exercise 7 - CAD/img/icons/bezier.png</file>
-    <file alias="line.png">C:/Users/eduardo.kreuch/Documents/Old Exercises/Exercise 7 - CAD/img/icons/line.png</file>
-    <file alias="zoom-in.png">C:/Users/eduardo.kreuch/Documents/Old Exercises/Exercise 7 - CAD/img/icons/zoom-in.png</file>
-    <file alias="zoom-out.png">C:/Users/eduardo.kreuch/Documents/Old Exercises/Exercise 7 - CAD/img/icons/zoom-out.png</file>
+    <file alias="arc.png">C:/Users/eduardo.kreuch/Projetos/Projetos Atuais/Exercise 7 - CAD/img/icons/arc.png</file>
+    <file alias="bezier.png">C:/Users/eduardo.kreuch/Projetos/Projetos Atuais/Exercise 7 - CAD/img/icons/bezier.png</file>
+    <file alias="line.png">C:/Users/eduardo.kreuch/Projetos/Projetos Atuais/Exercise 7 - CAD/img/icons/line.png</file>
+    <file alias="zoom-in.png">C:/Users/eduardo.kreuch/Projetos/Projetos Atuais/Exercise 7 - CAD/img/icons/zoom-in.png</file>
+    <file alias="zoom-out.png">C:/Users/eduardo.kreuch/Projetos/Projetos Atuais/Exercise 7 - CAD/img/icons/zoom-out.png</file>
 </qresource>
 </RCC>

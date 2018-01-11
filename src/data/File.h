@@ -7,6 +7,7 @@
 #include <string>
 #include "Point.h"
 #include "ShapeTypes.h"
+#include "DataViewController.h"
 
 class Shape;
 
@@ -17,15 +18,13 @@ private:
    std::string pathDirectory;
    std::map<int,Shape*> shapes;
 
-   int width;
-   int height;
+   DataViewController viewController;
 
    bool saved;
 
 public:
    ~File();
-   File() : saved(false) {}
-   File(std::string _fileName,int _width,int _height);
+   File(std::string _fileName,Size sizeShape);
 
    int generateIdShape();
 
@@ -38,15 +37,14 @@ public:
    std::string getPath() { return pathDirectory; }
    void setPath(std::string path) { pathDirectory= path; }
 
-   int getWidth() { return width; }
-   void setWidth(int _width) { width= _width; }
-
-   int getHeight() { return height; }
-   void setHeight(int _height) { height= _height; }
-
    bool isSaved() { return saved; }
    void setSaved(bool status) { saved= status; }
    bool alreadySaved() { return pathDirectory.size() > 0; }
+
+   std::map<int,std::deque<Point>> repaintAll();
+   std::map<int,std::deque<Point>> repaintRect(Rect rect);
+
+   DataViewController& getDataViewController() { return viewController; }
 };
 
 #endif // INCLUDED_FILE_H

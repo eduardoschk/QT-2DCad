@@ -14,7 +14,46 @@ int LineShape::getType()
    return SHAPE_TYPE::LINE;
 }
 
-std::deque<Point> LineShape::getPoints()
+std::deque<Point> LineShape::getPointsToDraw(float scale)
+{
+   std::deque<Point> points;
+   int x= initial.x;
+   int y= initial.y;
+
+   int distanceY = final.y - initial.y;
+   int distanceX = final.x - initial.x;
+   int stepX,stepY;
+
+   distanceY < 0 ? stepY= -1 : stepY= 1;
+   distanceY *= stepY;
+
+   distanceX < 0 ? stepX= -1 : stepX= 1;
+   distanceX *= stepX;
+
+   if (distanceX > distanceY) {
+      for (int fraction= distanceY - distanceX ; x != final.x ; points.push_back(Point(x,y)*scale)) {
+         if (fraction >= 0) {
+            y += stepY;
+            fraction -= distanceX;
+         }
+         x += stepX;
+         fraction += distanceY;
+      }
+   }
+   else {
+      for (int fraction = distanceX - distanceY ; y != final.y ; points.push_back(Point(x,y)*scale)) {
+         if (fraction >= 0) {
+            x += stepX;
+            fraction -= distanceY;
+         }
+         y += stepY;
+         fraction += distanceX;
+      }
+   }
+   return points;
+}
+
+std::deque<Point> LineShape::getSelectedPoints()
 {
    std::deque<Point> points;
    points.push_back(initial);

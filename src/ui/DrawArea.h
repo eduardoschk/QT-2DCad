@@ -3,62 +3,39 @@
 #define INCLUDED_DRAW_AREA_H
 
 #include <map>
-#include <QGraphicsView>
+#include <deque>
+#include <vector>
+#include <QWidget>
 
-class DrawArea : public QGraphicsView
+class DrawArea : public QWidget
 {
-   Q_OBJECT
-public:
-   int widthDraw;
-   int heightDraw;
-   int limitWidth;
-   int limitHeight;
-   float scale;
-
-   QGraphicsScene* scene;
-   std::map<int,QGraphicsItem*> itens;
-
-   QScrollBar* hScrollBar;
-   int widthHorizontalScrollBar;
-   QScrollBar* vScrollBar;
-   int heigthVerticalScrollBar;
-
-   QPoint correctPointInRelationToScrollbar(QPoint point);
-
-   void changedSize();
-
-   void configureScrollBar();
+Q_OBJECT
+private:
+   std::map<int,std::deque<QPoint>> points;
    void configureDefaultValues();
 
-   int calcNewDrawingWidth();
-   int calcNewDrawingHeight();
-
 protected:
+   void paintEvent(QPaintEvent *event) override;
    void mousePressEvent(QMouseEvent* event) override;
    void mouseMoveEvent(QMouseEvent* event) override;
    void mouseReleaseEvent(QMouseEvent* event) override;
 
 public:
    ~DrawArea();
-   DrawArea(int _widthArea,int _heightArea,int _limitWidth,int _limitHeight);
+   DrawArea(QSize size,QWidget* parent);
 
-   void setScale(float scale);
-   void setLimitArea(const QSize size);
+   void setArea(const QSize size);
 
-   void eraseItem(int id);
-
-   void drawLine(int id,QPoint initial,QPoint final);
-   void drawArc(int id,QPoint center,QPoint initial,QPoint final);
-   void drawBezier(int id,QPoint initial,QPoint control,QPoint final);
+   void clearArea();
+   void eraseShape(int idShape);
+   void drawPoint(int idShape,QPoint point);
+   void drawPoints(int idShape,std::vector<QPoint> points);
 
 signals:
    void mousePress(QPoint);
    void mouseMove(QPoint);
    void mouseRelease(QPoint);
 
-public slots:
-   void heightScrollChanged(int value);
-   void widthScrollChanged(int value);
 };
 
 #endif // INCLUDED_DRAW_AREA_H

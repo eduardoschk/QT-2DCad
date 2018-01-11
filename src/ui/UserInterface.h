@@ -3,7 +3,10 @@
 #define INCLUDED_USER_INTERFACE_H
 
 #include <QWidget>
+#include <deque>
 #include <string>
+#include "Size.h"
+#include "Point.h"
 #include "MainWindow.h"
 #include "NewFileStructure.h"
 
@@ -12,32 +15,39 @@ class App;
 class UserInterface : public QWidget
 {
    Q_OBJECT
-public:
-   MainWindow mainWindow;
+private:
    App& app;
+   bool initialized;
+   MainWindow mainWindow;
 
 public:
    ~UserInterface() {}
-   UserInterface(App& _app,QWidget* parent= nullptr) : QWidget(parent),app(_app),mainWindow(*this) {}
+   UserInterface(App& _app);
 
-   void markOffAllOptions() { mainWindow.markOffAllOptions();  }
-   void markArcOptionAsSelected() { mainWindow.markArcOptionAsSelected(); }
-   void markLineOptionAsSelected() { mainWindow.markLineOptionAsSelected(); }
-   void markBezierOptionAsSelected() { mainWindow.markBezierOptionAsSelected(); }
+   void init();
 
-   void setDrawingScale(float scale) { mainWindow.setDrawingScale(scale); }
+   void markOffAllOptions();
+   void markArcOptionAsSelected();
+   void markLineOptionAsSelected();
+   void markBezierOptionAsSelected();
 
-   void activateMouseTracking() { mainWindow.activateMouseTracking(); }
-   void disableMouseTracking() { mainWindow.disableMouseTracking(); }
+   Size getSizeWindow();
+   void setSizeDrawArea(Size size);
+   void setZoomScaleWidget(int value);
 
-   void setTitleWindow(const char* name) { mainWindow.setWindowTitle(name); }
-   void createDrawArea(int width,int height) { mainWindow.createNewDrawArea(width,height); }
+   void disableMouseTracking();
+   void activateMouseTracking();
 
-   void eraseDraw(int id) { mainWindow.eraseDraw(id); }
+   void createDrawArea(Size size);
+   void setTitleWindow(const char* name);
 
-   void drawLine(int id,int xInit,int yInit,int xFinal,int yFinal) { mainWindow.drawLine(id,QPoint(xInit,yInit),QPoint(xFinal,yFinal)); }
-   void drawArc(int id,int xCenter,int yCenter,int xInit,int yInit,int xFinal,int yFinal) { mainWindow.drawArc(id,QPoint(xCenter,yCenter),QPoint(xInit,yInit),QPoint(xFinal,yFinal)); }
-   void drawBezier(int id,int xInit,int yInit,int xControl,int yControl,int xFinal,int yFinal) { mainWindow.drawBezier(id,QPoint(xInit,yInit),QPoint(xControl,yControl),QPoint(xFinal,yFinal)); }
+   void createVerticalScrollBar(int limit);
+   void createHorizontalScrollBar(int limit);
+
+   void clearArea();
+   void eraseShape(int idShape);
+   void drawPoint(int idShape,Point point);
+   void drawPoints(int idShape,std::deque<Point> points);
 
    NEW_FILE_STRUCTURE showPopupNewFile();
 
@@ -55,12 +65,16 @@ public slots:
    void mousePressEventInDrawArea(QPoint point);
    void mouseReleaseEventInDrawArea(QPoint point);
 
+   void verticalScrollMove(int value);
+   void horizontalScrollMove(int value);
+
    void startOptionNewFile();
    void startOptionOpenFile();
    void startOptionSaveFile();
    void startOptionSaveAsFile();
    void startOptionQuit();
 
+   void startResizeWindow(QSize size);
    void startZoomValueChange(int value);
 };
 

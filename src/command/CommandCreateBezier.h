@@ -2,18 +2,18 @@
 #ifndef INCLUDED_COMMAND_CREATE_BEZIER_H
 #define INCLUDED_COMMAND_CREATE_BEZIER_H
 
+#include "Point.h"
+#include "BezierShape.h"
 #include "CommandCreateDraw.h"
 
 class CommandCreateBezier : public CommandCreateDraw
 {
 private:
-   int id;
    Point initial;
    Point control;
    Point final;
 
-   void draw(UserInterface& ui);
-   void saveShapeOnFile(Data& data);
+   Shape& saveShapeOnFile(Data& data);
    void prepareToNewDraw(Data& data);
 
 public:

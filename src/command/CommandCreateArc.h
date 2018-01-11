@@ -2,18 +2,18 @@
 #ifndef INCLUDED_COMMAND_CREATE_ARC_H
 #define INCLUDED_COMMAND_CREATE_ARC_H
 
+#include "Point.h"
+#include "ArcShape.h"
 #include "CommandCreateDraw.h"
 
 class CommandCreateArc : public CommandCreateDraw
 {
 private:
-   int id;
    Point center;
    Point initial;
    Point final;
 
-   void draw(UserInterface& ui);
-   void saveShapeOnFile(Data& data);
+   Shape& saveShapeOnFile(Data& data);
    void prepareToNewDraw(Data& data);
 
 public:

@@ -1,7 +1,6 @@
 #include "CommandCreateArc.h"
 #include "Data.h"
 #include "File.h"
-#include "ArcShape.h"
 #include "UserInterface.h"
 
 void CommandCreateArc::exec(Data& data,UserInterface& ui)
@@ -16,29 +15,29 @@ void CommandCreateArc::exec(Data& data,UserInterface& ui)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CommandCreateArc::posMousePress(int x,int y,Data&,UserInterface& ui)
+void CommandCreateArc::posMousePress(int x,int y,Data& data,UserInterface& ui)
 {
    if (center.isNull())
-      center= Point(x,y);
+      center= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
    else
-      initial= Point(x,y);
+      initial= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
    ui.activateMouseTracking();
 }
 
-void CommandCreateArc::posMouseMove(int x,int y,Data&,UserInterface& ui)
+void CommandCreateArc::posMouseMove(int x,int y,Data& data,UserInterface& ui)
 {
    if (!initial.isNull()) {
-      final= Point(x,y);
-      draw(ui);
+      final= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
+      draw(ui,data.getCurrentFile().getDataViewController(),ArcShape(id,center,initial,final));
    }
 }
 
 void CommandCreateArc::posMouseRelease(int x,int y,Data& data,UserInterface& ui)
 {
    if (!final.isNull()) {
-      final= Point(x,y);
-      draw(ui);
-      saveShapeOnFile(data);
+      final= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
+      Shape& arc= saveShapeOnFile(data);
+      draw(ui,data.getCurrentFile().getDataViewController(),arc);
    }  
 }
 
@@ -50,15 +49,10 @@ void CommandCreateArc::prepareToNewDraw(Data& data)
    id= data.getCurrentFile().generateIdShape();
 }
 
-void CommandCreateArc::draw(UserInterface& ui)
+Shape& CommandCreateArc::saveShapeOnFile(Data& data)
 {
-   ui.eraseDraw(id);
-   ui.disableMouseTracking();
-   ui.drawArc(id,center.x,center.y,initial.x,initial.y,final.x,final.y);
-}
-
-void CommandCreateArc::saveShapeOnFile(Data& data)
-{
-   data.getCurrentFile().addShapeOnFile(new ArcShape(id,center,initial,final));
+   ArcShape* arc= new ArcShape(id,center,initial,final);
+   data.getCurrentFile().addShapeOnFile(arc);
    prepareToNewDraw(data);
+   return *arc;
 }

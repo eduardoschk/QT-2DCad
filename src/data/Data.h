@@ -5,14 +5,11 @@
 #include <string>
 #include <deque>
 
-#include "DataViewController.h"
-
 class File;
 
 class Data {
 private:
    File* currentFile;
-   DataViewController viewController;
 
 public:
    ~Data();
@@ -26,8 +23,6 @@ public:
 
    void setCurrentFile(File* file);
    File& getCurrentFile() { return *currentFile; }
-
-   DataViewController& getDataViewController() { return viewController; }
 };
 
 #endif // INCLUDED_DATA_H

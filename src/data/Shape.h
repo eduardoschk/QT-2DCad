@@ -3,9 +3,8 @@
 #define INCLUDED_SHAPE_H
 
 #include <deque>
+#include "Point.h"
 #include "ShapeTypes.h"
-
-class Point;
 
 class Shape
 {
@@ -17,7 +16,9 @@ public:
 
    int getId() { return id; }
    virtual int getType() = 0;
-   virtual std::deque<Point> getPoints() = 0;
+
+   virtual std::deque<Point> getSelectedPoints() = 0;
+   virtual std::deque<Point> getPointsToDraw(float scale) = 0;
 };
 
 #endif //INCLUDED_SHAPE_H

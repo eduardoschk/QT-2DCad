@@ -1,5 +1,6 @@
 #include "CommandZoomValueChange.h"
 #include "Data.h"
+#include "File.h"
 #include "UserInterface.h"
 
 void CommandZoomValueChange::exec(Data& data,UserInterface& ui)
@@ -19,6 +20,12 @@ void CommandZoomValueChange::exec(Data& data,UserInterface& ui)
          case ZOOM::NINE:  scale= 6;       break;
          case ZOOM::TEN:   scale= 8;       break;
       }
-      ui.setDrawingScale(scale);
+      data.getCurrentFile().getDataViewController().setScale(scale);
+
+      ui.clearArea();
+      ui.setSizeDrawArea(data.getCurrentFile().getDataViewController().getViewPortSize());
+      for (std::pair<int,std::deque<Point>> points : data.getCurrentFile().repaintAll()) 
+         ui.drawPoints(points.first,points.second);
+      ui.createVerticalScrollBar(150);
    }
 }

@@ -15,7 +15,9 @@ public:
    LineShape(int _id,Point _initial,Point _final);
 
    int getType();
-   std::deque<Point> getPoints();
+
+   std::deque<Point> getSelectedPoints();
+   std::deque<Point> getPointsToDraw(float scale);
 };
 
 #endif // INCLUDED_LINE_SHAPE_H

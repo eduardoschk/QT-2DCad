@@ -2,20 +2,17 @@
 #ifndef INCLUDED_COMMAND_CREATE_LINE_H
 #define INCLUDED_COMMAND_CREATE_LINE_H
 
-#include "CommandCreateDraw.h"
 #include "Point.h"
-
-class LineShape;
+#include "LineShape.h"
+#include "CommandCreateDraw.h"
 
 class CommandCreateLine : public CommandCreateDraw
 {
 private:
-   int id;
    Point initial;
    Point final;
 
-   void draw(UserInterface& ui);
-   void saveShapeOnFile(Data& data);
+   Shape& saveShapeOnFile(Data& data);
    void prepareToNewDraw(Data& data);
 
 public:

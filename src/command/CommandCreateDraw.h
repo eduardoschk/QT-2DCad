@@ -2,15 +2,20 @@
 #ifndef INCLUDED_COMMAND_CREATE_DRAW_H
 #define INCLUDED_COMMAND_CREATE_DRAW_H
 
-#include "Point.h"
+#include <deque>
 #include "Command.h"
+
+class Shape;
+class DataViewController;
 
 class CommandCreateDraw : public Command
 {
 protected:
-   virtual void draw(UserInterface& ui) = 0;
-   virtual void saveShapeOnFile(Data& data) = 0;
+   int id;
+
+   virtual Shape& saveShapeOnFile(Data& data) = 0;
    virtual void prepareToNewDraw(Data& data) = 0;
+   virtual void draw(UserInterface& ui,DataViewController& viewController,Shape& shape);
 
 public:
    virtual ~CommandCreateDraw() {}

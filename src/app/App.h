@@ -40,6 +40,7 @@ public:
    void startCommandSaveAsFile();
 
    void startCommandZoomValueChange(int value);
+   void startCommandResizeWindow(int height,int width);
 };
 
 #endif // INCLUDED_APP_H

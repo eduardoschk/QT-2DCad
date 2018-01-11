@@ -8,11 +8,9 @@ File::~File()
    shapes.clear();
 }
 
-File::File(std::string _fileName,int _width,int _height)
+File::File(std::string _fileName,Size sizeShape) : viewController(sizeShape)
 {
    saved= false;
-   width= _width;
-   height= _height;
    fileName= _fileName;
 }
 
@@ -38,4 +36,20 @@ void File::addShapeOnFile(Shape* newShape)
 {
    saved= false;
    shapes.insert(std::pair<int,Shape*>(newShape->getId(),newShape));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+std::map<int,std::deque<Point>> File::repaintAll()
+{
+   std::map<int,std::deque<Point>> points;
+   for (std::pair<int,Shape*> shape : shapes) {
+      points.insert(std::pair<int,std::deque<Point>>(shape.second->getId(),shape.second->getPointsToDraw(viewController.getZoomScale())));
+   }
+   return points;
+}
+
+std::map<int,std::deque<Point>> File::repaintRect(Rect rect)
+{
+   return std::map<int,std::deque<Point>>();
 }

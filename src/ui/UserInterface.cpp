@@ -1,12 +1,48 @@
+#include <vector>
+
 #include <QPoint>
 #include <QString>
 #include <QMessageBox>
 #include <QFileDialog>
 
+#include "UserInterface.h"
+
 #include "App.h"
 #include "MainWindow.h"
 #include "NewDrawPopup.h"
-#include "UserInterface.h"
+
+UserInterface::UserInterface(App& _app) : app(_app),initialized(false),mainWindow(*this) {}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void UserInterface::init()
+{ 
+   initialized= true; 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void UserInterface::markOffAllOptions() 
+{ 
+   mainWindow.markOffAllOptions(); 
+}
+
+void UserInterface::markArcOptionAsSelected() 
+{ 
+   mainWindow.markArcOptionAsSelected(); 
+}
+
+void UserInterface::markLineOptionAsSelected() 
+{ 
+   mainWindow.markLineOptionAsSelected(); 
+}
+
+void UserInterface::markBezierOptionAsSelected() 
+{ 
+   mainWindow.markBezierOptionAsSelected(); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 std::string UserInterface::requestPathFileToSave(std::string fileName)
 {
@@ -56,66 +92,165 @@ NEW_FILE_STRUCTURE UserInterface::showPopupNewFile()
 
 void UserInterface::startCreateArc()
 { 
-   app.startCommandDrawArc();
+   initialized ? app.startCommandDrawArc() : 0;
 }
 
 void UserInterface::startCreateLine()
 { 
-   app.startCommandDrawLine();
+   initialized ? app.startCommandDrawLine() : 0;
 }
 
 void UserInterface::startCreateBezier()
 { 
-   app.startCommandDrawBezier();
+   initialized ? app.startCommandDrawBezier() : 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void UserInterface::mouseMoveEventInDrawArea(QPoint point) 
 { 
-   app.actionMouseMoveInDrawArea(point.x(),point.y()); 
+   initialized ? app.actionMouseMoveInDrawArea(point.x(),point.y()) : 0;
 }
 
 void UserInterface::mousePressEventInDrawArea(QPoint point) 
 { 
-   app.actionMousePressInDrawArea(point.x(),point.y());
+   initialized ? app.actionMousePressInDrawArea(point.x(),point.y()) : 0;
 }
 
 void UserInterface::mouseReleaseEventInDrawArea(QPoint point) 
 { 
-   app.actionMouseReleaseInDrawArea(point.x(),point.y()); 
+   initialized ? app.actionMouseReleaseInDrawArea(point.x(),point.y()) : 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void UserInterface::startOptionNewFile() 
 { 
-   app.startCommandNewFile(); 
+   initialized ? app.startCommandNewFile() : 0;
 }
 
 void UserInterface::startOptionOpenFile()
 { 
-   app.startCommandOpenFile(); 
+   initialized ? app.startCommandOpenFile() : 0;
 }
 
 void UserInterface::startOptionSaveFile()
 { 
-   app.startCommandSaveFile();
+   initialized ? app.startCommandSaveFile() : 0;
 }
 
 void UserInterface::startOptionSaveAsFile()
 { 
-   app.startCommandSaveAsFile();
+   initialized ? app.startCommandSaveAsFile() : 0;
 }
 
 void UserInterface::startOptionQuit()
 { 
-   app.startCommandQuit();
+   initialized ? app.startCommandQuit() : 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void UserInterface::startResizeWindow(QSize size)
+{
+   initialized ? app.startCommandResizeWindow(size.width(),size.height()) : 0;
+}
+
 void UserInterface::startZoomValueChange(int value)
 { 
-   app.startCommandZoomValueChange(value);
+   initialized ? app.startCommandZoomValueChange(value) : 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Size UserInterface::getSizeWindow()
+{
+   QSize size= mainWindow.getSizeWindow();
+   return Size(size.width(),size.height());
+}
+
+void UserInterface::setSizeDrawArea(Size size) 
+{ 
+   mainWindow.setSizeDrawArea(QSize(size.width,size.height)); 
+}
+
+void UserInterface::setZoomScaleWidget(int value)
+{
+   mainWindow.setZoomScaleWidget(value);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void UserInterface::activateMouseTracking() 
+{ 
+   mainWindow.activateMouseTracking(); 
+}
+
+void UserInterface::disableMouseTracking() 
+{ 
+   mainWindow.disableMouseTracking(); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void UserInterface::setTitleWindow(const char* name) 
+{ 
+   mainWindow.setWindowTitle(name); 
+}
+
+void UserInterface::createDrawArea(Size size) 
+{ 
+   mainWindow.createNewDrawArea(QSize(size.width,size.height)); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void UserInterface::clearArea() 
+{ 
+   mainWindow.clearArea(); 
+}
+
+void UserInterface::eraseShape(int idShape) 
+{ 
+   mainWindow.eraseShape(idShape); 
+}
+
+void UserInterface::drawPoint(int idShape,Point point) 
+{ 
+   mainWindow.drawPoint(idShape,QPoint(point.x,point.y)); 
+}
+
+void UserInterface::drawPoints(int idShape,std::deque<Point> points)
+{
+   std::vector<QPoint> qPoints;
+   for (Point point : points) {
+      qPoints.push_back(QPoint(point.x,point.y));
+   }
+   mainWindow.drawPoints(idShape,qPoints);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void UserInterface::createVerticalScrollBar(int limit)
+{
+   mainWindow.createVerticalScrollBar(limit);
+}
+
+void UserInterface::createHorizontalScrollBar(int limit)
+{
+   mainWindow.createHorizontalScrollBar(limit);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+#include <iostream>
+
+void UserInterface::verticalScrollMove(int value)
+{
+   std::cout << value << std::endl;
+}
+
+void UserInterface::horizontalScrollMove(int value)
+{
+   std::cout << value << std::endl;
 }

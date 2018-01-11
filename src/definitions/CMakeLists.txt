@@ -1,3 +1,3 @@
-file (GLOB DEFINITIONS "*.h" "*.cpp")
-
-add_library(definitions ${DEFINITIONS})
+set(DEFINITION_FILES "${CMAKE_CURRENT_SOURCE_DIR}"
+					 "${CMAKE_CURRENT_SOURCE_DIR}/ShapeTypes.h"
+					 "${CMAKE_CURRENT_SOURCE_DIR}/ZoomControl.h" CACHE INTERNAL "drawing files")	 

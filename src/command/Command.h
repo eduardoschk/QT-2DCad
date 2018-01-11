@@ -8,9 +8,9 @@ class UserInterface;
 class Command {
 public:
    virtual ~Command() {}
-    Command() {}
+   Command() {}
 
-    virtual void exec(Data& data, UserInterface& ui) = 0;
+   virtual void exec(Data& data, UserInterface& ui) = 0;
 };
 
 #endif // INCLUDED_COMMAND_H

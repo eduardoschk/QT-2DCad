@@ -9,6 +9,7 @@
 #include "CommandCreateArc.h"
 #include "CommandCreateLine.h"
 #include "CommandCreateBezier.h"
+#include "CommandResizeWindow.h"
 #include "CommandZoomValueChange.h"
 
 App::~App()
@@ -17,7 +18,7 @@ App::~App()
    setCurrentCmd(nullptr);
 }
 
-App::App(int argc,char **argv) : QApplication(argc,argv),userInterface(*this)
+App::App(int argc,char **argv) : QApplication(argc,argv),data(),userInterface(*this)
 {
    currentCommand= nullptr;
 }
@@ -26,6 +27,7 @@ App::App(int argc,char **argv) : QApplication(argc,argv),userInterface(*this)
 
 void App::run()
 {
+   userInterface.init();
    exec();
 }
 
@@ -109,7 +111,14 @@ void App::startCommandQuit()
    quit();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 void App::startCommandZoomValueChange(int value)
 {
    CommandZoomValueChange(value).exec(data,userInterface);
+}
+
+void App::startCommandResizeWindow(int width,int height)
+{
+   CommandResizeWindow(width,height).exec(data,userInterface);
 }

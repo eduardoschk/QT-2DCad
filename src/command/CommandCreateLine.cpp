@@ -1,7 +1,6 @@
 #include "CommandCreateLine.h"
 #include "Data.h"
 #include "File.h"
-#include "LineShape.h"
 #include "UserInterface.h"
 
 void CommandCreateLine::exec(Data& data,UserInterface& ui)
@@ -16,24 +15,24 @@ void CommandCreateLine::exec(Data& data,UserInterface& ui)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CommandCreateLine::posMousePress(int x,int y,Data&,UserInterface& ui)
+void CommandCreateLine::posMousePress(int x,int y,Data& data,UserInterface& ui)
 {
-   initial= Point(x,y);
+   initial= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
    ui.activateMouseTracking();
 }
 
-void CommandCreateLine::posMouseMove(int x,int y,Data&,UserInterface& ui)
+void CommandCreateLine::posMouseMove(int x,int y,Data& data,UserInterface& ui)
 {
-   final= Point(x,y);
-   draw(ui);
+   final= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
+   draw(ui,data.getCurrentFile().getDataViewController(),LineShape(id,initial,final));
 }
 
 void CommandCreateLine::posMouseRelease(int x,int y,Data& data,UserInterface& ui)
 {
-   final= Point(x,y);
+   final= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
 
-   draw(ui);
-   saveShapeOnFile(data);
+   Shape& line= saveShapeOnFile(data);
+   draw(ui,data.getCurrentFile().getDataViewController(),line);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,15 +42,10 @@ void CommandCreateLine::prepareToNewDraw(Data& data)
    id= data.getCurrentFile().generateIdShape();
 }
 
-void CommandCreateLine::draw(UserInterface& ui)
-{ 
-   ui.eraseDraw(id);
-   ui.disableMouseTracking();
-   ui.drawLine(id,initial.x,initial.y,final.x,final.y);
-}
-
-void CommandCreateLine::saveShapeOnFile(Data& data)
+Shape& CommandCreateLine::saveShapeOnFile(Data& data)
 {
-   data.getCurrentFile().addShapeOnFile(new LineShape(id,initial,final));
+   LineShape* line= new LineShape(id,initial,final);
+   data.getCurrentFile().addShapeOnFile(line);
    prepareToNewDraw(data);
+   return *line;
 }

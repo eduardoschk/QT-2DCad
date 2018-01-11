@@ -3,7 +3,9 @@
 #include <QSlider>
 #include <QMenuBar>
 #include <QToolBar>
+#include <QScrollBar>
 #include <QStatusBar>
+#include <QGridLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QResizeEvent>
@@ -17,6 +19,8 @@
 int HEIGHT_ZOOM_WIDGET= 100;
 int WIDTH_ZOOM_BUTTON= 30;
 
+#include <iostream>
+
 MainWindow::~MainWindow()
 {
    if (drawArea)
@@ -27,10 +31,11 @@ MainWindow::~MainWindow()
    delete qSliderZoom;
 }
 
-MainWindow::MainWindow(UserInterface& _ui,QWidget* parent) : QMainWindow(parent),drawArea(nullptr),ui(_ui)
+MainWindow::MainWindow(UserInterface& _ui,QWidget* parent) : QMainWindow(parent),drawArea(nullptr),verticalScroll(nullptr),horizontalScroll(nullptr),ui(_ui),viewPort(this)
 {
-   setBackgroundRole(QPalette::Dark);
+   setCentralWidget(&viewPort);
    setAutoFillBackground(true);
+   setBackgroundRole(QPalette::Dark);
 
    configureMenuBar(*menuBar());
    configureToolBarShapes();
@@ -68,29 +73,40 @@ void MainWindow::markArcOptionAsSelected()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::createNewDrawArea(int _width,int _height)
+void MainWindow::createNewDrawArea(QSize size)
 {
-   drawArea= new DrawArea(_width,_height,width(),height() - HEIGHT_ZOOM_WIDGET);
+   viewPort.setFixedSize(size);
+   drawArea= new DrawArea(size,&viewPort);
    configureDrawActions();
-   setCentralWidget(drawArea);
-   qSliderZoom->setValue(ZOOM::DEFAULT);
+
+   delete viewPort.layout();
+   QGridLayout* layout= new QGridLayout(this);
+   layout->setMargin(0);
+   layout->addWidget(drawArea,0,0);
+
+   viewPort.setLayout(layout);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::drawLine(int id,QPoint initial,QPoint final)
+void MainWindow::clearArea()
 {
-   drawArea->drawLine(id,initial,final); 
+   drawArea->clearArea();
 }
 
-void MainWindow::drawArc(int id,QPoint center,QPoint initial,QPoint final)
-{ 
-   drawArea->drawArc(id,center,initial,final); 
+void MainWindow::eraseShape(int idShape)
+{
+   drawArea->eraseShape(idShape);
 }
 
-void MainWindow::drawBezier(int id,QPoint initial,QPoint control,QPoint final)
-{ 
-   drawArea->drawBezier(id,initial,control,final); 
+void MainWindow::drawPoint(int idShape,QPoint point)
+{
+   drawArea->drawPoint(idShape,point);
+}
+
+void MainWindow::drawPoints(int idShape,std::vector<QPoint> points)
+{
+   drawArea->drawPoints(idShape,points);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -103,13 +119,6 @@ void MainWindow::activateMouseTracking()
 void MainWindow::disableMouseTracking()
 {
    drawArea->setMouseTracking(false);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MainWindow::eraseDraw(int id)
-{
-   drawArea->eraseItem(id); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -158,7 +167,6 @@ void MainWindow::configureZoomControlOnStatusBar()
    qSliderZoom->setMinimum(ZOOM::FIRST);
    qSliderZoom->setMaximum(ZOOM::LAST);
    qSliderZoom->setValue(ZOOM::DEFAULT);
-   qSliderZoom->setTickInterval(1);
    qSliderZoom->setFocusPolicy(Qt::StrongFocus);
    qSliderZoom->setTickPosition(QSlider::TicksBelow);
 
@@ -205,11 +213,45 @@ void MainWindow::plusZoomClicked()
 
 void MainWindow::resizeEvent(QResizeEvent* event)
 {
-   if (drawArea)
-      drawArea->setLimitArea(event->size());
+   ui.startResizeWindow(event->size());
 }
 
-void MainWindow::setDrawingScale(float scale) 
+QSize MainWindow::getSizeWindow()
 {
-   drawArea->setScale(scale);
+   return size();
+}
+
+void MainWindow::setSizeDrawArea(QSize size)
+{
+   viewPort.setFixedSize(size);
+   if (drawArea) 
+      drawArea->setArea(size);
+}
+
+void MainWindow::setZoomScaleWidget(int value)
+{
+   qSliderZoom->setValue(value);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MainWindow::createVerticalScrollBar(int limit)
+{
+   verticalScroll= new QScrollBar(Qt::Vertical,&viewPort);
+   verticalScroll->setMaximum(limit);
+   verticalScroll->setValue(100);
+   connect(verticalScroll,SIGNAL(valueChanged(int)),&ui,SLOT(verticalScrollMove(int)));
+
+   delete viewPort.layout();
+   QGridLayout* layout= new QGridLayout(this);
+   layout->setMargin(0);
+   layout->addWidget(drawArea,0,0);
+   layout->addWidget(verticalScroll,0,1);
+
+   viewPort.setLayout(layout);
+}
+
+void MainWindow::createHorizontalScrollBar(int limit)
+{
+
 }

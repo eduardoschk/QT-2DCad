@@ -36,12 +36,11 @@ void IOFile::saveAs(std::string completedPath,File& file)
 void IOFile::save(std::ofstream& stream,File& file)
 {
    std::deque<Shape*> shapes= file.getShapes();
-   int width= file.getWidth();
-   int height= file.getHeight();
+   Size size= file.getDataViewController().getShapeSize();
    int countShapes= (int)shapes.size();
 
-   stream.write((char*)&width,sizeof(int));
-   stream.write((char*)&height,sizeof(int));
+   stream.write((char*)&size.width,sizeof(int));
+   stream.write((char*)&size.height,sizeof(int));
    stream.write((char*)&countShapes,sizeof(int));
 
    for (int i= 0; i < countShapes ; ++i)
@@ -55,17 +54,15 @@ File* IOFile::open(std::string pathAndFile)
    stream.open(pathAndFile);
    stream.seekg(0);
 
-   File* file= new File();
-   int _width,_height,_countShapes;
+   int width,height,countShapes;
 
-   stream.read((char*)&_width,sizeof(int));
-   stream.read((char*)&_height,sizeof(int));
-   stream.read((char*)&_countShapes,sizeof(int));
+   stream.read((char*)&width,sizeof(int));
+   stream.read((char*)&height,sizeof(int));
+   stream.read((char*)&countShapes,sizeof(int));
 
-   file->setWidth(_width);
-   file->setHeight(_height);
+   File* file= new File("",Size(width,height));
 
-   for (int i= 0 ; i < _countShapes ; ++i)
+   for (int i= 0 ; i < countShapes ; ++i)
       file->addShapeOnFile(readShape(file->generateIdShape(),stream));
 
    return file;
@@ -77,7 +74,7 @@ void IOFile::writeShape(std::ofstream& stream,Shape& shape)
 {
    int type= shape.getType();
    
-   std::deque<Point> pointsOfShape= shape.getPoints();
+   std::deque<Point> pointsOfShape= shape.getSelectedPoints();
 
    stream.write((char*)&type,sizeof(int));
 

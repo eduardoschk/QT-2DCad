@@ -1,6 +1,10 @@
 #include <crtdbg.h>
 #include "App.h"
 
+#include "Point.h"
+
+#include <iostream>
+
 void main(int argc,char **argv)
 {   
    _CrtSetReportMode(_CRT_WARN,_CRTDBG_MODE_FILE);

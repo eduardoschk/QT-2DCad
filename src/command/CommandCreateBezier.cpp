@@ -1,7 +1,7 @@
 #include "CommandCreateBezier.h"
 #include "Data.h"
 #include "File.h"
-#include "BezierShape.h"
+#include "LineShape.h"
 #include "UserInterface.h"
 
 void CommandCreateBezier::exec(Data& data,UserInterface& ui)
@@ -16,38 +16,43 @@ void CommandCreateBezier::exec(Data& data,UserInterface& ui)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CommandCreateBezier::posMousePress(int x,int y,Data&,UserInterface& ui)
+void CommandCreateBezier::posMousePress(int x,int y,Data& data,UserInterface& ui)
 {
    if (initial.isNull())
-      initial= Point(x,y);
+      initial= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
    else
-      control= Point(x,y);
+      control= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
    ui.activateMouseTracking();
 }
 
-void CommandCreateBezier::posMouseMove(int x,int y,Data&,UserInterface& ui)
+void CommandCreateBezier::posMouseMove(int x,int y,Data& data,UserInterface& ui)
 {
    if (!final.isNull())
-      if (!control.isNull()) 
-         control= Point(x,y);
-      else 
-         final= Point(x,y);
-   else
-      final= Point(x,y);
-   draw(ui);
+      if (!control.isNull()) {
+         control= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
+         draw(ui,data.getCurrentFile().getDataViewController(),BezierShape(id,initial,control,final));
+      }
+      else {
+         final= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
+         draw(ui,data.getCurrentFile().getDataViewController(),LineShape(id,initial,final));
+      }
+   else {
+      final= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
+      draw(ui,data.getCurrentFile().getDataViewController(),LineShape(id,initial,final));
+   }
 }
 
 void CommandCreateBezier::posMouseRelease(int x,int y,Data& data,UserInterface& ui)
 {
    if (!control.isNull()) {
-      control= Point(x,y);
+      control= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
 
-      draw(ui);
-      saveShapeOnFile(data);
+      Shape& bezier= saveShapeOnFile(data);
+      draw(ui,data.getCurrentFile().getDataViewController(),bezier);
    }
    else {
-      final= Point(x,y);
-      draw(ui);
+      final= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
+      draw(ui,data.getCurrentFile().getDataViewController(),LineShape(id,initial,final));
    }
 }
 
@@ -59,18 +64,10 @@ void CommandCreateBezier::prepareToNewDraw(Data& data)
    id= data.getCurrentFile().generateIdShape();
 }
 
-void CommandCreateBezier::draw(UserInterface& ui)
+Shape& CommandCreateBezier::saveShapeOnFile(Data& data)
 {
-   ui.eraseDraw(id);
-   ui.disableMouseTracking();
-   if (!control.isNull())
-      ui.drawBezier(id,initial.x,initial.y,control.x,control.y,final.x,final.y);
-   else
-      ui.drawLine(id,initial.x,initial.y,final.x,final.y);
-}
-
-void CommandCreateBezier::saveShapeOnFile(Data& data)
-{
-   data.getCurrentFile().addShapeOnFile(new BezierShape(id,initial,control,final));
+   BezierShape* bezier= new BezierShape(id,initial,control,final);
+   data.getCurrentFile().addShapeOnFile(bezier);
    prepareToNewDraw(data);
+   return *bezier;
 }

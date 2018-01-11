@@ -3,9 +3,10 @@
 #define INCLUDED_IO_FILE_H
 
 #include <string>
+#include "Point.h"
+
 class File;
 class Shape;
-class Point;
 
 class IOFile
 {
