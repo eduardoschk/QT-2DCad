@@ -63,25 +63,25 @@ void App::startCommandDrawBezier()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void App::actionMousePressInDrawArea(int x,int y)
+void App::actionMousePressInDrawArea(Point point)
 {
    CommandCreateDraw* isDrawCommand= dynamic_cast<CommandCreateDraw*>(currentCommand);
    if (isDrawCommand)
-      isDrawCommand->posMousePress(x,y,data,userInterface);
+      isDrawCommand->posMousePress(point,data,userInterface);
 }
 
-void App::actionMouseMoveInDrawArea(int x,int y)
+void App::actionMouseMoveInDrawArea(Point point)
 {
    CommandCreateDraw* isDrawCommand= dynamic_cast<CommandCreateDraw*>(currentCommand);
    if (isDrawCommand)
-      isDrawCommand->posMouseMove(x,y,data,userInterface);
+      isDrawCommand->posMouseMove(point,data,userInterface);
 }
 
-void App::actionMouseReleaseInDrawArea(int x,int y)
+void App::actionMouseReleaseInDrawArea(Point point)
 {
    CommandCreateDraw* isDrawCommand= dynamic_cast<CommandCreateDraw*>(currentCommand);
    if (isDrawCommand)
-      isDrawCommand->posMouseRelease(x,y,data,userInterface);
+      isDrawCommand->posMouseRelease(point,data,userInterface);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

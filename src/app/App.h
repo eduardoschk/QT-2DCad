@@ -26,12 +26,12 @@ public:
    void run();
 
    void startCommandDrawArc();
-   void startCommandDrawLine();
+   void startCommandDrawLine();  
    void startCommandDrawBezier();
 
-   void actionMousePressInDrawArea(int x,int y);
-   void actionMouseMoveInDrawArea(int x,int y);
-   void actionMouseReleaseInDrawArea(int x,int y);
+   void actionMousePressInDrawArea(Point point);
+   void actionMouseMoveInDrawArea(Point point);
+   void actionMouseReleaseInDrawArea(Point point);
 
    void startCommandQuit();
    void startCommandNewFile();

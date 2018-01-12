@@ -16,7 +16,7 @@ void CommandCreateNewFile::exec(Data& data,UserInterface& ui)
    if (response) {
       NEW_FILE_STRUCTURE nfs= ui.showPopupNewFile();
       if (nfs.isValid()) {
-         File* file= new File(nfs.name,Size(nfs.width,nfs.height));
+         File* file= new File(nfs.name,nfs.size);
          file->getDataViewController().setWindowSize(ui.getSizeWindow());
          data.setCurrentFile(file);
 

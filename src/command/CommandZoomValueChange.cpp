@@ -26,6 +26,7 @@ void CommandZoomValueChange::exec(Data& data,UserInterface& ui)
       ui.setSizeDrawArea(data.getCurrentFile().getDataViewController().getViewPortSize());
       for (std::pair<int,std::deque<Point>> points : data.getCurrentFile().repaintAll()) 
          ui.drawPoints(points.first,points.second);
-      ui.createVerticalScrollBar(150);
+      ui.createVerticalScrollBar(data.getCurrentFile().getDataViewController().calcVerticalScrollPageStep(),data.getCurrentFile().getDataViewController().calcVerticalScrollLimit());
+      ui.createHorizontalScrollBar(data.getCurrentFile().getDataViewController().calcHorizontalScrollPageStep(),data.getCurrentFile().getDataViewController().calcHorizontalScrollLimit());
    }
 }

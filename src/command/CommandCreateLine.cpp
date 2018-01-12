@@ -15,21 +15,21 @@ void CommandCreateLine::exec(Data& data,UserInterface& ui)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CommandCreateLine::posMousePress(int x,int y,Data& data,UserInterface& ui)
+void CommandCreateLine::posMousePress(Point point,Data& data,UserInterface& ui)
 {
-   initial= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
+   initial= data.getCurrentFile().getDataViewController().fixPointInView(point);
    ui.activateMouseTracking();
 }
 
-void CommandCreateLine::posMouseMove(int x,int y,Data& data,UserInterface& ui)
+void CommandCreateLine::posMouseMove(Point point,Data& data,UserInterface& ui)
 {
-   final= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
+   final= data.getCurrentFile().getDataViewController().fixPointInView(point);
    draw(ui,data.getCurrentFile().getDataViewController(),LineShape(id,initial,final));
 }
 
-void CommandCreateLine::posMouseRelease(int x,int y,Data& data,UserInterface& ui)
+void CommandCreateLine::posMouseRelease(Point point,Data& data,UserInterface& ui)
 {
-   final= data.getCurrentFile().getDataViewController().fixPointInView(Point(x,y));
+   final= data.getCurrentFile().getDataViewController().fixPointInView(point);
 
    Shape& line= saveShapeOnFile(data);
    draw(ui,data.getCurrentFile().getDataViewController(),line);

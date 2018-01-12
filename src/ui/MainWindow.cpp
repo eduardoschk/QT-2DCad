@@ -33,10 +33,10 @@ MainWindow::~MainWindow()
 
 MainWindow::MainWindow(UserInterface& _ui,QWidget* parent) : QMainWindow(parent),drawArea(nullptr),verticalScroll(nullptr),horizontalScroll(nullptr),ui(_ui),viewPort(this)
 {
-   setCentralWidget(&viewPort);
    setAutoFillBackground(true);
    setBackgroundRole(QPalette::Dark);
 
+   configureDrawArea();
    configureMenuBar(*menuBar());
    configureToolBarShapes();
    configureZoomControlOnStatusBar();
@@ -122,6 +122,17 @@ void MainWindow::disableMouseTracking()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void MainWindow::configureDrawArea()
+{
+   setCentralWidget(&viewPort);
+   QGridLayout* gridLayout= new QGridLayout(this);
+
+   gridLayout->setMargin(0);
+   gridLayout->addWidget(drawArea,0,0);
+   
+   viewPort.setLayout(gridLayout);
+}
 
 void MainWindow::configureMenuBar(QMenuBar& menu)
 {
@@ -235,23 +246,38 @@ void MainWindow::setZoomScaleWidget(int value)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::createVerticalScrollBar(int limit)
+void MainWindow::createVerticalScrollBar(int pageStep,int limit)
 {
-   verticalScroll= new QScrollBar(Qt::Vertical,&viewPort);
-   verticalScroll->setMaximum(limit);
-   verticalScroll->setValue(100);
-   connect(verticalScroll,SIGNAL(valueChanged(int)),&ui,SLOT(verticalScrollMove(int)));
+   std::cout << "Step" << pageStep << " - Limit" << limit << std::endl;
+   if (verticalScroll) {
+      delete verticalScroll;
+      verticalScroll= nullptr;
+   }
+   if (limit > 0) {
+      verticalScroll= new QScrollBar(Qt::Vertical,&viewPort);
+      verticalScroll->setMaximum(limit);
+      verticalScroll->setPageStep(pageStep);
+      connect(verticalScroll,SIGNAL(valueChanged(int)),&ui,SLOT(verticalScrollMove(int)));
 
-   delete viewPort.layout();
-   QGridLayout* layout= new QGridLayout(this);
-   layout->setMargin(0);
-   layout->addWidget(drawArea,0,0);
-   layout->addWidget(verticalScroll,0,1);
-
-   viewPort.setLayout(layout);
+      QGridLayout* layout= dynamic_cast<QGridLayout*>(viewPort.layout());
+      layout->addWidget(verticalScroll,0,1);
+   }
 }
 
-void MainWindow::createHorizontalScrollBar(int limit)
+void MainWindow::createHorizontalScrollBar(int pageStep,int limit)
 {
+   std::cout << "Step" << pageStep << " - Limit" << limit << std::endl;
+   if (horizontalScroll) {
+      delete horizontalScroll;
+      horizontalScroll= nullptr;
+   }
+   if (limit > 0) {
+      horizontalScroll= new QScrollBar(Qt::Horizontal,&viewPort);
+      horizontalScroll->setMaximum(limit);
+      horizontalScroll->setPageStep(pageStep);
+      connect(horizontalScroll,SIGNAL(valueChanged(int)),&ui,SLOT(horizontalScrollMove(int)));
 
+      QGridLayout* layout= dynamic_cast<QGridLayout*>(viewPort.layout());
+      layout->addWidget(horizontalScroll,1,0);
+   }
 }

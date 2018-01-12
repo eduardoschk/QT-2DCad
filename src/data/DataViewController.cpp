@@ -73,3 +73,49 @@ Size DataViewController::getViewPortSize()
 {
    return viewPortSize;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+int DataViewController::calcVerticalScrollLimit()
+{
+   if (viewSize.height > windowSize.height) {
+      return viewSize.height - viewPortSize.height;
+   }
+   return 0;
+}
+
+int DataViewController::calcVerticalScrollPageStep()
+{
+   if (viewSize.height > windowSize.height) {
+      return viewPortSize.height;
+   }
+   return 0;
+}
+
+int DataViewController::calcHorizontalScrollLimit()
+{
+   if (viewSize.width > windowSize.width) {
+      return viewSize.width - viewPortSize.width;
+   }
+   return 0;
+}
+
+int DataViewController::calcHorizontalScrollPageStep()
+{
+   if (viewSize.width > windowSize.width) {
+      return viewPortSize.width;
+   }
+   return 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DataViewController::setXPresentation(int value)
+{
+   rectPresentation.initialX= value;
+}
+
+void DataViewController::setYPresentation(int value)
+{
+   rectPresentation.initialY= value;
+}

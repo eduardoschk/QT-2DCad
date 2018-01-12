@@ -41,8 +41,8 @@ public:
    void createDrawArea(Size size);
    void setTitleWindow(const char* name);
 
-   void createVerticalScrollBar(int limit);
-   void createHorizontalScrollBar(int limit);
+   void createVerticalScrollBar(int pageStep,int limit);
+   void createHorizontalScrollBar(int pageStep,int limit);
 
    void clearArea();
    void eraseShape(int idShape);

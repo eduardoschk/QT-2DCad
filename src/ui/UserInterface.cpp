@@ -109,17 +109,17 @@ void UserInterface::startCreateBezier()
 
 void UserInterface::mouseMoveEventInDrawArea(QPoint point) 
 { 
-   initialized ? app.actionMouseMoveInDrawArea(point.x(),point.y()) : 0;
+   initialized ? app.actionMouseMoveInDrawArea(Point(point.x(),point.y())) : 0;
 }
 
 void UserInterface::mousePressEventInDrawArea(QPoint point) 
 { 
-   initialized ? app.actionMousePressInDrawArea(point.x(),point.y()) : 0;
+   initialized ? app.actionMousePressInDrawArea(Point(point.x(),point.y())) : 0;
 }
 
 void UserInterface::mouseReleaseEventInDrawArea(QPoint point) 
 { 
-   initialized ? app.actionMouseReleaseInDrawArea(point.x(),point.y()) : 0;
+   initialized ? app.actionMouseReleaseInDrawArea(Point(point.x(),point.y())) : 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -231,14 +231,14 @@ void UserInterface::drawPoints(int idShape,std::deque<Point> points)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UserInterface::createVerticalScrollBar(int limit)
+void UserInterface::createVerticalScrollBar(int pageStep,int limit)
 {
-   mainWindow.createVerticalScrollBar(limit);
+   mainWindow.createVerticalScrollBar(pageStep,limit);
 }
 
-void UserInterface::createHorizontalScrollBar(int limit)
+void UserInterface::createHorizontalScrollBar(int pageStep,int limit)
 {
-   mainWindow.createHorizontalScrollBar(limit);
+   mainWindow.createHorizontalScrollBar(pageStep,limit);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

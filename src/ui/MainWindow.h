@@ -26,6 +26,7 @@ private:
    QAction* qActionBezier;
    QSlider* qSliderZoom;
 
+   void configureDrawArea();
    void configureDrawActions();
    void configureToolBarShapes();
    void configureZoomControlOnStatusBar();
@@ -54,8 +55,8 @@ public:
    QSize getSizeWindow();
    void setSizeDrawArea(QSize size);
    void setZoomScaleWidget(int value);
-   void createVerticalScrollBar(int limit);
-   void createHorizontalScrollBar(int limit);
+   void createVerticalScrollBar(int pageStep,int limit);
+   void createHorizontalScrollBar(int pagetStep,int limit);
 
 public slots:
    void minusZoomClicked();

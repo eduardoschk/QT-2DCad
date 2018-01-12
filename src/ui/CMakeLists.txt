@@ -22,6 +22,8 @@ include_directories(${DATA_INCLUDES_FILES})
 
 #############QT###############
 
+set(CMAKE_AUTOMOC ON)
+
 find_package(Qt5Widgets CONFIG
         PATHS C:/Qt/5.9.2/msvc2017_64/lib/cmake/Qt5Widgets
         NO_DEFAULT_PATH)

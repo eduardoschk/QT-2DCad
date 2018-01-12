@@ -4,6 +4,7 @@
 
 #include <deque>
 #include "Command.h"
+#include "Point.h"
 
 class Shape;
 class DataViewController;
@@ -21,9 +22,9 @@ public:
    virtual ~CommandCreateDraw() {}
    CommandCreateDraw() {}
 
-   virtual void posMousePress(int x,int y,Data& data,UserInterface& ui) = 0;
-   virtual void posMouseMove(int x,int y,Data& data,UserInterface& ui) = 0;
-   virtual void posMouseRelease(int x,int y,Data& data,UserInterface& ui) = 0;
+   virtual void posMousePress(Point point,Data& data,UserInterface& ui) = 0;
+   virtual void posMouseMove(Point point,Data& data,UserInterface& ui) = 0;
+   virtual void posMouseRelease(Point point,Data& data,UserInterface& ui) = 0;
 
 };
 

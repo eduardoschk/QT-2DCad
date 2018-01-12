@@ -4,7 +4,6 @@
 
 #include "Size.h"
 #include "Point.h"
-#include "Rect.h"
 
 class DataViewController
 {
@@ -29,13 +28,19 @@ public:
    void setScale(float scale);
    void setWindowSize(Size newSize);
 
+   void setXPresentation(int value);
+   void setYPresentation(int value);
    Point fixPointInView(Point point);
 
    Size getViewSize();
    Size getShapeSize();
    Size getWindowSize();
    Size getViewPortSize();
-
+   
+   int calcVerticalScrollLimit();
+   int calcHorizontalScrollLimit();
+   int calcVerticalScrollPageStep();
+   int calcHorizontalScrollPageStep();
 };
 
 #endif // INCLUDED_DATA_VIEW_CONTROLLER_H

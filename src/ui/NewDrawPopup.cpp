@@ -67,8 +67,7 @@ void NewDrawPopup::configurePopupLayout()
 
 void NewDrawPopup::accept()
 {
-   nfs->width= widthText->value();
-   nfs->height= heightText->value();
+   nfs->size = Size(widthText->value(),heightText->value());
    nfs->name= nameText->text().toStdString();
 
    QDialog::accept();
