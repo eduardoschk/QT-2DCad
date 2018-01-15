@@ -53,6 +53,18 @@ std::deque<Point> LineShape::getPointsToDraw(float scale)
    return points;
 }
 
+std::deque<Point> LineShape::getPointsToDrawInRect(float scale,Rect rect)
+{
+   std::deque<Point> pointInRect;
+   std::deque<Point> allPoints= getPointsToDraw(scale);
+
+   for (Point point : allPoints) {
+      if (point.on(rect))
+         pointInRect.push_back(point);
+   }
+   return pointInRect;
+}
+
 std::deque<Point> LineShape::getSelectedPoints()
 {
    std::deque<Point> points;

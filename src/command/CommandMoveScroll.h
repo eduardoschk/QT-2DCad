@@ -4,12 +4,18 @@
 
 #include "Command.h"
 
-class CommandMoveScroll :
-   public Command
+enum SCROL_ORIENTATION { HORIZONTAL, VERTICAL };
+
+class CommandMoveScroll : public Command
 {
+private:
+   int value;
+   SCROL_ORIENTATION orientation;
 public:
-   CommandMoveScroll();
-   ~CommandMoveScroll();
+   CommandMoveScroll(int value, SCROL_ORIENTATION orientation);
+   ~CommandMoveScroll() {}
+
+   void exec(Data& data,UserInterface& ui);
 };
 
 #endif // INCLUDED_COMMAND_MOVE_SCROLL_H

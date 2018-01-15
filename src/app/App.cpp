@@ -2,14 +2,15 @@
 #include "Data.h"
 #include "UserInterface.h"
 #include "Command.h"
-#include "CommandCreateNewFile.h"
 #include "CommandOpenFile.h"
 #include "CommandSaveFile.h"
 #include "CommandSaveAsFile.h"
 #include "CommandCreateArc.h"
 #include "CommandCreateLine.h"
+#include "CommandMoveScroll.h"
 #include "CommandCreateBezier.h"
 #include "CommandResizeWindow.h"
+#include "CommandCreateNewFile.h"
 #include "CommandZoomValueChange.h"
 
 App::~App()
@@ -121,4 +122,16 @@ void App::startCommandZoomValueChange(int value)
 void App::startCommandResizeWindow(int width,int height)
 {
    CommandResizeWindow(width,height).exec(data,userInterface);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void App::startMoveXScroll(int value)
+{
+   CommandMoveScroll(value,SCROL_ORIENTATION::HORIZONTAL).exec(data,userInterface);
+}
+
+void App::startMoveYScroll(int value)
+{
+   CommandMoveScroll(value,SCROL_ORIENTATION::VERTICAL).exec(data,userInterface);
 }

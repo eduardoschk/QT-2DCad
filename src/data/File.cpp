@@ -43,13 +43,18 @@ void File::addShapeOnFile(Shape* newShape)
 std::map<int,std::deque<Point>> File::repaintAll()
 {
    std::map<int,std::deque<Point>> points;
-   for (std::pair<int,Shape*> shape : shapes) {
+   for (std::pair<int,Shape*> shape : shapes) 
       points.insert(std::pair<int,std::deque<Point>>(shape.second->getId(),shape.second->getPointsToDraw(viewController.getZoomScale())));
-   }
    return points;
 }
 
 std::map<int,std::deque<Point>> File::repaintRect(Rect rect)
 {
-   return std::map<int,std::deque<Point>>();
+   std::map<int,std::deque<Point>> points;
+   for (std::pair<int,Shape*> shape : shapes) {
+      std::deque<Point> pointsOfShape= shape.second->getPointsToDrawInRect(viewController.getZoomScale(),rect);
+      if (pointsOfShape.size() > 0)
+         points.insert(std::pair<int,std::deque<Point>>(shape.second->getId(),pointsOfShape));
+   }
+   return points;
 }

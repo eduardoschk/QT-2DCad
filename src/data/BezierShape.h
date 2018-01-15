@@ -24,6 +24,7 @@ public:
 
    std::deque<Point> getSelectedPoints();
    std::deque<Point> getPointsToDraw(float scale);
+   std::deque<Point> getPointsToDrawInRect(float scale,Rect rect);
 };
 
 #endif // INCLUDED_BEZIER_SHAPE_H

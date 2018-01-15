@@ -243,14 +243,12 @@ void UserInterface::createHorizontalScrollBar(int pageStep,int limit)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <iostream>
-
 void UserInterface::verticalScrollMove(int value)
 {
-   std::cout << value << std::endl;
+   initialized ? app.startMoveYScroll(value) : 0;
 }
 
 void UserInterface::horizontalScrollMove(int value)
 {
-   std::cout << value << std::endl;
+   initialized ? app.startMoveXScroll(value) : 0;
 }

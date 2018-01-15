@@ -41,6 +41,18 @@ std::deque<Point> BezierShape::getPointsToDraw(float scale)
    return pointsToDraw;
 }
 
+std::deque<Point> BezierShape::getPointsToDrawInRect(float scale,Rect rect)
+{
+   std::deque<Point> pointInRect;
+   std::deque<Point> allPoints= getPointsToDraw(scale);
+
+   for (Point point : allPoints) {
+      if (point.on(rect))
+         pointInRect.push_back(point);
+   }
+   return pointInRect;
+}
+
 std::deque<Point> BezierShape::getSelectedPoints()
 {
    std::deque<Point> points;

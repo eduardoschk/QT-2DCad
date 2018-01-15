@@ -74,6 +74,11 @@ Size DataViewController::getViewPortSize()
    return viewPortSize;
 }
 
+Rect DataViewController::getRectPresentation()
+{
+   return rectPresentation;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 int DataViewController::calcVerticalScrollLimit()

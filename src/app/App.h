@@ -25,6 +25,9 @@ public:
 
    void run();
 
+   void startMoveXScroll(int value);
+   void startMoveYScroll(int value);
+
    void startCommandDrawArc();
    void startCommandDrawLine();  
    void startCommandDrawBezier();

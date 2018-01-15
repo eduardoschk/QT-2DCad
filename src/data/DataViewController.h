@@ -36,6 +36,7 @@ public:
    Size getShapeSize();
    Size getWindowSize();
    Size getViewPortSize();
+   Rect getRectPresentation();
    
    int calcVerticalScrollLimit();
    int calcHorizontalScrollLimit();

@@ -34,6 +34,18 @@ std::deque<Point> ArcShape::getPointsToDraw(float scale)
    return points;
 }
 
+std::deque<Point> ArcShape::getPointsToDrawInRect(float scale,Rect rect)
+{
+   std::deque<Point> pointInRect;
+   std::deque<Point> allPoints= getPointsToDraw(scale);
+
+   for (Point point : allPoints) {
+      if (point.on(rect))
+         pointInRect.push_back(point);
+   }
+   return pointInRect;
+}
+
 std::deque<Point> ArcShape::getSelectedPoints()
 {
    std::deque<Point> points;

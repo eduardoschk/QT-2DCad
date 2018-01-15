@@ -19,6 +19,7 @@ public:
 
    virtual std::deque<Point> getSelectedPoints() = 0;
    virtual std::deque<Point> getPointsToDraw(float scale) = 0;
+   virtual std::deque<Point> getPointsToDrawInRect(float scale,Rect rect) = 0;
 };
 
 #endif //INCLUDED_SHAPE_H
