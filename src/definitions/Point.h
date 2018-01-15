@@ -4,7 +4,7 @@
 
 #include "Rect.h"
 
-struct Point {
+class Point {
 public:
     int x,y;
 
@@ -18,6 +18,7 @@ public:
 
     Point operator*(float scale) { return Point(x*scale,y*scale); }
     Point operator/(float scale) { return Point(x/scale,y/scale); }
+    Point operator-(Point point) { return Point(x-point.x,y-point.y); }
 
 };
 

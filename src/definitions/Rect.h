@@ -17,7 +17,7 @@ public:
    Rect operator/(float scale) { return Rect(initialX,initialY,width / scale,height / scale); }
    Rect operator+(Rect size) { return Rect(initialX,initialY,width + size.width,height + size.height); }
    Rect operator-(Rect size) { return Rect(initialX,initialY,width - size.width,height - size.height); }
-   bool operator>(Rect size) { return ((width > size.width) && (height >= size.height)) || ((width >= size.width) && (height > size.height)); }
+   bool operator>(Rect size) { return (width * height) > (size.width * size.height); }
 };
 
 #endif // INCLUDED_RECT_H

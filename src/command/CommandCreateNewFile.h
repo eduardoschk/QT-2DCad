@@ -2,9 +2,9 @@
 #ifndef INCLUDED_COMMAND_CREATE_NEW_FILE_H
 #define INCLUDED_COMMAND_CREATE_NEW_FILE_H
 
-#include "Command.h"
+#include "CommandChangeDrawArea.h"
 
-class CommandCreateNewFile : public Command
+class CommandCreateNewFile : public CommandChangeDrawArea
 {
 public:
    ~CommandCreateNewFile() {}

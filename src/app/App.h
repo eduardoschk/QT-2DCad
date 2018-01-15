@@ -3,8 +3,6 @@
 #define INCLUDED_APP_H
 
 #include <QApplication>
-#include <string>
-
 #include "Data.h"
 #include "UserInterface.h"
 
@@ -42,8 +40,8 @@ public:
    void startCommandSaveFile();
    void startCommandSaveAsFile();
 
+   void startCommandResizeWindow(Size size);
    void startCommandZoomValueChange(int value);
-   void startCommandResizeWindow(int height,int width);
 };
 
 #endif // INCLUDED_APP_H

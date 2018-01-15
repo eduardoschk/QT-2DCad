@@ -9,7 +9,7 @@ include_directories(${COMMAND_INCLUDES_FILES})
 #############QT###############
 
 set(CMAKE_AUTOMOC ON)
-#set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTORCC ON)
 
 find_package(Qt5Widgets CONFIG
         PATHS C:/Qt/5.9.2/msvc2017_64/lib/cmake/Qt5Widgets

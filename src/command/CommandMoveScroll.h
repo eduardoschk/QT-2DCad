@@ -2,11 +2,11 @@
 #ifndef INCLUDED_COMMAND_MOVE_SCROLL_H
 #define INCLUDED_COMMAND_MOVE_SCROLL_H
 
-#include "Command.h"
+#include "CommandChangeDrawArea.h"
 
 enum SCROL_ORIENTATION { HORIZONTAL, VERTICAL };
 
-class CommandMoveScroll : public Command
+class CommandMoveScroll : public CommandChangeDrawArea
 {
 private:
    int value;

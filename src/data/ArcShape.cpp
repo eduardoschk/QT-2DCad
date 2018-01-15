@@ -41,7 +41,7 @@ std::deque<Point> ArcShape::getPointsToDrawInRect(float scale,Rect rect)
 
    for (Point point : allPoints) {
       if (point.on(rect))
-         pointInRect.push_back(point);
+         pointInRect.push_back(point - Point(rect.initialX,rect.initialY));
    }
    return pointInRect;
 }

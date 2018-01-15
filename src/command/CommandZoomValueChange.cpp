@@ -1,6 +1,7 @@
 #include "CommandZoomValueChange.h"
 #include "Data.h"
 #include "File.h"
+#include "ZoomControl.h"
 #include "UserInterface.h"
 
 void CommandZoomValueChange::exec(Data& data,UserInterface& ui)
@@ -23,10 +24,10 @@ void CommandZoomValueChange::exec(Data& data,UserInterface& ui)
       data.getCurrentFile().getDataViewController().setScale(scale);
 
       ui.clearArea();
-      ui.setSizeDrawArea(data.getCurrentFile().getDataViewController().getViewPortSize());
-      for (std::pair<int,std::deque<Point>> points : data.getCurrentFile().repaintAll()) 
-         ui.drawPoints(points.first,points.second);
-      ui.createVerticalScrollBar(data.getCurrentFile().getDataViewController().calcVerticalScrollPageStep(),data.getCurrentFile().getDataViewController().calcVerticalScrollLimit());
-      ui.createHorizontalScrollBar(data.getCurrentFile().getDataViewController().calcHorizontalScrollPageStep(),data.getCurrentFile().getDataViewController().calcHorizontalScrollLimit());
+      resizeDrawArea(data.getCurrentFile().getDataViewController(),ui);
+      
+      repaint(data,ui);
+     
+      verifyTheNeedForScrollInDrawArea(data.getCurrentFile().getDataViewController(),ui);
    }
 }

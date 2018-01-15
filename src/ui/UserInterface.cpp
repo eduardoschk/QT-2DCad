@@ -1,7 +1,5 @@
 #include <vector>
 
-#include <QPoint>
-#include <QString>
 #include <QMessageBox>
 #include <QFileDialog>
 
@@ -153,7 +151,7 @@ void UserInterface::startOptionQuit()
 
 void UserInterface::startResizeWindow(QSize size)
 {
-   initialized ? app.startCommandResizeWindow(size.width(),size.height()) : 0;
+   initialized ? app.startCommandResizeWindow(Size(size.width(),size.height())) : 0;
 }
 
 void UserInterface::startZoomValueChange(int value)
@@ -167,6 +165,11 @@ Size UserInterface::getSizeWindow()
 {
    QSize size= mainWindow.getSizeWindow();
    return Size(size.width(),size.height());
+}
+
+void UserInterface::setSizeViewPort(Size size)
+{
+   mainWindow.setSizeViewPort(QSize(size.width,size.height));
 }
 
 void UserInterface::setSizeDrawArea(Size size) 
@@ -223,13 +226,33 @@ void UserInterface::drawPoint(int idShape,Point point)
 void UserInterface::drawPoints(int idShape,std::deque<Point> points)
 {
    std::vector<QPoint> qPoints;
-   for (Point point : points) {
-      qPoints.push_back(QPoint(point.x,point.y));
+   for (const Point point : points) {
+      qPoints.emplace_back(QPoint(point.x,point.y));
    }
    mainWindow.drawPoints(idShape,qPoints);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void UserInterface::destructVerticalScrollBar()
+{
+   mainWindow.destructVerticalScrollBar();
+}
+
+void UserInterface::destructHorizontalScrollBar()
+{
+   mainWindow.destructHorizontalScrollBar();
+}
+
+void UserInterface::setVerticalScrollBarPosition(int value)
+{
+   mainWindow.setVerticalScrollBarPosition(value);
+}
+
+void UserInterface::setHorizontalScrollBarPosition(int value)
+{
+   mainWindow.setHorizontalScrollBarPosition(value);
+}
 
 void UserInterface::createVerticalScrollBar(int pageStep,int limit)
 {

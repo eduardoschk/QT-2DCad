@@ -23,6 +23,7 @@ void CommandCreateNewFile::exec(Data& data,UserInterface& ui)
          ui.setTitleWindow(nfs.name.c_str());
          ui.setZoomScaleWidget(ZOOM::DEFAULT);
          ui.createDrawArea(file->getDataViewController().getViewPortSize());
+         verifyTheNeedForScrollInDrawArea(data.getCurrentFile().getDataViewController(),ui);
       }
    }
 }

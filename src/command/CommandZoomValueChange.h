@@ -2,10 +2,9 @@
 #ifndef INCLUDED_COMMAND_ZOOM_VALUE_CHANGE_H
 #define INCLUDED_COMMAND_ZOOM_VALUE_CHANGE_H
 
-#include "Command.h"
-#include "ZoomControl.h"
+#include "CommandChangeDrawArea.h"
 
-class CommandZoomValueChange : public Command
+class CommandZoomValueChange : public CommandChangeDrawArea
 {
 private:
    int zoom;

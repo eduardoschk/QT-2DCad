@@ -21,8 +21,5 @@ void CommandMoveScroll::exec(Data& data,UserInterface& ui)
          data.getCurrentFile().getDataViewController().setXPresentation(value);
       break;
    }
-   data.getCurrentFile().repaintRect(data.getCurrentFile().getDataViewController().getRectPresentation());
-   ui.clearArea();
-   for (std::pair<int,std::deque<Point>> points : data.getCurrentFile().repaintRect(data.getCurrentFile().getDataViewController().getRectPresentation()))
-      ui.drawPoints(points.first,points.second); 
+   repaint(data,ui);
 }

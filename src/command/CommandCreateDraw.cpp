@@ -7,5 +7,5 @@ void CommandCreateDraw::draw(UserInterface& ui,DataViewController& viewControlle
 {
    ui.disableMouseTracking();
    ui.eraseShape(shape.getId());
-   ui.drawPoints(shape.getId(),shape.getPointsToDraw(viewController.getZoomScale()));
+   ui.drawPoints(shape.getId(),shape.getPointsToDrawInRect(viewController.getZoomScale(),viewController.getRectPresentation()));
 }

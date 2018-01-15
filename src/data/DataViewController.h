@@ -9,7 +9,7 @@ class DataViewController
 {
 private:
    const int footerHeight= 105;
-   const int scrollSizeWidget= 25;
+   const int scrollSizeWidget= 15;
    const Size frameBorder= Size(scrollSizeWidget,footerHeight+scrollSizeWidget);
 
    float zoomScale;
@@ -18,6 +18,7 @@ private:
    Size shapeSize;
    Size windowSize;
    Size viewPortSize;
+   Size drawAreaSize;
    Rect rectPresentation;
 
 public:
@@ -36,8 +37,12 @@ public:
    Size getShapeSize();
    Size getWindowSize();
    Size getViewPortSize();
+   Size getSizeDrawArea();
    Rect getRectPresentation();
    
+   bool verifyNeedVerticalScroll();
+   bool verifyNeedHorizontalScroll();
+
    int calcVerticalScrollLimit();
    int calcHorizontalScrollLimit();
    int calcVerticalScrollPageStep();

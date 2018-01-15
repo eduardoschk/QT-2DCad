@@ -32,6 +32,7 @@ public:
    void markBezierOptionAsSelected();
 
    Size getSizeWindow();
+   void setSizeViewPort(Size size);
    void setSizeDrawArea(Size size);
    void setZoomScaleWidget(int value);
 
@@ -41,6 +42,10 @@ public:
    void createDrawArea(Size size);
    void setTitleWindow(const char* name);
 
+   void destructVerticalScrollBar();
+   void destructHorizontalScrollBar();
+   void setVerticalScrollBarPosition(int value);
+   void setHorizontalScrollBarPosition(int value);
    void createVerticalScrollBar(int pageStep,int limit);
    void createHorizontalScrollBar(int pageStep,int limit);
 

@@ -6,7 +6,6 @@
 #include <deque>
 #include <string>
 #include "Point.h"
-#include "ShapeTypes.h"
 #include "DataViewController.h"
 
 class Shape;

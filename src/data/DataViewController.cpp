@@ -36,20 +36,30 @@ void DataViewController::setScale(float scale)
 {
    zoomScale= scale;
    viewSize= shapeSize * zoomScale;
-   if ((windowSize - frameBorder) > viewSize)
-      viewPortSize= viewSize;
-   else 
-      viewPortSize= windowSize - frameBorder;
+   if ((windowSize - frameBorder) > viewSize) {
+      viewPortSize= drawAreaSize= viewSize;
+   } else {
+      viewPortSize= windowSize - Size(0,footerHeight);
+      drawAreaSize= windowSize - frameBorder;
+   }
+   rectPresentation= Rect(0,0,viewPortSize.getWidth(),viewPortSize.getHeight());
 }
 
 void DataViewController::setWindowSize(Size newSize)
 {
    windowSize= newSize;
-   if (windowSize > viewPortSize) 
-      viewPortSize= (viewSize > windowSize - frameBorder) ? windowSize - frameBorder : viewSize;
-   else 
-      viewPortSize= windowSize - frameBorder;
-   rectPresentation= Rect(0,0,viewPortSize.getWidth(),viewPortSize.getHeight());
+   if (windowSize > viewPortSize) {
+      if (viewSize > windowSize - frameBorder) {
+         viewPortSize= windowSize - Size(0,footerHeight);
+         drawAreaSize= windowSize - frameBorder;
+      } else {
+         viewPortSize= drawAreaSize= viewSize;
+      }
+   } else {
+      viewPortSize= windowSize - Size(0,footerHeight);
+      drawAreaSize= windowSize - frameBorder;
+   }
+   rectPresentation= Rect(rectPresentation.initialX,rectPresentation.initialY,viewPortSize.getWidth(),viewPortSize.getHeight());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -74,6 +84,11 @@ Size DataViewController::getViewPortSize()
    return viewPortSize;
 }
 
+Size DataViewController::getSizeDrawArea()
+{
+   return drawAreaSize;
+}
+
 Rect DataViewController::getRectPresentation()
 {
    return rectPresentation;
@@ -81,36 +96,34 @@ Rect DataViewController::getRectPresentation()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool DataViewController::verifyNeedVerticalScroll()
+{
+   return viewSize.height > viewPortSize.height;
+}
+
+bool DataViewController::verifyNeedHorizontalScroll()
+{
+   return viewSize.width > viewPortSize.width;
+}
+
 int DataViewController::calcVerticalScrollLimit()
 {
-   if (viewSize.height > windowSize.height) {
-      return viewSize.height - viewPortSize.height;
-   }
-   return 0;
+   return viewSize.height - viewPortSize.height;
 }
 
 int DataViewController::calcVerticalScrollPageStep()
 {
-   if (viewSize.height > windowSize.height) {
-      return viewPortSize.height;
-   }
-   return 0;
+   return viewPortSize.height;
 }
 
 int DataViewController::calcHorizontalScrollLimit()
 {
-   if (viewSize.width > windowSize.width) {
-      return viewSize.width - viewPortSize.width;
-   }
-   return 0;
+   return viewSize.width - viewPortSize.width;
 }
 
 int DataViewController::calcHorizontalScrollPageStep()
 {
-   if (viewSize.width > windowSize.width) {
-      return viewPortSize.width;
-   }
-   return 0;
+   return viewPortSize.width;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

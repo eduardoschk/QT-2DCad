@@ -2,7 +2,6 @@
 #ifndef INCLUDED_MAIN_WINDOW_H
 #define INCLUDED_MAIN_WINDOW_H
 
-#include <string.h>
 #include <QMainWindow>
 
 class QLabel;
@@ -53,8 +52,14 @@ public:
    void markBezierOptionAsSelected();
 
    QSize getSizeWindow();
+   void setSizeViewPort(QSize size);
    void setSizeDrawArea(QSize size);
    void setZoomScaleWidget(int value);
+
+   void destructVerticalScrollBar();
+   void destructHorizontalScrollBar();
+   void setVerticalScrollBarPosition(int value);
+   void setHorizontalScrollBarPosition(int value);
    void createVerticalScrollBar(int pageStep,int limit);
    void createHorizontalScrollBar(int pagetStep,int limit);
 

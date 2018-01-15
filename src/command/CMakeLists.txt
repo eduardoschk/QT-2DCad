@@ -12,6 +12,7 @@ set(COMMAND_INCLUDES_FILES "${CMAKE_CURRENT_SOURCE_DIR}/"
 						   "${CMAKE_CURRENT_SOURCE_DIR}/CommandSaveFile.h"
 						   "${CMAKE_CURRENT_SOURCE_DIR}/CommandZoomValueChange.h"
 						   "${CMAKE_CURRENT_SOURCE_DIR}/CommandMoveScroll.h"
+						   "${CMAKE_CURRENT_SOURCE_DIR}/CommandChangeDrawArea.h"
 						   CACHE INTERNAL "Commmand includes files")
 						
 set(COMMAND_SOURCES_FILES "${CMAKE_CURRENT_SOURCE_DIR}/CommandCreateArc.cpp"
@@ -25,7 +26,8 @@ set(COMMAND_SOURCES_FILES "${CMAKE_CURRENT_SOURCE_DIR}/CommandCreateArc.cpp"
 						  "${CMAKE_CURRENT_SOURCE_DIR}/CommandSaveAsFile.cpp"
 						  "${CMAKE_CURRENT_SOURCE_DIR}/CommandSaveFile.cpp"
 						  "${CMAKE_CURRENT_SOURCE_DIR}/CommandZoomValueChange.cpp"
-						  "${CMAKE_CURRENT_SOURCE_DIR}/CommandMoveScroll.cpp")
+						  "${CMAKE_CURRENT_SOURCE_DIR}/CommandMoveScroll.cpp"
+						  "${CMAKE_CURRENT_SOURCE_DIR}/CommandChangeDrawArea.cpp")
 						  
 include_directories(${DEFINITION_FILES})
 include_directories(${USER_INTERFACE_INCLUDES_FILES})
