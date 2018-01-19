@@ -4,37 +4,36 @@
 
 #include <map>
 #include <deque>
-#include <vector>
 #include <QWidget>
+
+#include "Point.h"
 
 class DrawArea : public QWidget
 {
 Q_OBJECT
 private:
-   std::map<int,std::deque<QPoint>> points;
+   std::map<int,std::deque<Point>> points;
    void configureDefaultValues();
 
 protected:
-   void paintEvent(QPaintEvent *event) override;
+   void paintEvent(QPaintEvent* event) override;
    void mousePressEvent(QMouseEvent* event) override;
    void mouseMoveEvent(QMouseEvent* event) override;
    void mouseReleaseEvent(QMouseEvent* event) override;
 
 public:
    ~DrawArea();
-   DrawArea(QSize size,QWidget* parent);
-
-   void setArea(const QSize size);
+   DrawArea(QWidget* parent);
 
    void clearArea();
    void eraseShape(int idShape);
-   void drawPoint(int idShape,QPoint point);
-   void drawPoints(int idShape,std::vector<QPoint> points);
+   void drawPoint(int idShape,Point point);
+   void drawPoints(int idShape,std::deque<Point>& points);
 
 signals:
-   void mousePress(QPoint);
-   void mouseMove(QPoint);
-   void mouseRelease(QPoint);
+   void mousePress(Point);
+   void mouseMove(Point);
+   void mouseRelease(Point);
 
 };
 

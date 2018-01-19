@@ -3,18 +3,24 @@
 #define INCLUDED_ARC_SHAPE_H
 
 #include "Shape.h"
-#include "Point.h"
 
 enum QUADRANT { UM,DOIS,TRES,QUATRO };
 
 class ArcShape : public Shape
 {
 private:
-   Point center;
-   Point initial;
-   Point final;
+   Point& originalCenterPoint;
+   Point& originalInitialPoint;
+   Point& originalFinalPoint;
+
+   Point currentCenterPoint;
+   Point currentInitialPoint;
+   Point currentFinalPoint;
 
    double raio;
+
+   Rect calcRectShape(float scale);
+   std::deque<Point> calcPointsToDraw(float scale);
 
    QUADRANT calcQuadrantPoint(const Point& point);
    int diffCordenates(const int coord1,const int coord2);
@@ -29,16 +35,19 @@ private:
    void drawWithInitialPointInFourthQuadrant(std::deque<Point>& points,double distanceInitFinal,float scale);
 
    double calcAngle(double catetoOposto,double hipo);
-   double calcPitagoras(const Point& point1,const Point& point2);
+   double calcPitagoras(const Point point1,const Point point2);
 public:
    ~ArcShape();
-   ArcShape(int _id, Point _center,Point _initial,Point _final);
+   ArcShape(int _id, Point& _center,Point& _initial,Point& _final);
 
    int getType();
 
+   Rect getOriginalRectShape();
+   Rect getCurrentRectShape(DataViewController& dataViewController);
+
    std::deque<Point> getSelectedPoints();
-   std::deque<Point> getPointsToDraw(float scale);
-   std::deque<Point> getPointsToDrawInRect(float scale,Rect rect);
+   std::deque<Point> getPointsToDraw(DataViewController& dataViewController);
+   std::deque<Point> getPointsToDrawInRect(DataViewController& dataViewController);
 
 };
 

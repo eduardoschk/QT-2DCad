@@ -5,7 +5,7 @@
 #include <map>
 #include <deque>
 #include <string>
-#include "Point.h"
+
 #include "DataViewController.h"
 
 class Shape;
@@ -20,30 +20,29 @@ private:
    DataViewController viewController;
 
    bool saved;
-
 public:
    ~File();
-   File(std::string _fileName,Size sizeShape);
+   File(std::string _fileName);
 
    int generateIdShape();
 
-   std::deque<Shape*> getShapes();
+   std::deque<Shape*>& getShapes();
    void addShapeOnFile(Shape* newShape);
 
-   std::string getFileName() { return fileName; }
-   void setFileName(std::string name) { fileName= name; }
+   std::string getFileName();
+   void setFileName(std::string name);
 
-   std::string getPath() { return pathDirectory; }
-   void setPath(std::string path) { pathDirectory= path; }
+   std::string getPath();
+   void setPath(std::string path);
 
-   bool isSaved() { return saved; }
-   void setSaved(bool status) { saved= status; }
-   bool alreadySaved() { return pathDirectory.size() > 0; }
+   bool isSaved();
+   bool alreadySaved();
+   void setSaved(bool status);
 
-   std::map<int,std::deque<Point>> repaintAll();
-   std::map<int,std::deque<Point>> repaintRect(Rect rect);
+   std::map<int,std::deque<Point>>& repaintAll();
+   std::map<int,std::deque<Point>>& repaintRectInPresentation();
 
-   DataViewController& getDataViewController() { return viewController; }
+   DataViewController& getDataViewController();
 };
 
 #endif // INCLUDED_FILE_H

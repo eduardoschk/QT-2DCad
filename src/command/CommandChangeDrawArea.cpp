@@ -1,19 +1,13 @@
 #include "CommandChangeDrawArea.h"
 #include "Data.h"
 #include "File.h"
+#include "Rect.h"
 #include "UserInterface.h"
 
 void CommandChangeDrawArea::repaint(Data& data,UserInterface& ui)
 {
-   ui.clearArea();
-   for (std::pair<int,std::deque<Point>> points : data.getCurrentFile().repaintRect(data.getCurrentFile().getDataViewController().getRectPresentation()))
+   for (std::pair<int,std::deque<Point>> points : data.getCurrentFile().repaintRectInPresentation())
       ui.drawPoints(points.first,points.second);
-}
-
-void CommandChangeDrawArea::resizeDrawArea(DataViewController& data,UserInterface& ui)
-{
-   ui.setSizeViewPort(data.getViewPortSize());
-   ui.setSizeDrawArea(data.getSizeDrawArea());
 }
 
 void CommandChangeDrawArea::verifyTheNeedForScrollInDrawArea(DataViewController& dataView,UserInterface& ui)

@@ -30,9 +30,9 @@ public:
    void startCommandDrawLine();  
    void startCommandDrawBezier();
 
-   void actionMousePressInDrawArea(Point point);
-   void actionMouseMoveInDrawArea(Point point);
-   void actionMouseReleaseInDrawArea(Point point);
+   void actionMousePressInDrawArea(Point& point);
+   void actionMouseMoveInDrawArea(Point& point);
+   void actionMouseReleaseInDrawArea(Point& point);
 
    void startCommandQuit();
    void startCommandNewFile();

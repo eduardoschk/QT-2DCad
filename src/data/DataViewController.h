@@ -2,8 +2,11 @@
 #ifndef INCLUDED_DATA_VIEW_CONTROLLER_H
 #define INCLUDED_DATA_VIEW_CONTROLLER_H
 
+#include <deque>
 #include "Size.h"
-#include "Point.h"
+#include "Rect.h"
+
+class Point;
 
 class DataViewController
 {
@@ -11,35 +14,38 @@ private:
    const int footerHeight= 105;
    const int scrollSizeWidget= 15;
    const Size frameBorder= Size(scrollSizeWidget,footerHeight+scrollSizeWidget);
+   const Size defaultDraw= Size(100,100);
 
    float zoomScale;
 
-   Size viewSize;
-   Size shapeSize;
    Size windowSize;
    Size viewPortSize;
-   Size drawAreaSize;
+   Size currentShapesSize;
+   Size originalShapesSize;
    Rect rectPresentation;
 
 public:
    ~DataViewController() {}
-   DataViewController(Size _sizeShape);
+   DataViewController();
 
-   float getZoomScale();
+   void newShape(Rect rect);
+
+   float getScale();
    void setScale(float scale);
    void setWindowSize(Size newSize);
 
    void setXPresentation(int value);
    void setYPresentation(int value);
-   Point fixPointInView(Point point);
+   
+   Point fixPoint(Point point);
+   Point fixPointWorldInView(Point point);
+   Point fixPointViewInWorld(Point point);
 
-   Size getViewSize();
-   Size getShapeSize();
    Size getWindowSize();
-   Size getViewPortSize();
-   Size getSizeDrawArea();
    Rect getRectPresentation();
    
+   bool verifyDiffScale();
+
    bool verifyNeedVerticalScroll();
    bool verifyNeedHorizontalScroll();
 

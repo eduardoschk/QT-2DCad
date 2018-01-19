@@ -11,6 +11,7 @@
 #include <QResizeEvent>
 #include <QCoreApplication>
 
+#include "Size.h"
 #include "DrawArea.h"
 #include "ZoomControl.h"
 #include "UserInterface.h"
@@ -70,10 +71,9 @@ void MainWindow::markArcOptionAsSelected()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::createNewDrawArea(QSize size)
+void MainWindow::createNewDrawArea()
 {
-   viewPort.setFixedSize(size);
-   drawArea= new DrawArea(size,&viewPort);
+   drawArea= new DrawArea(&viewPort);
    configureDrawActions();
 
    delete viewPort.layout();
@@ -96,12 +96,12 @@ void MainWindow::eraseShape(int idShape)
    drawArea->eraseShape(idShape);
 }
 
-void MainWindow::drawPoint(int idShape,QPoint point)
+void MainWindow::drawPoint(int idShape,Point point)
 {
    drawArea->drawPoint(idShape,point);
 }
 
-void MainWindow::drawPoints(int idShape,std::vector<QPoint> points)
+void MainWindow::drawPoints(int idShape,std::deque<Point>& points)
 {
    drawArea->drawPoints(idShape,points);
 }
@@ -200,9 +200,9 @@ void MainWindow::configureZoomControlOnStatusBar()
 
 void MainWindow::configureDrawActions()
 {
-   connect(drawArea,SIGNAL(mouseMove(QPoint)),&ui,SLOT(mouseMoveEventInDrawArea(QPoint)));
-   connect(drawArea,SIGNAL(mousePress(QPoint)),&ui,SLOT(mousePressEventInDrawArea(QPoint)));
-   connect(drawArea,SIGNAL(mouseRelease(QPoint)),&ui,SLOT(mouseReleaseEventInDrawArea(QPoint)));
+   connect(drawArea,SIGNAL(mouseMove(Point)),&ui,SLOT(mouseMoveEventInDrawArea(Point)));
+   connect(drawArea,SIGNAL(mousePress(Point)),&ui,SLOT(mousePressEventInDrawArea(Point)));
+   connect(drawArea,SIGNAL(mouseRelease(Point)),&ui,SLOT(mouseReleaseEventInDrawArea(Point)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -221,23 +221,12 @@ void MainWindow::plusZoomClicked()
 
 void MainWindow::resizeEvent(QResizeEvent* event)
 {
-   ui.startResizeWindow(event->size());
+   ui.startResizeWindow(Size(event->size().width(),event->size().height()));
 }
 
 QSize MainWindow::getSizeWindow()
 {
    return size();
-}
-
-void MainWindow::setSizeViewPort(QSize size)
-{
-   viewPort.setFixedSize(size);
-}
-
-void MainWindow::setSizeDrawArea(QSize size)
-{
-   if (drawArea) 
-      drawArea->setArea(size);
 }
 
 void MainWindow::setZoomScaleWidget(int value)

@@ -3,6 +3,8 @@
 #define INCLUDED_MAIN_WINDOW_H
 
 #include <QMainWindow>
+#include <deque>
+#include "Point.h"
 
 class QLabel;
 class QSlider;
@@ -36,15 +38,15 @@ public:
    ~MainWindow();
    MainWindow(UserInterface& _ui,QWidget* parent= nullptr);
 
-   void createNewDrawArea(QSize size);
+   void createNewDrawArea();
 
    void activateMouseTracking();
    void disableMouseTracking();
 
    void clearArea();
    void eraseShape(int idShape);
-   void drawPoint(int idShape,QPoint point);
-   void drawPoints(int idShape,std::vector<QPoint> points);
+   void drawPoint(int idShape,Point point);
+   void drawPoints(int idShape,std::deque<Point>& points);
 
    void markOffAllOptions();
    void markArcOptionAsSelected();
@@ -52,8 +54,6 @@ public:
    void markBezierOptionAsSelected();
 
    QSize getSizeWindow();
-   void setSizeViewPort(QSize size);
-   void setSizeDrawArea(QSize size);
    void setZoomScaleWidget(int value);
 
    void destructVerticalScrollBar();

@@ -16,7 +16,7 @@ protected:
 
    virtual Shape& saveShapeOnFile(Data& data) = 0;
    virtual void prepareToNewDraw(Data& data) = 0;
-   virtual void draw(UserInterface& ui,DataViewController& viewController,Shape& shape);
+   void draw(UserInterface& ui,DataViewController& viewController,Shape& shape);
 
 public:
    virtual ~CommandCreateDraw() {}

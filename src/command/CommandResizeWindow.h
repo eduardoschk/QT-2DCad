@@ -3,15 +3,16 @@
 #define INCLUDED_COMMAND_RESIZE_WINDOW_H
 
 #include "CommandChangeDrawArea.h"
-#include "Size.h"
+
+class Size;
 
 class CommandResizeWindow : public CommandChangeDrawArea
 {
 private:
-   Size size;
+   Size& size;
 public:
    ~CommandResizeWindow() {}
-   CommandResizeWindow(Size size);
+   CommandResizeWindow(Size& size);
 
    void exec(Data& data,UserInterface& ui);
 };

@@ -8,7 +8,6 @@
 #include "Size.h"
 #include "Point.h"
 #include "MainWindow.h"
-#include "NewFileStructure.h"
 
 class App;
 
@@ -32,14 +31,12 @@ public:
    void markBezierOptionAsSelected();
 
    Size getSizeWindow();
-   void setSizeViewPort(Size size);
-   void setSizeDrawArea(Size size);
    void setZoomScaleWidget(int value);
 
    void disableMouseTracking();
    void activateMouseTracking();
 
-   void createDrawArea(Size size);
+   void createDrawArea();
    void setTitleWindow(const char* name);
 
    void destructVerticalScrollBar();
@@ -52,9 +49,9 @@ public:
    void clearArea();
    void eraseShape(int idShape);
    void drawPoint(int idShape,Point point);
-   void drawPoints(int idShape,std::deque<Point> points);
+   void drawPoints(int idShape,std::deque<Point>& points);
 
-   NEW_FILE_STRUCTURE showPopupNewFile();
+   std::string showPopupNewFile();
 
    std::string requestPathFileToOpen();
    void showErrorMessage(std::string message);
@@ -66,9 +63,9 @@ public slots:
    void startCreateLine();
    void startCreateBezier();
 
-   void mouseMoveEventInDrawArea(QPoint point);
-   void mousePressEventInDrawArea(QPoint point);
-   void mouseReleaseEventInDrawArea(QPoint point);
+   void mouseMoveEventInDrawArea(Point point);
+   void mousePressEventInDrawArea(Point point);
+   void mouseReleaseEventInDrawArea(Point point);
 
    void verticalScrollMove(int value);
    void horizontalScrollMove(int value);
@@ -79,7 +76,7 @@ public slots:
    void startOptionSaveAsFile();
    void startOptionQuit();
 
-   void startResizeWindow(QSize size);
+   void startResizeWindow(Size& size);
    void startZoomValueChange(int value);
 };
 

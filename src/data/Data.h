@@ -19,10 +19,10 @@ public:
    void saveAs(std::string completedPath);
    File* open(std::string pathAndFile);
 
-   bool hasFile() { return currentFile; }
+   bool hasFile();
 
+   File& getCurrentFile();
    void setCurrentFile(File* file);
-   File& getCurrentFile() { return *currentFile; }
 };
 
 #endif // INCLUDED_DATA_H

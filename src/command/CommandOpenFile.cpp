@@ -9,6 +9,7 @@
 void CommandOpenFile::exec(Data& data,UserInterface& ui)
 {
    bool response= true;
+
    if (data.hasFile() && !data.getCurrentFile().isSaved())
       response= ui.confirmOperation("O arquivo aberto não está com suas atualizações salvas, deseja continuar?");
 
@@ -32,14 +33,13 @@ void CommandOpenFile::exec(Data& data,UserInterface& ui)
 void CommandOpenFile::drawOpenFile(UserInterface& ui,File& opennedFile)
 {
    ui.setZoomScaleWidget(ZOOM::DEFAULT);
-   ui.createDrawArea(opennedFile.getDataViewController().getViewPortSize());
+   ui.createDrawArea();
    std::deque<Shape*> shapes= opennedFile.getShapes();
-   for (int i= 0 ; i < shapes.size() ; ++i)
-      drawShape(ui,*shapes[i]);
+   for (Shape* shape : shapes)
+      drawShape(ui,*shape);
 }
 
 void CommandOpenFile::drawShape(UserInterface& ui,Shape& shape)
 {
-   for (Point point : shape.getPointsToDraw(1))
-      ui.drawPoint(shape.getId(),point);
+   //ui.drawPoints(shape.getId(),shape.getPointsToDraw(ZOOM::DEFAULT));
 }

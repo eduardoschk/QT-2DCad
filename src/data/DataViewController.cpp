@@ -1,33 +1,58 @@
 #include "DataViewController.h"
+#include "Rect.h"
+#include "Point.h"
 
-DataViewController::DataViewController(Size _shapeSize)
+#include <memory>
+
+DataViewController::DataViewController()
 {
    zoomScale= 1;
-   viewSize= _shapeSize;
-   shapeSize= viewSize;
+   originalShapesSize= defaultDraw;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <iostream>
+void DataViewController::newShape(Rect rect)
+{
+   if (!originalShapesSize.contains(rect)) {
+      originalShapesSize= (originalShapesSize << rect) + defaultDraw;
+      currentShapesSize= originalShapesSize * zoomScale;
+   }
+}
 
-Point DataViewController::fixPointInView(Point point)
+///////////////////////////////////////////////////////////////////////////////
+
+Point DataViewController::fixPointWorldInView(Point point)
+{
+   if (verifyDiffScale()) {
+      point.x= (point.x * currentShapesSize.width) / originalShapesSize.width;
+      point.y= (point.y * currentShapesSize.height) / originalShapesSize.height;
+   }
+   return point;
+}
+
+Point DataViewController::fixPoint(Point point)
+{
+   point.x-= rectPresentation.initialX;
+   point.y-= rectPresentation.initialY;
+   return point;
+}
+
+Point DataViewController::fixPointViewInWorld(Point point)
 {
    point.x+= rectPresentation.initialX;
    point.y+= rectPresentation.initialY;
 
-   if (!point.on(rectPresentation)) {
-      std::cout << "Fora da apresentação" << std::endl;
-      if (!point.on(viewSize.sizeRect)) {
-         std::cout << "Fora de tudo" << std::endl;
-      }
+   if (verifyDiffScale()) {
+      point.x= point.x * (originalShapesSize.width) / currentShapesSize.width;
+      point.y= point.y * (originalShapesSize.height) / currentShapesSize.height;
    }
-   return point / zoomScale;
+   return point;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float DataViewController::getZoomScale()
+float DataViewController::getScale()
 {
    return zoomScale;
 }
@@ -35,90 +60,73 @@ float DataViewController::getZoomScale()
 void DataViewController::setScale(float scale)
 {
    zoomScale= scale;
-   viewSize= shapeSize * zoomScale;
-   if ((windowSize - frameBorder) > viewSize) {
-      viewPortSize= drawAreaSize= viewSize;
-   } else {
-      viewPortSize= windowSize - Size(0,footerHeight);
-      drawAreaSize= windowSize - frameBorder;
-   }
+   currentShapesSize= originalShapesSize * zoomScale;
+
+   if (currentShapesSize > windowSize)
+      viewPortSize= windowSize - frameBorder;
+   else 
+      viewPortSize= windowSize;
+
    rectPresentation= Rect(0,0,viewPortSize.getWidth(),viewPortSize.getHeight());
 }
 
 void DataViewController::setWindowSize(Size newSize)
 {
    windowSize= newSize;
-   if (windowSize > viewPortSize) {
-      if (viewSize > windowSize - frameBorder) {
-         viewPortSize= windowSize - Size(0,footerHeight);
-         drawAreaSize= windowSize - frameBorder;
-      } else {
-         viewPortSize= drawAreaSize= viewSize;
-      }
-   } else {
-      viewPortSize= windowSize - Size(0,footerHeight);
-      drawAreaSize= windowSize - frameBorder;
-   }
+
+   if (currentShapesSize > windowSize)
+      viewPortSize= windowSize - frameBorder;
+   else
+      viewPortSize= windowSize;
+
    rectPresentation= Rect(rectPresentation.initialX,rectPresentation.initialY,viewPortSize.getWidth(),viewPortSize.getHeight());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-Size DataViewController::getViewSize()
-{
-   return viewSize;
-}
-
-Size DataViewController::getShapeSize()
-{
-   return shapeSize;
-}
 
 Size DataViewController::getWindowSize()
 {
    return windowSize;
 }
 
-Size DataViewController::getViewPortSize()
-{
-   return viewPortSize;
-}
-
-Size DataViewController::getSizeDrawArea()
-{
-   return drawAreaSize;
-}
-
 Rect DataViewController::getRectPresentation()
 {
-   return rectPresentation;
+   std::shared_ptr<Rect> rect(new Rect(rectPresentation.initialX - 100,rectPresentation.initialY - 100,rectPresentation.width + 100,rectPresentation.height + 100));
+   return *rect.get();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool DataViewController::verifyDiffScale()
+{
+   return zoomScale != 1;
+}
+
 bool DataViewController::verifyNeedVerticalScroll()
 {
-   return viewSize.height > viewPortSize.height;
+   return currentShapesSize.height > viewPortSize.height;
 }
 
 bool DataViewController::verifyNeedHorizontalScroll()
 {
-   return viewSize.width > viewPortSize.width;
+   return currentShapesSize.width > viewPortSize.width;
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 int DataViewController::calcVerticalScrollLimit()
 {
-   return viewSize.height - viewPortSize.height;
+   return currentShapesSize.height - viewPortSize.height;
+}
+
+int DataViewController::calcHorizontalScrollLimit()
+{
+   return currentShapesSize.width - viewPortSize.width;
 }
 
 int DataViewController::calcVerticalScrollPageStep()
 {
    return viewPortSize.height;
-}
-
-int DataViewController::calcHorizontalScrollLimit()
-{
-   return viewSize.width - viewPortSize.width;
 }
 
 int DataViewController::calcHorizontalScrollPageStep()

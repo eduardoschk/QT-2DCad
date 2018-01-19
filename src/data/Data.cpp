@@ -40,3 +40,15 @@ File* Data::open(std::string pathAndFile)
 {
    return IOFile().open(pathAndFile);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool Data::hasFile() 
+{ 
+   return currentFile; 
+}
+
+File& Data::getCurrentFile()
+{
+   return *currentFile;
+}

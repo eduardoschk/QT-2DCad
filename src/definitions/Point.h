@@ -2,24 +2,24 @@
 #ifndef INCLUDED_POINT_H
 #define INCLUDED_POINT_H
 
-#include "Rect.h"
+class Rect;
 
 class Point {
 public:
     int x,y;
 
-    Point() : x(0),y(0) {}
-    Point(int _x,int _y) : x(_x),y(_y) {}
-    Point(float _x,float _y) : x((int)_x),y((int)_y) {}
-    Point(double _x,double _y) : x((int)_x),y((int)_y) {}
+    ~Point() {}
+    Point();
+    Point(int _x,int _y);
+    Point(float _x,float _y);
+    Point(double _x,double _y);
     
-    bool isNull() { return (x <= 0) && (y <= 0); }
-    bool on(Rect rect) { return !((x < rect.initialX) || (y < rect.initialY) || (y >(rect.initialY + rect.height)) || (x >(rect.initialX + rect.width))); }
+    bool isNull();
+    bool on(Rect rect);
 
-    Point operator*(float scale) { return Point(x*scale,y*scale); }
-    Point operator/(float scale) { return Point(x/scale,y/scale); }
-    Point operator-(Point point) { return Point(x-point.x,y-point.y); }
-
+    Point operator*(float scale);
+    Point operator/(float scale);
+    Point operator-(Point point);
 };
 
 #endif // INCLUDED_POINT_H

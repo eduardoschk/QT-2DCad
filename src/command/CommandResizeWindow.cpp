@@ -3,18 +3,16 @@
 #include "File.h"
 #include "UserInterface.h"
 
-CommandResizeWindow::CommandResizeWindow(Size _size)
-{
-   size= _size;
-}
+CommandResizeWindow::CommandResizeWindow(Size& _size) : size(_size) {}
 
 void CommandResizeWindow::exec(Data& data,UserInterface& ui)
 {
+   DataViewController& dataViewController=  data.getCurrentFile().getDataViewController();
+
    if (data.hasFile()) {
-      data.getCurrentFile().getDataViewController().setWindowSize(size);
+      dataViewController.setWindowSize(size);
       
-      resizeDrawArea(data.getCurrentFile().getDataViewController(),ui);
-      verifyTheNeedForScrollInDrawArea(data.getCurrentFile().getDataViewController(),ui);
+      verifyTheNeedForScrollInDrawArea(dataViewController,ui);
 
       repaint(data,ui);
    }

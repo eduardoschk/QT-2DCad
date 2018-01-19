@@ -8,6 +8,7 @@ void CommandZoomValueChange::exec(Data& data,UserInterface& ui)
 {
    if (data.hasFile()) {
       float scale;
+      DataViewController& dataViewController=  data.getCurrentFile().getDataViewController();
 
       switch (zoom) {
          case ZOOM::ONE:   scale= 0.125;   break;
@@ -21,13 +22,10 @@ void CommandZoomValueChange::exec(Data& data,UserInterface& ui)
          case ZOOM::NINE:  scale= 6;       break;
          case ZOOM::TEN:   scale= 8;       break;
       }
-      data.getCurrentFile().getDataViewController().setScale(scale);
+      dataViewController.setScale(scale);
 
-      ui.clearArea();
-      resizeDrawArea(data.getCurrentFile().getDataViewController(),ui);
-      
+      verifyTheNeedForScrollInDrawArea(dataViewController,ui);
+
       repaint(data,ui);
-     
-      verifyTheNeedForScrollInDrawArea(data.getCurrentFile().getDataViewController(),ui);
    }
 }

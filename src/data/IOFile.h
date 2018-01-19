@@ -12,7 +12,7 @@ class IOFile
 {
 private:
    void writeShape(std::ofstream& stream,Shape& shape);
-   void writePoint(std::ofstream& stream,Point& point);
+   void writePoint(std::ofstream& stream,Point point);
 
    Shape* readShape(int id,std::ifstream& stream);
    Point readPoint(std::ifstream& stream);

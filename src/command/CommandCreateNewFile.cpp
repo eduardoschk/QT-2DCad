@@ -3,7 +3,6 @@
 #include "File.h"
 #include "ZoomControl.h"
 #include "UserInterface.h"
-#include "NewFileStructure.h"
 
 void CommandCreateNewFile::exec(Data& data,UserInterface& ui)
 {
@@ -14,15 +13,15 @@ void CommandCreateNewFile::exec(Data& data,UserInterface& ui)
    }
 
    if (response) {
-      NEW_FILE_STRUCTURE nfs= ui.showPopupNewFile();
-      if (nfs.isValid()) {
-         File* file= new File(nfs.name,nfs.size);
+      std::string name= ui.showPopupNewFile();
+      if (name.size() > 0) {
+         File* file= new File(name);
          file->getDataViewController().setWindowSize(ui.getSizeWindow());
          data.setCurrentFile(file);
 
-         ui.setTitleWindow(nfs.name.c_str());
+         ui.setTitleWindow(name.c_str());
          ui.setZoomScaleWidget(ZOOM::DEFAULT);
-         ui.createDrawArea(file->getDataViewController().getViewPortSize());
+         ui.createDrawArea();
          verifyTheNeedForScrollInDrawArea(data.getCurrentFile().getDataViewController(),ui);
       }
    }

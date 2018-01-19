@@ -17,6 +17,8 @@ set(DATA_SOURCES_FILES  "${CMAKE_CURRENT_SOURCE_DIR}/ArcShape.cpp"
 						"${CMAKE_CURRENT_SOURCE_DIR}/IOFile.cpp"
 						"${CMAKE_CURRENT_SOURCE_DIR}/LineShape.cpp")
 
-include_directories(${DEFINITION_FILES})
+include_directories(${DEFINITION_INCLUDES_FILES})
 
 add_library(data ${DATA_INCLUDES_FILES} ${DATA_SOURCES_FILES})
+
+target_link_libraries(data definitions)

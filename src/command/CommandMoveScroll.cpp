@@ -13,12 +13,14 @@ CommandMoveScroll::CommandMoveScroll(int _value,SCROL_ORIENTATION _orientation)
 
 void CommandMoveScroll::exec(Data& data,UserInterface& ui)
 {
+   DataViewController& dataViewController=  data.getCurrentFile().getDataViewController();
+
    switch (orientation) {
       case VERTICAL:
-         data.getCurrentFile().getDataViewController().setYPresentation(value);
+         dataViewController.setYPresentation(value);
       break;
       case HORIZONTAL:
-         data.getCurrentFile().getDataViewController().setXPresentation(value);
+         dataViewController.setXPresentation(value);
       break;
    }
    repaint(data,ui);

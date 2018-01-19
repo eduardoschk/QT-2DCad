@@ -29,10 +29,11 @@ set(COMMAND_SOURCES_FILES "${CMAKE_CURRENT_SOURCE_DIR}/CommandCreateArc.cpp"
 						  "${CMAKE_CURRENT_SOURCE_DIR}/CommandMoveScroll.cpp"
 						  "${CMAKE_CURRENT_SOURCE_DIR}/CommandChangeDrawArea.cpp")
 						  
-include_directories(${DEFINITION_FILES})
+include_directories(${DEFINITION_INCLUDES_FILES})
 include_directories(${USER_INTERFACE_INCLUDES_FILES})
 include_directories(${DATA_INCLUDES_FILES})
 
 add_library(command ${COMMAND_INCLUDES_FILES} ${COMMAND_SOURCES_FILES})
 
 target_link_libraries(command ui)
+target_link_libraries(command definitions)

@@ -7,7 +7,6 @@ class CommandChangeDrawArea : public Command
 {
 protected:
    void repaint(Data& data,UserInterface& ui);
-   void resizeDrawArea(DataViewController& data,UserInterface& ui);
    void verifyTheNeedForScrollInDrawArea(DataViewController& data,UserInterface& ui);
 public:
    ~CommandChangeDrawArea() {}

@@ -2,29 +2,37 @@
 #ifndef INCLUDED_SIZE_H
 #define INCLUDED_SIZE_H
 
-#include "Rect.h"
+#include "Size.h"
 
-struct Size
+class Rect;
+
+class Size
 {
+private:
+   Size(Rect& rect);
 public:
-   Rect sizeRect;
+   Rect& sizeRect;
    int width= getWidth();
    int height= getHeight();
-   
-   Size() : sizeRect(0,0,0,0) {}
-   Size(Rect rect) : sizeRect(rect) {}
-   Size(int _width,int _height) : sizeRect(Rect(0,0,_width,_height)) {}
-   Size(float _width,float _height) : sizeRect(Rect(0,0,(int)_width,(int)_height)) {}
 
-   int getWidth() { return sizeRect.width; }
-   int getHeight() { return sizeRect.height; }
-   bool isNull() { return sizeRect.isNull(); }
+   Size();
+   Size(int _width,int _height);
+   Size(float _width,float _height);
 
-   Size operator*(float scale) { return Size(sizeRect * scale); }
-   Size operator/(float scale) { return Size(sizeRect / scale); }
-   Size operator+(Size size) { return Size(sizeRect + size.sizeRect); }
-   Size operator-(Size size) { return Size(sizeRect - size.sizeRect); }
-   bool operator>(Size size) { return sizeRect > size.sizeRect; }
+   int getWidth();
+   int getHeight();
+   bool isNull();
+   bool contains(const Rect& rect);
+
+   Size operator=(const Size& size);
+   Size operator<<(const Rect& rect);
+   bool operator!=(const Size& size);
+   Size operator+(const Rect& rect);
+   Size operator*(const float& scale);
+   Size operator/(const float& scale);
+   bool operator>(const Size& size);
+   Size operator+(const Size& size);
+   Size operator-(const Size& size);
 };
 
 #endif // INCLUDED_SIZE_H
