@@ -27,13 +27,12 @@ int File::generateIdShape()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::deque<Shape*>& File::getShapes()
+std::deque<Shape*> File::getShapes()
 {
-   std::shared_ptr<std::deque<Shape*>> dequeShapes(new std::deque<Shape*>);
-   for (std::pair<int,Shape*> shape : shapes) {
-      dequeShapes.get()->push_back(shape.second);
-   }
-   return *dequeShapes.get();
+   std::deque<Shape*> dequeShapes;
+   for (std::pair<int,Shape*> shape : shapes) 
+      dequeShapes.push_back(shape.second);
+   return dequeShapes;
 }
 
 void File::addShapeOnFile(Shape* newShape)
@@ -45,26 +44,25 @@ void File::addShapeOnFile(Shape* newShape)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::map<int,std::deque<Point>>& File::repaintAll()
+std::map<int,std::deque<Point>> File::repaintAll()
 {
-   std::shared_ptr<std::map<int,std::deque<Point>>> points(new std::map<int,std::deque<Point>>);
+   std::map<int,std::deque<Point>> points;
    for (std::pair<int,Shape*> shape : shapes) 
-      points.get()->insert(std::pair<int,std::deque<Point>>(shape.second->getId(),shape.second->getPointsToDraw(viewController)));
-   return *points.get();
+      points.insert(std::pair<int,std::deque<Point>>(shape.second->getId(),shape.second->getPointsToDraw(viewController)));
+   return points;
 }
 
-std::map<int,std::deque<Point>>& File::repaintRectInPresentation()
+#include <iostream>
+
+std::map<int,std::deque<Point>> File::repaintRectInPresentation()
 {
-   std::shared_ptr<std::map<int,std::deque<Point>>> points(new std::map<int,std::deque<Point>>);
+   std::map<int,std::deque<Point>> points;
    for (std::pair<int,Shape*> shape : shapes) {
-
-      shape.second->getCurrentRectShape(viewController).partiallyContained(viewController.getRectPresentation());
-
+      // auto b= viewController.getRectPresentation().partiallyContained(shape.second->getCurrentRectShape(viewController));
       std::deque<Point> pointsOfShape= shape.second->getPointsToDrawInRect(viewController);
-
-      points.get()->insert(std::pair<int,std::deque<Point>>(shape.second->getId(),pointsOfShape));
+      points.insert(std::pair<int,std::deque<Point>>(shape.second->getId(),pointsOfShape));
    }
-   return *points.get();
+   return points;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

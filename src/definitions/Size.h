@@ -2,16 +2,14 @@
 #ifndef INCLUDED_SIZE_H
 #define INCLUDED_SIZE_H
 
-#include "Size.h"
-
-class Rect;
+#include "Rect.h"
 
 class Size
 {
 private:
    Size(Rect& rect);
 public:
-   Rect& sizeRect;
+   Rect sizeRect;
    int width= getWidth();
    int height= getHeight();
 
@@ -24,7 +22,6 @@ public:
    bool isNull();
    bool contains(const Rect& rect);
 
-   Size operator=(const Size& size);
    Size operator<<(const Rect& rect);
    bool operator!=(const Size& size);
    Size operator+(const Rect& rect);

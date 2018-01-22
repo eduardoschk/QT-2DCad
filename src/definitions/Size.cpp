@@ -1,5 +1,4 @@
 #include "Size.h"
-#include "Rect.h"
 
 Size::Size(Rect& rect) : sizeRect(rect) {}
 
@@ -32,11 +31,6 @@ bool Size::contains(const Rect& rect)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-Size Size::operator=(const Size& size)
-{
-   return Size(size);
-}
 
 Size Size::operator<<(const Rect& rect)
 {

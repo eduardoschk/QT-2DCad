@@ -1,8 +1,15 @@
 #include "CommandCreateBezier.h"
 #include "Data.h"
 #include "File.h"
+#include "Point.h"
 #include "LineShape.h"
+#include "BezierShape.h"
 #include "UserInterface.h"
+
+CommandCreateBezier::CommandCreateBezier() : initial(Point()),control(Point()),final(Point()) 
+{}
+
+///////////////////////////////////////////////////////////////////////////////
 
 void CommandCreateBezier::exec(Data& data,UserInterface& ui)
 {
@@ -16,7 +23,7 @@ void CommandCreateBezier::exec(Data& data,UserInterface& ui)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CommandCreateBezier::posMousePress(Point point,Data& data,UserInterface& ui)
+void CommandCreateBezier::posMousePress(Point& point,Data& data,UserInterface& ui)
 {
    if (initial.isNull())
       initial= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
@@ -25,7 +32,7 @@ void CommandCreateBezier::posMousePress(Point point,Data& data,UserInterface& ui
    ui.activateMouseTracking();
 }
 
-void CommandCreateBezier::posMouseMove(Point point,Data& data,UserInterface& ui)
+void CommandCreateBezier::posMouseMove(Point& point,Data& data,UserInterface& ui)
 {
    if (!final.isNull())
       if (!control.isNull()) {
@@ -42,7 +49,7 @@ void CommandCreateBezier::posMouseMove(Point point,Data& data,UserInterface& ui)
    }
 }
 
-void CommandCreateBezier::posMouseRelease(Point point,Data& data,UserInterface& ui)
+void CommandCreateBezier::posMouseRelease(Point& point,Data& data,UserInterface& ui)
 {
    if (!control.isNull()) {
       control= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);

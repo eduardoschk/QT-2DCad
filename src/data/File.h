@@ -26,7 +26,7 @@ public:
 
    int generateIdShape();
 
-   std::deque<Shape*>& getShapes();
+   std::deque<Shape*> getShapes();
    void addShapeOnFile(Shape* newShape);
 
    std::string getFileName();
@@ -39,8 +39,8 @@ public:
    bool alreadySaved();
    void setSaved(bool status);
 
-   std::map<int,std::deque<Point>>& repaintAll();
-   std::map<int,std::deque<Point>>& repaintRectInPresentation();
+   std::map<int,std::deque<Point>> repaintAll();
+   std::map<int,std::deque<Point>> repaintRectInPresentation();
 
    DataViewController& getDataViewController();
 };

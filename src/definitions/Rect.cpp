@@ -25,14 +25,7 @@ bool Rect::fullyContained(Rect rect)
 
 bool Rect::partiallyContained(Rect rect)
 {
-   bool a= Point(rect.initialX,rect.initialY).on(*this);
-   bool b= Point(rect.initialX + rect.width,rect.initialY).on(*this);
-   bool c= Point(rect.initialX,rect.initialY + rect.height).on(*this);
-   bool d= Point(rect.initialX + rect.width,rect.initialY + rect.height).on(*this);
-
-   // std::cout << "A: " << a << " - B: " << b << " - C: " << c << " - D: " d << std::endl;
-
-   return false;
+   return true;
 }
 
 bool Rect::isNull()

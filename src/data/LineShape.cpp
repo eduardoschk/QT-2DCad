@@ -2,7 +2,11 @@
 #include "Rect.h"
 #include "DataViewController.h"
 
-LineShape::LineShape(int _id,Point& _initial,Point& _final) : Shape(_id),originalFinalPoint(_final), originalInitialPoint(_initial) {}
+LineShape::LineShape(int _id,Point& _initial,Point& _final) : Shape(_id)
+{
+   originalFinalPoint= _final;
+   originalInitialPoint= _initial;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -107,10 +111,8 @@ std::deque<Point> LineShape::getPointsToDrawInRect(DataViewController& dataViewC
 
    std::deque<Point> fixsPoints;
 
-   for (Point point : calcPointsToDraw(dataViewController.getScale())) {
-      if (point.on(dataViewController.getRectPresentation()))
-         fixsPoints.push_back(dataViewController.fixPoint(point));
-   }
+   for (Point point : calcPointsToDraw(dataViewController.getScale()))
+      fixsPoints.push_back(dataViewController.fixPoint(point));
 
    return fixsPoints;
 }

@@ -7,9 +7,9 @@
 class BezierShape : public Shape
 {
 private:
-   Point& originalInitialPoint;
-   Point& originalControlPoint;
-   Point& originalFinalPoint;
+   Point originalInitialPoint;
+   Point originalControlPoint;
+   Point originalFinalPoint;
 
    Point currentInitialPoint;
    Point currentControlPoint;

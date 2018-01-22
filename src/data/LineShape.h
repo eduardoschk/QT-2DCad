@@ -7,8 +7,8 @@
 class LineShape : public Shape
 {
 private:
-   Point& originalInitialPoint;
-   Point& originalFinalPoint;
+   Point originalInitialPoint;
+   Point originalFinalPoint;
 
    Point currentInitialPoint;
    Point currentFinalPoint;

@@ -1,18 +1,21 @@
 #include "DataViewController.h"
 #include "Rect.h"
+#include "Size.h"
 #include "Point.h"
 
-#include <memory>
+const int footerHeight= 105;
+const int scrollSizeWidget= 15;
+const Size& frameBorder= Size(scrollSizeWidget,footerHeight + scrollSizeWidget);
+const Size& defaultDraw= Size(100,100);
 
-DataViewController::DataViewController()
+DataViewController::DataViewController() : originalShapesSize(Size(defaultDraw)),windowSize(Size()),viewPortSize(Size()),currentShapesSize(Size()),rectPresentation(Rect())
 {
    zoomScale= 1;
-   originalShapesSize= defaultDraw;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DataViewController::newShape(Rect rect)
+void DataViewController::newShape(Rect& rect)
 {
    if (!originalShapesSize.contains(rect)) {
       originalShapesSize= (originalShapesSize << rect) + defaultDraw;
@@ -70,7 +73,7 @@ void DataViewController::setScale(float scale)
    rectPresentation= Rect(0,0,viewPortSize.getWidth(),viewPortSize.getHeight());
 }
 
-void DataViewController::setWindowSize(Size newSize)
+void DataViewController::setWindowSize(Size& newSize)
 {
    windowSize= newSize;
 
@@ -84,15 +87,15 @@ void DataViewController::setWindowSize(Size newSize)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Size DataViewController::getWindowSize()
+Size& DataViewController::getWindowSize()
 {
    return windowSize;
 }
 
-Rect DataViewController::getRectPresentation()
+Rect& DataViewController::getRectPresentation()
 {
-   std::shared_ptr<Rect> rect(new Rect(rectPresentation.initialX - 100,rectPresentation.initialY - 100,rectPresentation.width + 100,rectPresentation.height + 100));
-   return *rect.get();
+   return rectPresentation;
+   //Rect(rectPresentation.initialX - 100,rectPresentation.initialY - 100,rectPresentation.width + 100,rectPresentation.height + 100);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

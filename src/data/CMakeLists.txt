@@ -7,6 +7,7 @@ set(DATA_INCLUDES_FILES "${CMAKE_CURRENT_SOURCE_DIR}"
 						"${CMAKE_CURRENT_SOURCE_DIR}/IOFile.h"
 						"${CMAKE_CURRENT_SOURCE_DIR}/LineShape.h"
 						"${CMAKE_CURRENT_SOURCE_DIR}/Shape.h"
+						"${CMAKE_CURRENT_SOURCE_DIR}/PointerMapper.h"
 						CACHE INTERNAL "Data includes files")
 						
 set(DATA_SOURCES_FILES  "${CMAKE_CURRENT_SOURCE_DIR}/ArcShape.cpp"
@@ -15,7 +16,8 @@ set(DATA_SOURCES_FILES  "${CMAKE_CURRENT_SOURCE_DIR}/ArcShape.cpp"
 						"${CMAKE_CURRENT_SOURCE_DIR}/DataViewController.cpp"
 						"${CMAKE_CURRENT_SOURCE_DIR}/File.cpp"
 						"${CMAKE_CURRENT_SOURCE_DIR}/IOFile.cpp"
-						"${CMAKE_CURRENT_SOURCE_DIR}/LineShape.cpp")
+						"${CMAKE_CURRENT_SOURCE_DIR}/LineShape.cpp"
+						"${CMAKE_CURRENT_SOURCE_DIR}/PointerMapper.cpp")
 
 include_directories(${DEFINITION_INCLUDES_FILES})
 

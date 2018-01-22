@@ -3,7 +3,6 @@
 #define INCLUDED_COMMAND_CREATE_ARC_H
 
 #include "Point.h"
-#include "ArcShape.h"
 #include "CommandCreateDraw.h"
 
 class CommandCreateArc : public CommandCreateDraw
@@ -18,13 +17,13 @@ private:
 
 public:
    ~CommandCreateArc() {}
-   CommandCreateArc() {}
+   CommandCreateArc();
 
    void exec(Data& data,UserInterface& ui);
 
-   void posMousePress(Point point,Data& data,UserInterface& ui);
-   void posMouseMove(Point point,Data& data,UserInterface& ui);
-   void posMouseRelease(Point point,Data& data,UserInterface& ui);
+   void posMousePress(Point& point,Data& data,UserInterface& ui);
+   void posMouseMove(Point& point,Data& data,UserInterface& ui);
+   void posMouseRelease(Point& point,Data& data,UserInterface& ui);
 
 };
 

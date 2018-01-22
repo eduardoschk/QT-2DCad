@@ -45,7 +45,7 @@ public:
 
    void clearArea();
    void eraseShape(int idShape);
-   void drawPoint(int idShape,Point point);
+   void drawPoint(int idShape,Point& point);
    void drawPoints(int idShape,std::deque<Point>& points);
 
    void markOffAllOptions();

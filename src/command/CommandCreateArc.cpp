@@ -1,7 +1,14 @@
 #include "CommandCreateArc.h"
 #include "Data.h"
 #include "File.h"
+#include "Point.h"
+#include "ArcShape.h"
 #include "UserInterface.h"
+
+CommandCreateArc::CommandCreateArc() : initial(Point()),center(Point()),final(Point())
+{}
+
+///////////////////////////////////////////////////////////////////////////////
 
 void CommandCreateArc::exec(Data& data,UserInterface& ui)
 {
@@ -15,7 +22,7 @@ void CommandCreateArc::exec(Data& data,UserInterface& ui)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CommandCreateArc::posMousePress(Point point,Data& data,UserInterface& ui)
+void CommandCreateArc::posMousePress(Point& point,Data& data,UserInterface& ui)
 {
    if (center.isNull())
       center= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
@@ -24,7 +31,7 @@ void CommandCreateArc::posMousePress(Point point,Data& data,UserInterface& ui)
    ui.activateMouseTracking();
 }
 
-void CommandCreateArc::posMouseMove(Point point,Data& data,UserInterface& ui)
+void CommandCreateArc::posMouseMove(Point& point,Data& data,UserInterface& ui)
 {
    if (!initial.isNull()) {
       final= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
@@ -32,7 +39,7 @@ void CommandCreateArc::posMouseMove(Point point,Data& data,UserInterface& ui)
    }
 }
 
-void CommandCreateArc::posMouseRelease(Point point,Data& data,UserInterface& ui)
+void CommandCreateArc::posMouseRelease(Point& point,Data& data,UserInterface& ui)
 {
    if (!final.isNull()) {
       final= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);

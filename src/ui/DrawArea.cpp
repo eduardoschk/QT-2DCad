@@ -75,7 +75,7 @@ void DrawArea::eraseShape(int idShape)
    update();
 }
 
-void DrawArea::drawPoint(int idShape,Point point)
+void DrawArea::drawPoint(int idShape,Point& point)
 {
    auto shape= points.find(idShape);
    if (shape != points.end()) {

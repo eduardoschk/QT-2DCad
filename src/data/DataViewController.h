@@ -11,11 +11,6 @@ class Point;
 class DataViewController
 {
 private:
-   const int footerHeight= 105;
-   const int scrollSizeWidget= 15;
-   const Size frameBorder= Size(scrollSizeWidget,footerHeight+scrollSizeWidget);
-   const Size defaultDraw= Size(100,100);
-
    float zoomScale;
 
    Size windowSize;
@@ -28,11 +23,11 @@ public:
    ~DataViewController() {}
    DataViewController();
 
-   void newShape(Rect rect);
+   void newShape(Rect& rect);
 
    float getScale();
    void setScale(float scale);
-   void setWindowSize(Size newSize);
+   void setWindowSize(Size& newSize);
 
    void setXPresentation(int value);
    void setYPresentation(int value);
@@ -41,8 +36,8 @@ public:
    Point fixPointWorldInView(Point point);
    Point fixPointViewInWorld(Point point);
 
-   Size getWindowSize();
-   Rect getRectPresentation();
+   Size& getWindowSize();
+   Rect& getRectPresentation();
    
    bool verifyDiffScale();
 

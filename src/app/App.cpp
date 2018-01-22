@@ -119,7 +119,7 @@ void App::startCommandZoomValueChange(int value)
    CommandZoomValueChange(value).exec(data,userInterface);
 }
 
-void App::startCommandResizeWindow(Size size)
+void App::startCommandResizeWindow(Size& size)
 {
    CommandResizeWindow(size).exec(data,userInterface);
 }

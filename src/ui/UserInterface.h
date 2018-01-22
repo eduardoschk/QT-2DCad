@@ -49,7 +49,7 @@ public:
    void clearArea();
    void eraseShape(int idShape);
    void drawPoint(int idShape,Point point);
-   void drawPoints(int idShape,std::deque<Point>& points);
+   void drawPoints(int idShape,std::deque<Point> points);
 
    std::string showPopupNewFile();
 
@@ -76,7 +76,7 @@ public slots:
    void startOptionSaveAsFile();
    void startOptionQuit();
 
-   void startResizeWindow(Size& size);
+   void startResizeWindow(Size size);
    void startZoomValueChange(int value);
 };
 

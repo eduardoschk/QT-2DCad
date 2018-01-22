@@ -96,7 +96,7 @@ void MainWindow::eraseShape(int idShape)
    drawArea->eraseShape(idShape);
 }
 
-void MainWindow::drawPoint(int idShape,Point point)
+void MainWindow::drawPoint(int idShape,Point& point)
 {
    drawArea->drawPoint(idShape,point);
 }

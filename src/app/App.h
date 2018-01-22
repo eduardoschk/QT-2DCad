@@ -40,7 +40,7 @@ public:
    void startCommandSaveFile();
    void startCommandSaveAsFile();
 
-   void startCommandResizeWindow(Size size);
+   void startCommandResizeWindow(Size& size);
    void startCommandZoomValueChange(int value);
 };
 

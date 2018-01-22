@@ -157,7 +157,7 @@ void UserInterface::startOptionQuit()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UserInterface::startResizeWindow(Size& size)
+void UserInterface::startResizeWindow(Size size)
 {
    if (initialized)
       app.startCommandResizeWindow(size);
@@ -223,7 +223,7 @@ void UserInterface::drawPoint(int idShape,Point point)
    mainWindow.drawPoint(idShape,point); 
 }
 
-void UserInterface::drawPoints(int idShape,std::deque<Point>& points)
+void UserInterface::drawPoints(int idShape,std::deque<Point> points)
 {
    mainWindow.drawPoints(idShape,points);
 }

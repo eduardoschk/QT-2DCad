@@ -4,7 +4,12 @@
 #include "Rect.h"
 #include "DataViewController.h"
 
-BezierShape::BezierShape(int _id,Point& _initial,Point& _control,Point& _final) : Shape(_id),originalInitialPoint(_initial),originalControlPoint(_control),originalFinalPoint(_final) {}
+BezierShape::BezierShape(int _id,Point& _initial,Point& _control,Point& _final) : Shape(_id)
+{
+   originalInitialPoint= _initial;
+   originalControlPoint= _control;
+   originalFinalPoint= _final;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 

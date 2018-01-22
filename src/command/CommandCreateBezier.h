@@ -3,7 +3,6 @@
 #define INCLUDED_COMMAND_CREATE_BEZIER_H
 
 #include "Point.h"
-#include "BezierShape.h"
 #include "CommandCreateDraw.h"
 
 class CommandCreateBezier : public CommandCreateDraw
@@ -18,13 +17,13 @@ private:
 
 public:
    ~CommandCreateBezier() {}
-   CommandCreateBezier() {}
+   CommandCreateBezier();
 
    void exec(Data& data,UserInterface& ui);
 
-   void posMousePress(Point point,Data& data,UserInterface& ui);
-   void posMouseMove(Point point,Data& data,UserInterface& ui);
-   void posMouseRelease(Point point,Data& data,UserInterface& ui);
+   void posMousePress(Point& point,Data& data,UserInterface& ui);
+   void posMouseMove(Point& point,Data& data,UserInterface& ui);
+   void posMouseRelease(Point& point,Data& data,UserInterface& ui);
 
 };
 

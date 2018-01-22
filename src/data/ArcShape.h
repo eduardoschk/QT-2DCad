@@ -9,9 +9,9 @@ enum QUADRANT { UM,DOIS,TRES,QUATRO };
 class ArcShape : public Shape
 {
 private:
-   Point& originalCenterPoint;
-   Point& originalInitialPoint;
-   Point& originalFinalPoint;
+   Point originalCenterPoint;
+   Point originalInitialPoint;
+   Point originalFinalPoint;
 
    Point currentCenterPoint;
    Point currentInitialPoint;

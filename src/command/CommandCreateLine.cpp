@@ -1,7 +1,12 @@
 #include "CommandCreateLine.h"
 #include "Data.h"
 #include "File.h"
+#include "LineShape.h"
 #include "UserInterface.h"
+
+CommandCreateLine::CommandCreateLine() : initial(Point()),final(Point()) {}
+
+///////////////////////////////////////////////////////////////////////////////
 
 void CommandCreateLine::exec(Data& data,UserInterface& ui)
 {
@@ -15,20 +20,20 @@ void CommandCreateLine::exec(Data& data,UserInterface& ui)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CommandCreateLine::posMousePress(Point point,Data& data,UserInterface& ui)
+void CommandCreateLine::posMousePress(Point& point,Data& data,UserInterface& ui)
 {
    initial= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
    ui.activateMouseTracking();
 }
 
-void CommandCreateLine::posMouseMove(Point point,Data& data,UserInterface& ui)
+void CommandCreateLine::posMouseMove(Point& point,Data& data,UserInterface& ui)
 {
    final= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
    auto a= LineShape(id,initial,final);
    draw(ui,data.getCurrentFile().getDataViewController(),a);
 }
 
-void CommandCreateLine::posMouseRelease(Point point,Data& data,UserInterface& ui)
+void CommandCreateLine::posMouseRelease(Point& point,Data& data,UserInterface& ui)
 {
    final= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
 
