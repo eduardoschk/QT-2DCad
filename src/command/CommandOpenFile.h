@@ -6,12 +6,13 @@
 
 class File;
 class Shape;
+class DataViewController;
 
 class CommandOpenFile : public CommandIOFile
 {
 private:
-   void drawShape(UserInterface& ui,Shape& shape);
    void drawOpenFile(UserInterface& ui,File& openedFile);
+   void drawShape(UserInterface& ui,Shape& shape,DataViewController& dataViewController);
 public:
    ~CommandOpenFile() {}
    CommandOpenFile() {}

@@ -25,6 +25,13 @@ void DataViewController::newShape(Rect& rect)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Point DataViewController::fixScroll(Point point)
+{
+   point.x+= rectPresentation.initialX;
+   point.y+= rectPresentation.initialY;
+   return point;
+}
+
 Point DataViewController::fixPointWorldInView(Point point)
 {
    if (verifyDiffScale()) {
@@ -34,7 +41,7 @@ Point DataViewController::fixPointWorldInView(Point point)
    return point;
 }
 
-Point DataViewController::fixPoint(Point point)
+Point DataViewController::discardScroll(Point point)
 {
    point.x-= rectPresentation.initialX;
    point.y-= rectPresentation.initialY;
@@ -43,9 +50,6 @@ Point DataViewController::fixPoint(Point point)
 
 Point DataViewController::fixPointViewInWorld(Point point)
 {
-   point.x+= rectPresentation.initialX;
-   point.y+= rectPresentation.initialY;
-
    if (verifyDiffScale()) {
       point.x= point.x * (originalShapesSize.width) / currentShapesSize.width;
       point.y= point.y * (originalShapesSize.height) / currentShapesSize.height;
@@ -63,14 +67,29 @@ float DataViewController::getScale()
 void DataViewController::setScale(float scale)
 {
    zoomScale= scale;
+   Point centerPoint= Point(rectPresentation.initialX + (rectPresentation.width / 2),rectPresentation.initialY + (rectPresentation.height / 2));
+   Point originalCenterPoint= fixPointViewInWorld(centerPoint);
+   
    currentShapesSize= originalShapesSize * zoomScale;
+
+   Point newCenterPoint= fixPointWorldInView(originalCenterPoint);
 
    if (currentShapesSize > windowSize)
       viewPortSize= windowSize - frameBorder;
    else 
       viewPortSize= windowSize;
 
-   rectPresentation= Rect(0,0,viewPortSize.getWidth(),viewPortSize.getHeight());
+   int newInitialX,newInitialY;
+   newInitialX= newInitialY= 0;
+
+   if (verifyNeedHorizontalScroll()) {
+      newInitialX= newCenterPoint.x - (viewPortSize.getWidth() / 2);
+   }
+   if (verifyNeedVerticalScroll()) {
+      newInitialY= newCenterPoint.y - (viewPortSize.getHeight() / 2);
+   }
+
+   rectPresentation= Rect(newInitialX,newInitialY,viewPortSize.getWidth(),viewPortSize.getHeight());
 }
 
 void DataViewController::setWindowSize(Size& newSize)
@@ -95,7 +114,6 @@ Size& DataViewController::getWindowSize()
 Rect& DataViewController::getRectPresentation()
 {
    return rectPresentation;
-   //Rect(rectPresentation.initialX - 100,rectPresentation.initialY - 100,rectPresentation.width + 100,rectPresentation.height + 100);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

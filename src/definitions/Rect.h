@@ -16,7 +16,6 @@ public:
    Rect(int _initialX,int _initialY,float _width,float _height);
 
    bool fullyContained(Rect rect);
-   bool partiallyContained(Rect rect);
 
    bool isNull();
    bool operator>(const Rect size);

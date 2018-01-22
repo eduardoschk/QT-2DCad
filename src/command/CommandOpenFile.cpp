@@ -36,10 +36,11 @@ void CommandOpenFile::drawOpenFile(UserInterface& ui,File& opennedFile)
    ui.createDrawArea();
    std::deque<Shape*> shapes= opennedFile.getShapes();
    for (Shape* shape : shapes)
-      drawShape(ui,*shape);
+      drawShape(ui,*shape,opennedFile.getDataViewController());
 }
 
-void CommandOpenFile::drawShape(UserInterface& ui,Shape& shape)
+void CommandOpenFile::drawShape(UserInterface& ui,Shape& shape,DataViewController& dataViewController)
 {
-   //ui.drawPoints(shape.getId(),shape.getPointsToDraw(ZOOM::DEFAULT));
+   ui.markOffAllOptions();
+   ui.drawPoints(shape.getId(),shape.getPointsToDraw(dataViewController));
 }

@@ -25,41 +25,44 @@ void CommandCreateBezier::exec(Data& data,UserInterface& ui)
 
 void CommandCreateBezier::posMousePress(Point& point,Data& data,UserInterface& ui)
 {
+   auto dataViewController= data.getCurrentFile().getDataViewController();
    if (initial.isNull())
-      initial= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
+      initial= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
    else
-      control= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
+      control= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
    ui.activateMouseTracking();
 }
 
 void CommandCreateBezier::posMouseMove(Point& point,Data& data,UserInterface& ui)
 {
+   auto dataViewController= data.getCurrentFile().getDataViewController();
    if (!final.isNull())
       if (!control.isNull()) {
-         control= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
-         draw(ui,data.getCurrentFile().getDataViewController(),BezierShape(id,initial,control,final));
+         control= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+         draw(ui,dataViewController,BezierShape(id,initial,control,final));
       }
       else {
-         final= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
-         draw(ui,data.getCurrentFile().getDataViewController(),LineShape(id,initial,final));
+         final= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+         draw(ui,dataViewController,LineShape(id,initial,final));
       }
    else {
-      final= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
-      draw(ui,data.getCurrentFile().getDataViewController(),LineShape(id,initial,final));
+      final=dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+      draw(ui,dataViewController,LineShape(id,initial,final));
    }
 }
 
 void CommandCreateBezier::posMouseRelease(Point& point,Data& data,UserInterface& ui)
 {
+   auto dataViewController= data.getCurrentFile().getDataViewController();
    if (!control.isNull()) {
-      control= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
+      control= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
 
       Shape& bezier= saveShapeOnFile(data);
-      draw(ui,data.getCurrentFile().getDataViewController(),bezier);
+      draw(ui,dataViewController,bezier);
    }
    else {
-      final= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
-      draw(ui,data.getCurrentFile().getDataViewController(),LineShape(id,initial,final));
+      final= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+      draw(ui,dataViewController,LineShape(id,initial,final));
    }
 }
 

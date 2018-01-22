@@ -78,7 +78,7 @@ bool UserInterface::confirmOperation(std::string _message)
 
 std::string UserInterface::showPopupNewFile()
 {
-   std::string name= QInputDialog::getText(this,tr("Nome"),tr("Digite o nome desejado para o arquivo")).toStdString();
+   std::string name= QInputDialog::getText(this,QString::fromLatin1("Nome"),QString::fromLatin1("Digite o nome desejado para o arquivo")).toStdString();
    
    return name;
 }

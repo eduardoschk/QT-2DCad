@@ -95,7 +95,7 @@ std::deque<Point> ArcShape::getPointsToDrawInRect(DataViewController& dataViewCo
 
    for (Point point : calcPointsToDraw(dataViewController.getScale())) {
       if (point.on(dataViewController.getRectPresentation()))
-         fixsPoints.push_back(dataViewController.fixPoint(point));
+         fixsPoints.push_back(dataViewController.discardScroll(point));
    }
 
    return fixsPoints;

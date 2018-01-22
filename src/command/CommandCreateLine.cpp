@@ -22,23 +22,25 @@ void CommandCreateLine::exec(Data& data,UserInterface& ui)
 
 void CommandCreateLine::posMousePress(Point& point,Data& data,UserInterface& ui)
 {
-   initial= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
+   auto dataViewController= data.getCurrentFile().getDataViewController();
+   initial= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
    ui.activateMouseTracking();
 }
 
 void CommandCreateLine::posMouseMove(Point& point,Data& data,UserInterface& ui)
 {
-   final= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
-   auto a= LineShape(id,initial,final);
-   draw(ui,data.getCurrentFile().getDataViewController(),a);
+   auto dataViewController= data.getCurrentFile().getDataViewController();
+   final= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+   draw(ui,dataViewController,LineShape(id,initial,final));
 }
 
 void CommandCreateLine::posMouseRelease(Point& point,Data& data,UserInterface& ui)
 {
-   final= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
+   auto dataViewController= data.getCurrentFile().getDataViewController();
+   final= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
 
    Shape& line= saveShapeOnFile(data);
-   draw(ui,data.getCurrentFile().getDataViewController(),line);
+   draw(ui,dataViewController,line);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

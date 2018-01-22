@@ -24,27 +24,30 @@ void CommandCreateArc::exec(Data& data,UserInterface& ui)
 
 void CommandCreateArc::posMousePress(Point& point,Data& data,UserInterface& ui)
 {
+   auto dataViewController= data.getCurrentFile().getDataViewController();
    if (center.isNull())
-      center= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
+      center= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
    else
-      initial= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
+      initial= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
    ui.activateMouseTracking();
 }
 
 void CommandCreateArc::posMouseMove(Point& point,Data& data,UserInterface& ui)
 {
+   auto dataViewController= data.getCurrentFile().getDataViewController();
    if (!initial.isNull()) {
-      final= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
-      draw(ui,data.getCurrentFile().getDataViewController(),ArcShape(id,center,initial,final));
+      final= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+      draw(ui,dataViewController,ArcShape(id,center,initial,final));
    }
 }
 
 void CommandCreateArc::posMouseRelease(Point& point,Data& data,UserInterface& ui)
 {
+   auto dataViewController= data.getCurrentFile().getDataViewController();
    if (!final.isNull()) {
-      final= data.getCurrentFile().getDataViewController().fixPointViewInWorld(point);
+      final= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
       Shape& arc= saveShapeOnFile(data);
-      draw(ui,data.getCurrentFile().getDataViewController(),arc);
+      draw(ui,dataViewController,arc);
    }  
 }
 

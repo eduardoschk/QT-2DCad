@@ -19,6 +19,18 @@ int LineShape::getType()
 
 Rect LineShape::calcRectShape(float scale)
 {
+   //if (initial.y() > final.y()) {
+   //   if (initial.x() > final.x())
+   //      return QRect(final,initial);
+   //   else
+   //      return QRectF(QPoint(initial.x(),final.y()),QPoint(final.x(),initial.y()));
+   //}
+   //else {
+   //   if (initial.x() > final.x())
+   //      return QRectF(QPoint(final.x(),initial.y()),QPoint(initial.x(),final.y()));
+   //   else
+   //      return QRect(initial,final);
+   //}
    int east,north,west,south;
    west= south= 0;
    east= north= 99999;
@@ -111,8 +123,10 @@ std::deque<Point> LineShape::getPointsToDrawInRect(DataViewController& dataViewC
 
    std::deque<Point> fixsPoints;
 
-   for (Point point : calcPointsToDraw(dataViewController.getScale()))
-      fixsPoints.push_back(dataViewController.fixPoint(point));
+   for (Point point : calcPointsToDraw(dataViewController.getScale())) {
+      if (point.on(dataViewController.getRectPresentation()))
+         fixsPoints.push_back(dataViewController.discardScroll(point));
+   }
 
    return fixsPoints;
 }

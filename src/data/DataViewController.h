@@ -32,7 +32,8 @@ public:
    void setXPresentation(int value);
    void setYPresentation(int value);
    
-   Point fixPoint(Point point);
+   Point fixScroll(Point point);
+   Point discardScroll(Point point);
    Point fixPointWorldInView(Point point);
    Point fixPointViewInWorld(Point point);
 

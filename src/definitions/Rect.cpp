@@ -23,11 +23,6 @@ bool Rect::fullyContained(Rect rect)
    return (initialX <= rect.initialX && initialY <= rect.initialY && (initialX + width >= rect.initialX + rect.width) && (initialY + height >= rect.initialY + rect.height)); 
 }
 
-bool Rect::partiallyContained(Rect rect)
-{
-   return true;
-}
-
 bool Rect::isNull()
 { 
    return (height <= 0) && (width <= 0); 

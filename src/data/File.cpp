@@ -3,8 +3,6 @@
 #include "Point.h"
 #include "Rect.h"
 
-#include <memory>
-
 File::~File()
 {
    for (int i= 0; i < shapes.size() ; ++i)
@@ -52,13 +50,10 @@ std::map<int,std::deque<Point>> File::repaintAll()
    return points;
 }
 
-#include <iostream>
-
 std::map<int,std::deque<Point>> File::repaintRectInPresentation()
 {
    std::map<int,std::deque<Point>> points;
    for (std::pair<int,Shape*> shape : shapes) {
-      // auto b= viewController.getRectPresentation().partiallyContained(shape.second->getCurrentRectShape(viewController));
       std::deque<Point> pointsOfShape= shape.second->getPointsToDrawInRect(viewController);
       points.insert(std::pair<int,std::deque<Point>>(shape.second->getId(),pointsOfShape));
    }
