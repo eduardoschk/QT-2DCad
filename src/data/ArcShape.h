@@ -9,45 +9,46 @@ enum QUADRANT { UM,DOIS,TRES,QUATRO };
 class ArcShape : public Shape
 {
 private:
-   Point originalCenterPoint;
-   Point originalInitialPoint;
-   Point originalFinalPoint;
+   Coordinate originalCenterCoordinate;
+   Coordinate originalInitialCoordinate;
+   Coordinate originalFinalCoordinate;
 
-   Point currentCenterPoint;
-   Point currentInitialPoint;
-   Point currentFinalPoint;
+   Coordinate currentCenterCoordinate;
+   Coordinate currentInitialCoordinate;
+   Coordinate currentFinalCoordinate;
 
-   double raio;
+   double radius;
 
-   Rect calcRectShape(float scale);
-   std::deque<Point> calcPointsToDraw(float scale);
+   void calcRectShape();
 
-   QUADRANT calcQuadrantPoint(const Point& point);
+   std::deque<Coordinate> calcCoordinatesOfShape(float scale);
+
+   QUADRANT calcQuadrantCoordinate(const Coordinate& coordinate);
    int diffCordenates(const int coord1,const int coord2);
 
-   void drawPoints(std::deque<Point>& points,const double initAngule,const double finalAngule,float scale);
+   void addCoordinates(std::deque<Coordinate>& coordinates,const double initAngule,const double finalAngule,float scale);
 
-   Point calcPointOnAngle(double angle);
+   Coordinate calcCoordinateOnAngle(double angle);
 
-   void drawWithInitialPointInFirstQuadrant(std::deque<Point>& points,double distanceInitFinal,float scale);
-   void drawWithInitialPointInSecondQuadrant(std::deque<Point>& points,double distanceInitFinal,float scale);
-   void drawWithInitialPointInThirdQuadrant(std::deque<Point>& points,double distanceInitFinal,float scale);
-   void drawWithInitialPointInFourthQuadrant(std::deque<Point>& points,double distanceInitFinal,float scale);
+   void calcCoordinatesWithInitialCoordinateInFirstQuadrant(std::deque<Coordinate>& coordinates,double distanceInitFinal,float scale);
+   void calcCoordinatesWithInitialCoordinateInSecondQuadrant(std::deque<Coordinate>& coordinates,double distanceInitFinal,float scale);
+   void calcCoordinatesWithInitialCoordinateInThirdQuadrant(std::deque<Coordinate>& coordinates,double distanceInitFinal,float scale);
+   void calcCoordinatesWithInitialCoordinateInFourthQuadrant(std::deque<Coordinate>& coordinates,double distanceInitFinal,float scale);
 
    double calcAngle(double catetoOposto,double hipo);
-   double calcPitagoras(const Point point1,const Point point2);
+   double calcPythagoras(const Coordinate& Coordinate1,const Coordinate& Coordinate2);
 public:
    ~ArcShape();
-   ArcShape(int _id, Point& _center,Point& _initial,Point& _final);
+   ArcShape(int _id, Coordinate& _center,Coordinate& _initial,Coordinate& _final);
 
    int getType();
 
-   Rect getOriginalRectShape();
+   Rect getRectShape();
    Rect getCurrentRectShape(DataViewController& dataViewController);
 
-   std::deque<Point> getSelectedPoints();
-   std::deque<Point> getPointsToDraw(DataViewController& dataViewController);
-   std::deque<Point> getPointsToDrawInRect(DataViewController& dataViewController);
+   std::deque<Coordinate> getSelectedCoordinates();
+   std::deque<Coordinate> getCoordinatesToDraw(DataViewController& dataViewController);
+   std::deque<Coordinate> getCoordinatesToDrawInRect(DataViewController& dataViewController);
 
 };
 

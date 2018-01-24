@@ -7,26 +7,26 @@
 class LineShape : public Shape
 {
 private:
-   Point originalInitialPoint;
-   Point originalFinalPoint;
+   Coordinate originalInitialCoordinate;
+   Coordinate originalFinalCoordinate;
 
-   Point currentInitialPoint;
-   Point currentFinalPoint;
+   Coordinate currentInitialCoordinate;
+   Coordinate currentFinalCoordinate;
 
-   Rect calcRectShape(float scale);
-   std::deque<Point> calcPointsToDraw(float scale);
+   void calcRectShape();
+   std::deque<Coordinate> calcCoordinatesOfShape(float scale);
 public:
    ~LineShape() {}
-   LineShape(int _id,Point& _initial,Point& _final);
+   LineShape(int _id,Coordinate& _initial,Coordinate& _final);
 
    int getType();
 
-   Rect getOriginalRectShape();
+   Rect getRectShape();
    Rect getCurrentRectShape(DataViewController& dataViewController);
 
-   std::deque<Point> getSelectedPoints();
-   std::deque<Point> getPointsToDraw(DataViewController& dataViewController);
-   std::deque<Point> getPointsToDrawInRect(DataViewController& dataViewController);
+   std::deque<Coordinate> getSelectedCoordinates();
+   std::deque<Coordinate> getCoordinatesToDraw(DataViewController& dataViewController);
+   std::deque<Coordinate> getCoordinatesToDrawInRect(DataViewController& dataViewController);
 };
 
 #endif // INCLUDED_LINE_SHAPE_H

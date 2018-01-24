@@ -1,60 +1,53 @@
 #include "DataViewController.h"
 #include "Rect.h"
 #include "Size.h"
-#include "Point.h"
+#include "Coordinate.h"
 
 const int footerHeight= 105;
 const int scrollSizeWidget= 15;
-const Size& frameBorder= Size(scrollSizeWidget,footerHeight + scrollSizeWidget);
-const Size& defaultDraw= Size(100,100);
+Size& defaultDraw= Size(100,100);
 
-DataViewController::DataViewController() : originalShapesSize(Size(defaultDraw)),windowSize(Size()),viewPortSize(Size()),currentShapesSize(Size()),rectPresentation(Rect())
+DataViewController::DataViewController() : coordinateMapper(defaultDraw,defaultDraw)
 {
    zoomScale= 1;
+   rectPresentation= Rect(0,0,defaultDraw.width,defaultDraw.height);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void DataViewController::newShape(Rect& rect)
 {
-   if (!originalShapesSize.contains(rect)) {
-      originalShapesSize= (originalShapesSize << rect) + defaultDraw;
-      currentShapesSize= originalShapesSize * zoomScale;
+   if (!coordinateMapper.getWorldSize().contains(rect)) {
+      coordinateMapper.setWorldSize((coordinateMapper.getWorldSize() << rect) + defaultDraw);
+      coordinateMapper.setDeviceSize(coordinateMapper.getWorldSize() * zoomScale);
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Point DataViewController::fixScroll(Point point)
+Coordinate DataViewController::discardScroll(Coordinate& coordinate)
 {
-   point.x+= rectPresentation.initialX;
-   point.y+= rectPresentation.initialY;
-   return point;
+   Coordinate fixedCoordenate;
+
+   fixedCoordenate.x= coordinate.x - rectPresentation.initialX;
+   fixedCoordenate.y= coordinate.y - rectPresentation.initialY;
+
+   return fixedCoordenate;
 }
 
-Point DataViewController::fixPointWorldInView(Point point)
+Coordinate DataViewController::repairCoordinateWorldToView(Coordinate& coordinate)
 {
-   if (verifyDiffScale()) {
-      point.x= (point.x * currentShapesSize.width) / originalShapesSize.width;
-      point.y= (point.y * currentShapesSize.height) / originalShapesSize.height;
-   }
-   return point;
+   return coordinateMapper.mapCoordinateWorldToDevice(coordinate);
 }
 
-Point DataViewController::discardScroll(Point point)
+Coordinate DataViewController::repairCoordinateViewToWorld(Coordinate& coordinate)
 {
-   point.x-= rectPresentation.initialX;
-   point.y-= rectPresentation.initialY;
-   return point;
-}
+   Coordinate fixedCoordenate;
 
-Point DataViewController::fixPointViewInWorld(Point point)
-{
-   if (verifyDiffScale()) {
-      point.x= point.x * (originalShapesSize.width) / currentShapesSize.width;
-      point.y= point.y * (originalShapesSize.height) / currentShapesSize.height;
-   }
-   return point;
+   fixedCoordenate.x= coordinate.x + rectPresentation.initialX;
+   fixedCoordenate.y= coordinate.y + rectPresentation.initialY;
+
+   return coordinateMapper.mapCoordinateDeviceToWorld(fixedCoordenate);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,30 +57,44 @@ float DataViewController::getScale()
    return zoomScale;
 }
 
+void DataViewController::recalcSizes()
+{
+   if (coordinateMapper.getDeviceSize() > windowSize)
+      recalcViewPortSize();
+   else
+      viewPortSize= windowSize;
+}
+
+void DataViewController::recalcViewPortSize()
+{
+   viewPortSize= windowSize - Size(0,footerHeight);
+   if (verifyNeedVerticalScroll())
+      viewPortSize= viewPortSize - Size(scrollSizeWidget,0);
+   if (verifyNeedHorizontalScroll())
+      viewPortSize= viewPortSize - Size(0,scrollSizeWidget);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void DataViewController::setScale(float scale)
 {
    zoomScale= scale;
-   Point centerPoint= Point(rectPresentation.initialX + (rectPresentation.width / 2),rectPresentation.initialY + (rectPresentation.height / 2));
-   Point originalCenterPoint= fixPointViewInWorld(centerPoint);
-   
-   currentShapesSize= originalShapesSize * zoomScale;
+   Coordinate centerCoordenate(rectPresentation.initialX + (rectPresentation.width / 2),rectPresentation.initialY + (rectPresentation.height / 2));
+   Coordinate originalCenterCoordinate= coordinateMapper.mapCoordinateDeviceToWorld(centerCoordenate);
 
-   Point newCenterPoint= fixPointWorldInView(originalCenterPoint);
+   coordinateMapper.setDeviceSize(coordinateMapper.getWorldSize() * zoomScale);
 
-   if (currentShapesSize > windowSize)
-      viewPortSize= windowSize - frameBorder;
-   else 
-      viewPortSize= windowSize;
+   Coordinate newCenterCoordinate= coordinateMapper.mapCoordinateWorldToDevice(originalCenterCoordinate);
+
+   recalcSizes();
 
    int newInitialX,newInitialY;
    newInitialX= newInitialY= 0;
 
-   if (verifyNeedHorizontalScroll()) {
-      newInitialX= newCenterPoint.x - (viewPortSize.getWidth() / 2);
-   }
-   if (verifyNeedVerticalScroll()) {
-      newInitialY= newCenterPoint.y - (viewPortSize.getHeight() / 2);
-   }
+   if (verifyNeedHorizontalScroll())
+      newInitialX= newCenterCoordinate.x - (viewPortSize.getWidth() / 2);
+   if (verifyNeedVerticalScroll())
+      newInitialY= newCenterCoordinate.y - (viewPortSize.getHeight() / 2);
 
    rectPresentation= Rect(newInitialX,newInitialY,viewPortSize.getWidth(),viewPortSize.getHeight());
 }
@@ -95,13 +102,9 @@ void DataViewController::setScale(float scale)
 void DataViewController::setWindowSize(Size& newSize)
 {
    windowSize= newSize;
+   recalcSizes();
 
-   if (currentShapesSize > windowSize)
-      viewPortSize= windowSize - frameBorder;
-   else
-      viewPortSize= windowSize;
-
-   rectPresentation= Rect(rectPresentation.initialX,rectPresentation.initialY,viewPortSize.getWidth(),viewPortSize.getHeight());
+   rectPresentation= Rect(rectPresentation.getInitialCordinate(),viewPortSize.getWidth(),viewPortSize.getHeight());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -116,33 +119,41 @@ Rect& DataViewController::getRectPresentation()
    return rectPresentation;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
-bool DataViewController::verifyDiffScale()
+bool DataViewController::rectIsInPresentation(Rect& rect)
 {
-   return zoomScale != 1;
+   bool shapeOnRect;
+   if (rect > rectPresentation)
+      shapeOnRect= rect.fullyContained(rectPresentation);
+   else 
+      shapeOnRect= rectPresentation.fullyContained(rect);
+   
+   shapeOnRect= shapeOnRect || rectPresentation.partiallycontained(rect);
+
+   return shapeOnRect;
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 bool DataViewController::verifyNeedVerticalScroll()
 {
-   return currentShapesSize.height > viewPortSize.height;
+   return coordinateMapper.getDeviceSize().height > viewPortSize.height;
 }
 
 bool DataViewController::verifyNeedHorizontalScroll()
 {
-   return currentShapesSize.width > viewPortSize.width;
+   return coordinateMapper.getDeviceSize().width > viewPortSize.width;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 int DataViewController::calcVerticalScrollLimit()
 {
-   return currentShapesSize.height - viewPortSize.height;
+   return coordinateMapper.getDeviceSize().height - viewPortSize.height;
 }
 
 int DataViewController::calcHorizontalScrollLimit()
 {
-   return currentShapesSize.width - viewPortSize.width;
+   return coordinateMapper.getDeviceSize().width - viewPortSize.width;
 }
 
 int DataViewController::calcVerticalScrollPageStep()

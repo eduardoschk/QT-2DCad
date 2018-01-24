@@ -3,7 +3,7 @@
 #define INCLUDED_IO_FILE_H
 
 #include <string>
-#include "Point.h"
+#include "Coordinate.h"
 
 class File;
 class Shape;
@@ -12,10 +12,10 @@ class IOFile
 {
 private:
    void writeShape(std::ofstream& stream,Shape& shape);
-   void writePoint(std::ofstream& stream,Point point);
+   void writeCoordinate(std::ofstream& stream,Coordinate coordinate);
 
    Shape* readShape(int id,std::ifstream& stream);
-   Point readPoint(std::ifstream& stream);
+   Coordinate readCoordinate(std::ifstream& stream);
    Shape* readArcShape(int id,std::ifstream& stream);
    Shape* readLineShape(int id,std::ifstream& stream);
    Shape* readBezierShape(int id,std::ifstream& stream);

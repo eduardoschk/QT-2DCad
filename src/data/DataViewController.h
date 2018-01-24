@@ -5,8 +5,9 @@
 #include <deque>
 #include "Size.h"
 #include "Rect.h"
+#include "CoordinateMapper.h"
 
-class Point;
+class Coordinate;
 
 class DataViewController
 {
@@ -15,9 +16,12 @@ private:
 
    Size windowSize;
    Size viewPortSize;
-   Size currentShapesSize;
-   Size originalShapesSize;
    Rect rectPresentation;
+
+   CoordinateMapper coordinateMapper;
+
+   void recalcSizes();
+   void recalcViewPortSize();
 
 public:
    ~DataViewController() {}
@@ -32,15 +36,15 @@ public:
    void setXPresentation(int value);
    void setYPresentation(int value);
    
-   Point fixScroll(Point point);
-   Point discardScroll(Point point);
-   Point fixPointWorldInView(Point point);
-   Point fixPointViewInWorld(Point point);
+   Coordinate discardScroll(Coordinate& coordinate);
+
+   Coordinate repairCoordinateWorldToView(Coordinate& coordinate);
+   Coordinate repairCoordinateViewToWorld(Coordinate& coordinate);
 
    Size& getWindowSize();
    Rect& getRectPresentation();
    
-   bool verifyDiffScale();
+   bool rectIsInPresentation(Rect& rect);
 
    bool verifyNeedVerticalScroll();
    bool verifyNeedHorizontalScroll();

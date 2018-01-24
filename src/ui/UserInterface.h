@@ -1,12 +1,15 @@
 #pragma once
+#pragma warning( disable : 4290 )  
 #ifndef INCLUDED_USER_INTERFACE_H
 #define INCLUDED_USER_INTERFACE_H
 
-#include <QWidget>
 #include <deque>
 #include <string>
+#include <QWidget>
+#include <exception>
+
 #include "Size.h"
-#include "Point.h"
+#include "Coordinate.h"
 #include "MainWindow.h"
 
 class App;
@@ -23,6 +26,8 @@ public:
    ~UserInterface() {}
    UserInterface(App& _app);
 
+   class CancelNewFile : public std::exception { char const* what() const { return ""; } };
+
    void init();
 
    void markOffAllOptions();
@@ -37,7 +42,9 @@ public:
    void activateMouseTracking();
 
    void createDrawArea();
+
    void setTitleWindow(const char* name);
+   void setTipMessage(const char* messageTip);
 
    void destructVerticalScrollBar();
    void destructHorizontalScrollBar();
@@ -48,10 +55,10 @@ public:
 
    void clearArea();
    void eraseShape(int idShape);
-   void drawPoint(int idShape,Point point);
-   void drawPoints(int idShape,std::deque<Point> points);
+   void drawCoordinate(int idShape,Coordinate coordinate);
+   void drawCoordinates(int idShape,std::deque<Coordinate> coordinates);
 
-   std::string showPopupNewFile();
+   std::string showPopupNewFile() throw(CancelNewFile);
 
    std::string requestPathFileToOpen();
    void showErrorMessage(std::string message);
@@ -63,9 +70,9 @@ public slots:
    void startCreateLine();
    void startCreateBezier();
 
-   void mouseMoveEventInDrawArea(Point point);
-   void mousePressEventInDrawArea(Point point);
-   void mouseReleaseEventInDrawArea(Point point);
+   void mouseMoveEventInDrawArea(Coordinate coordinate);
+   void mousePressEventInDrawArea(Coordinate coordinate);
+   void mouseReleaseEventInDrawArea(Coordinate coordinate);
 
    void verticalScrollMove(int value);
    void horizontalScrollMove(int value);

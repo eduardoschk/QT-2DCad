@@ -2,10 +2,11 @@
 #include "Rect.h"
 #include "DataViewController.h"
 
-LineShape::LineShape(int _id,Point& _initial,Point& _final) : Shape(_id)
+LineShape::LineShape(int _id,Coordinate& _initial,Coordinate& _final) : Shape(_id)
 {
-   originalFinalPoint= _final;
-   originalInitialPoint= _initial;
+   originalFinalCoordinate= _final;
+   originalInitialCoordinate= _initial;
+   calcRectShape();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,64 +18,67 @@ int LineShape::getType()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Rect LineShape::calcRectShape(float scale)
+void LineShape::calcRectShape()
 {
-   //if (initial.y() > final.y()) {
-   //   if (initial.x() > final.x())
-   //      return QRect(final,initial);
-   //   else
-   //      return QRectF(QPoint(initial.x(),final.y()),QPoint(final.x(),initial.y()));
-   //}
-   //else {
-   //   if (initial.x() > final.x())
-   //      return QRectF(QPoint(final.x(),initial.y()),QPoint(initial.x(),final.y()));
-   //   else
-   //      return QRect(initial,final);
-   //}
+   currentFinalCoordinate= originalFinalCoordinate;
+   currentInitialCoordinate= originalInitialCoordinate;
+
    int east,north,west,south;
    west= south= 0;
    east= north= 99999;
 
-   for (Point point : calcPointsToDraw(scale)) {
-      if (point.x < east)
-         east= point.x;
-      if (point.x > west)
-         west= point.x;
-      if (point.y < north)
-         north= point.y;
-      if (point.y > south)
-         south= point.y;
+   for (Coordinate coordinate : calcCoordinatesOfShape(1)) {
+      if (coordinate.x < east)
+         east= coordinate.x;
+      if (coordinate.x > west)
+         west= coordinate.x;
+      if (coordinate.y < north)
+         north= coordinate.y;
+      if (coordinate.y > south)
+         south= coordinate.y;
    }
-  
-   return Rect(east,north,(west - east),(south - north));
-}
 
-Rect LineShape::getOriginalRectShape()
-{
-   currentFinalPoint= originalFinalPoint;
-   currentInitialPoint= originalInitialPoint;
-   return calcRectShape(1);
-}
-
-Rect LineShape::getCurrentRectShape(DataViewController& dataViewController)
-{
-   currentFinalPoint= dataViewController.fixPointWorldInView(originalFinalPoint);
-   currentInitialPoint= dataViewController.fixPointWorldInView(originalInitialPoint);
-
-   return calcRectShape(dataViewController.getScale());
+   rectShape= Rect(east,north,(west - east),(south - north));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::deque<Point> LineShape::calcPointsToDraw(float scale)
+Rect LineShape::getRectShape()
 {
-   std::deque<Point> points;
-   
-   int x= currentInitialPoint.x;
-   int y= currentInitialPoint.y;
+   return rectShape;
+}
 
-   int distanceY = currentFinalPoint.y - currentInitialPoint.y;
-   int distanceX = currentFinalPoint.x - currentInitialPoint.x;
+Rect LineShape::getCurrentRectShape(DataViewController& dataViewController)
+{
+   Coordinate repairedInitialCoordinate= dataViewController.repairCoordinateWorldToView(rectShape.getInitialCordinate());
+   float repairedWidth,repairedHeight;
+   repairedWidth= rectShape.width * dataViewController.getScale();
+   repairedHeight= rectShape.height * dataViewController.getScale();
+   return Rect(repairedInitialCoordinate, repairedWidth, repairedHeight);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+std::deque<Coordinate> LineShape::getSelectedCoordinates()
+{
+   std::deque<Coordinate> coordinates;
+
+   coordinates.push_back(originalInitialCoordinate);
+   coordinates.push_back(originalFinalCoordinate);
+   return coordinates;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+std::deque<Coordinate> LineShape::calcCoordinatesOfShape(float scale)
+{
+   std::deque<Coordinate> coordinates;
+   
+   int x= currentInitialCoordinate.x;
+   int y= currentInitialCoordinate.y;
+
+   int distanceY = currentFinalCoordinate.y - currentInitialCoordinate.y;
+   int distanceX = currentFinalCoordinate.x - currentInitialCoordinate.x;
    int stepX,stepY;
 
    distanceY < 0 ? stepY= -1 : stepY= 1;
@@ -84,7 +88,7 @@ std::deque<Point> LineShape::calcPointsToDraw(float scale)
    distanceX *= stepX;
 
    if (distanceX > distanceY) {
-      for (int fraction= distanceY - distanceX ; x != currentFinalPoint.x ; points.push_back(Point(x,y))) {
+      for (int fraction= distanceY - distanceX ; x != currentFinalCoordinate.x ; coordinates.push_back(Coordinate(x,y))) {
          if (fraction >= 0) {
             y += stepY;
             fraction -= distanceX;
@@ -94,7 +98,7 @@ std::deque<Point> LineShape::calcPointsToDraw(float scale)
       }
    }
    else {
-      for (int fraction = distanceX - distanceY ; y != currentFinalPoint.y ; points.push_back(Point(x,y))) {
+      for (int fraction = distanceX - distanceY ; y != currentFinalCoordinate.y ; coordinates.push_back(Coordinate(x,y))) {
          if (fraction >= 0) {
             x += stepX;
             fraction -= distanceY;
@@ -103,41 +107,29 @@ std::deque<Point> LineShape::calcPointsToDraw(float scale)
          fraction += distanceX;
       }
    }
-   return points;
+
+   return coordinates;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::deque<Point> LineShape::getPointsToDraw(DataViewController& dataViewController)
+std::deque<Coordinate> LineShape::getCoordinatesToDraw(DataViewController& dataViewController)
 {
-   currentInitialPoint= dataViewController.fixPointWorldInView(originalInitialPoint);
-   currentFinalPoint= dataViewController.fixPointWorldInView(originalFinalPoint);
+   currentFinalCoordinate= dataViewController.repairCoordinateWorldToView(originalFinalCoordinate);
+   currentInitialCoordinate= dataViewController.repairCoordinateWorldToView(originalInitialCoordinate);
 
-   return calcPointsToDraw(dataViewController.getScale());
+   return calcCoordinatesOfShape(dataViewController.getScale());
 }
 
-std::deque<Point> LineShape::getPointsToDrawInRect(DataViewController& dataViewController)
+std::deque<Coordinate> LineShape::getCoordinatesToDrawInRect(DataViewController& dataViewController)
 {
-   currentInitialPoint= dataViewController.fixPointWorldInView(originalInitialPoint);
-   currentFinalPoint= dataViewController.fixPointWorldInView(originalFinalPoint);
+   currentFinalCoordinate= dataViewController.repairCoordinateWorldToView(originalFinalCoordinate);
+   currentInitialCoordinate= dataViewController.repairCoordinateWorldToView(originalInitialCoordinate);
 
-   std::deque<Point> fixsPoints;
-
-   for (Point point : calcPointsToDraw(dataViewController.getScale())) {
-      if (point.on(dataViewController.getRectPresentation()))
-         fixsPoints.push_back(dataViewController.discardScroll(point));
+   std::deque<Coordinate> repairedCoordinates;
+   for (Coordinate coordinate : calcCoordinatesOfShape(dataViewController.getScale())) {
+      if (coordinate.on(dataViewController.getRectPresentation()))
+         repairedCoordinates.push_back(dataViewController.discardScroll(coordinate));
    }
-
-   return fixsPoints;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-std::deque<Point> LineShape::getSelectedPoints()
-{
-   std::deque<Point> points;
-  
-   points.push_back(originalInitialPoint);
-   points.push_back(originalFinalPoint);
-   return points;
+   return repairedCoordinates;
 }

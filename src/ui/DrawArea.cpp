@@ -1,17 +1,17 @@
 #include "DrawArea.h"
-
 #include <QPainter>
 #include <QMouseEvent>
 #include <QPainterPath>
 
 DrawArea::~DrawArea() 
 {
-   points.clear();
+   coordinatesOfTheShapesDrawn.clear();
 }
 
 DrawArea::DrawArea(QWidget* parent) : QWidget(parent)
 {
    configureDefaultValues();
+   setCursor(Qt::CrossCursor);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,13 +27,13 @@ void DrawArea::configureDefaultValues()
 void DrawArea::paintEvent(QPaintEvent* event)
 {
    QPainter painter(this);
-   if (points.size() > 0) {
-      for (std::pair<int,std::deque<Point>> pointsOfShape : points) {
-         if (pointsOfShape.second.size() > 0) {
+   if (coordinatesOfTheShapesDrawn.size() > 0) {
+      for (std::pair<int,std::deque<Coordinate>> coordinatesOfShape : coordinatesOfTheShapesDrawn) {
+         if (coordinatesOfShape.second.size() > 0) {
             QPainterPath path;
-            path.moveTo(pointsOfShape.second.front().x,pointsOfShape.second.front().y);
-            for (Point point : pointsOfShape.second)
-               path.lineTo(point.x,point.y);
+            path.moveTo(coordinatesOfShape.second.front().x,coordinatesOfShape.second.front().y);
+            for (Coordinate coordinate : coordinatesOfShape.second)
+               path.lineTo(coordinate.x,coordinate.y);
             painter.drawPath(path);
          }
       }
@@ -42,21 +42,21 @@ void DrawArea::paintEvent(QPaintEvent* event)
 
 void DrawArea::mousePressEvent(QMouseEvent* event)
 {
-   Point pos= Point(event->pos().x(),event->pos().y());
+   Coordinate pos= Coordinate(event->pos().x(),event->pos().y());
    emit(mousePress(pos));
    event->accept();
 }
 
 void DrawArea::mouseMoveEvent(QMouseEvent* event)
 {
-   Point pos= Point(event->pos().x(),event->pos().y());
+   Coordinate pos= Coordinate(event->pos().x(),event->pos().y());
    emit(mouseMove(pos));
    event->accept();
 }
 
 void DrawArea::mouseReleaseEvent(QMouseEvent* event)
 {
-   Point pos= Point(event->pos().x(),event->pos().y());
+   Coordinate pos= Coordinate(event->pos().x(),event->pos().y());
    emit(mouseRelease(pos));
    event->accept();
 }
@@ -65,37 +65,37 @@ void DrawArea::mouseReleaseEvent(QMouseEvent* event)
 
 void DrawArea::clearArea()
 {
-   points.clear();
+   coordinatesOfTheShapesDrawn.clear();
    repaint();
 }
 
 void DrawArea::eraseShape(int idShape)
 {
-   points.erase(idShape);
+   coordinatesOfTheShapesDrawn.erase(idShape);
    update();
 }
 
-void DrawArea::drawPoint(int idShape,Point& point)
+void DrawArea::drawCoordinate(int idShape,Coordinate& coordinate)
 {
-   auto shape= points.find(idShape);
-   if (shape != points.end()) {
-      shape->second.push_back(point);
+   auto shape= coordinatesOfTheShapesDrawn.find(idShape);
+   if (shape != coordinatesOfTheShapesDrawn.end()) {
+      shape->second.push_back(coordinate);
    }
    else {
-      std::deque<Point> newShapePoints;
-      newShapePoints.push_back(point);
-      points.insert(std::pair<int,std::deque<Point>>(idShape,newShapePoints));
+      std::deque<Coordinate> newShapeCoordinates;
+      newShapeCoordinates.push_back(coordinate);
+      coordinatesOfTheShapesDrawn.insert(std::pair<int,std::deque<Coordinate>>(idShape,newShapeCoordinates));
    }
    update();
 }
 
-void DrawArea::drawPoints(int idShape,std::deque<Point>& newPoints)
+void DrawArea::drawCoordinates(int idShape,std::deque<Coordinate>& newCoordinates)
 {
-   auto shape= points.find(idShape);
-   if (shape != points.end()) {
-      shape->second.swap(newPoints);
+   auto shape= coordinatesOfTheShapesDrawn.find(idShape);
+   if (shape != coordinatesOfTheShapesDrawn.end()) {
+      shape->second.swap(newCoordinates);
    }
    else
-      points.insert(std::pair<int,std::deque<Point>>(idShape,newPoints));
+      coordinatesOfTheShapesDrawn.insert(std::pair<int,std::deque<Coordinate>>(idShape,newCoordinates));
    update();
 }

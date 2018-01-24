@@ -6,8 +6,12 @@
 
 void CommandChangeDrawArea::repaint(Data& data,UserInterface& ui)
 {
-   for (std::pair<int,std::deque<Point>> points : data.getCurrentFile().repaintRectInPresentation())
-      ui.drawPoints(points.first,points.second);
+   for (std::pair<int,std::deque<Coordinate>> coordinates : data.getCurrentFile().repaintRectInPresentation()) {
+      if (coordinates.second.size() > 0)
+         ui.drawCoordinates(coordinates.first,coordinates.second);
+      else
+         ui.eraseShape(coordinates.first);
+   }
 }
 
 void CommandChangeDrawArea::verifyTheNeedForScrollInDrawArea(DataViewController& dataView,UserInterface& ui)

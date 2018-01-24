@@ -4,28 +4,29 @@
 #include "Rect.h"
 #include "DataViewController.h"
 
-BezierShape::BezierShape(int _id,Point& _initial,Point& _control,Point& _final) : Shape(_id)
+BezierShape::BezierShape(int _id,Coordinate& _initial,Coordinate& _control,Coordinate& _final) : Shape(_id)
 {
-   originalInitialPoint= _initial;
-   originalControlPoint= _control;
-   originalFinalPoint= _final;
+   originalFinalCoordinate= _final;
+   originalInitialCoordinate= _initial;
+   originalControlCoordinate= _control;
+   calcRectShape();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Point BezierShape::calcPoint(float distance)
+Coordinate BezierShape::calcCoordinate(float distance)
 {
-   return Point(calcX(distance),calcY(distance));
+   return Coordinate(calcX(distance),calcY(distance));
 }
 
 float BezierShape::calcX(float distance)
 {
-   return pow((1 - distance),2) * currentInitialPoint.x + 2 * distance * (1 - distance) * currentControlPoint.x + pow(distance,2) * currentFinalPoint.x;
+   return pow((1 - distance),2) * currentInitialCoordinate.x + 2 * distance * (1 - distance) * currentControlCoordinate.x + pow(distance,2) * currentFinalCoordinate.x;
 }
 
 float BezierShape::calcY(float distance)
 {
-   return pow((1 - distance),2) * currentInitialPoint.y + 2 * distance * (1 - distance) * currentControlPoint.y + pow(distance,2) * currentFinalPoint.y;
+   return pow((1 - distance),2) * currentInitialCoordinate.y + 2 * distance * (1 - distance) * currentControlCoordinate.y + pow(distance,2) * currentFinalCoordinate.y;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,86 +38,89 @@ int BezierShape::getType()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Rect BezierShape::calcRectShape(float scale)
+void BezierShape::calcRectShape()
 {
+   currentFinalCoordinate= originalFinalCoordinate;
+   currentInitialCoordinate= originalInitialCoordinate;
+   currentControlCoordinate= originalControlCoordinate;
+
    int east,north,west,south;
    west= south= 0;
    east= north= 99999;
 
-   for (Point point : calcPointsToDraw(scale)) {
-      if (point.x < east)
-         east= point.x;
-      if (point.x > west)
-         west= point.x;
-      if (point.y < north)
-         north= point.y;
-      if (point.y > south)
-         south= point.y;
+   for (Coordinate coordinate : calcCoordinatesOfShape(1)) {
+      if (coordinate.x < east)
+         east= coordinate.x;
+      if (coordinate.x > west)
+         west= coordinate.x;
+      if (coordinate.y < north)
+         north= coordinate.y;
+      if (coordinate.y > south)
+         south= coordinate.y;
    }
 
-   return Rect(east,north,(west - east),(south - north));
-}
-
-Rect BezierShape::getOriginalRectShape()
-{
-   currentFinalPoint= originalFinalPoint;
-   currentControlPoint= originalControlPoint;
-   currentInitialPoint= originalInitialPoint;
-
-   return calcRectShape(1);
-}
-
-Rect BezierShape::getCurrentRectShape(DataViewController& dataViewController)
-{
-   currentFinalPoint= dataViewController.fixPointWorldInView(originalFinalPoint);
-   currentControlPoint= dataViewController.fixPointWorldInView(originalControlPoint);
-   currentInitialPoint= dataViewController.fixPointWorldInView(originalInitialPoint);
-
-   return calcRectShape(dataViewController.getScale());
+   rectShape= Rect(east,north,(west - east),(south - north));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::deque<Point> BezierShape::calcPointsToDraw(float scale)
+Rect BezierShape::getRectShape()
 {
-   std::deque<Point> pointsToDraw;
+   return rectShape;
+}
+
+Rect BezierShape::getCurrentRectShape(DataViewController& dataViewController)
+{
+   Coordinate repairedInitialCoordinate= dataViewController.repairCoordinateWorldToView(rectShape.getInitialCordinate());
+   return Rect(repairedInitialCoordinate,rectShape.width * dataViewController.getScale(),rectShape.height * dataViewController.getScale());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+std::deque<Coordinate> BezierShape::getSelectedCoordinates()
+{
+   std::deque<Coordinate> coordinates;
+
+   coordinates.push_back(originalInitialCoordinate);
+   coordinates.push_back(originalControlCoordinate);
+   coordinates.push_back(originalFinalCoordinate);
+   return coordinates;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+std::deque<Coordinate> BezierShape::calcCoordinatesOfShape(float scale)
+{
+   std::deque<Coordinate> CoordinatesToDraw;
    for (float distance= 0; distance <= 1; distance+= 0.01f / scale)
-      pointsToDraw.push_back(calcPoint(distance));
-   pointsToDraw.push_back(calcPoint(1));
-   return pointsToDraw;
+      CoordinatesToDraw.push_back(calcCoordinate(distance));
+   CoordinatesToDraw.push_back(calcCoordinate(1));
+   return CoordinatesToDraw;
 }
 
-std::deque<Point> BezierShape::getPointsToDraw(DataViewController& dataViewController)
-{
-   currentInitialPoint= dataViewController.fixPointWorldInView(originalInitialPoint);
-   currentControlPoint= dataViewController.fixPointWorldInView(originalControlPoint);
-   currentFinalPoint= dataViewController.fixPointWorldInView(originalFinalPoint);
+///////////////////////////////////////////////////////////////////////////////
 
-   return calcPointsToDraw(dataViewController.getScale());
+std::deque<Coordinate> BezierShape::getCoordinatesToDraw(DataViewController& dataViewController)
+{
+   currentInitialCoordinate= dataViewController.repairCoordinateWorldToView(originalInitialCoordinate);
+   currentControlCoordinate= dataViewController.repairCoordinateWorldToView(originalControlCoordinate);
+   currentFinalCoordinate= dataViewController.repairCoordinateWorldToView(originalFinalCoordinate);
+
+   return calcCoordinatesOfShape(dataViewController.getScale());
 }
 
-std::deque<Point> BezierShape::getPointsToDrawInRect(DataViewController& dataViewController)
+std::deque<Coordinate> BezierShape::getCoordinatesToDrawInRect(DataViewController& dataViewController)
 {
-   currentInitialPoint= dataViewController.fixPointWorldInView(originalInitialPoint);
-   currentControlPoint= dataViewController.fixPointWorldInView(originalControlPoint);
-   currentFinalPoint= dataViewController.fixPointWorldInView(originalFinalPoint);
+   currentInitialCoordinate= dataViewController.repairCoordinateWorldToView(originalInitialCoordinate);
+   currentControlCoordinate= dataViewController.repairCoordinateWorldToView(originalControlCoordinate);
+   currentFinalCoordinate= dataViewController.repairCoordinateWorldToView(originalFinalCoordinate);
 
-   std::deque<Point> fixsPoints;
+   std::deque<Coordinate> repairedCoordinates;
 
-   for (Point point : calcPointsToDraw(dataViewController.getScale())) {
-      if (point.on(dataViewController.getRectPresentation()))
-         fixsPoints.push_back(dataViewController.discardScroll(point));
+   for (Coordinate coordinate : calcCoordinatesOfShape(dataViewController.getScale())) {
+      if (coordinate.on(dataViewController.getRectPresentation()))
+         repairedCoordinates.push_back(dataViewController.discardScroll(coordinate));
    }
 
-   return fixsPoints;
-}
-
-std::deque<Point> BezierShape::getSelectedPoints()
-{
-   std::deque<Point> points;
-
-   points.push_back(originalInitialPoint);
-   points.push_back(originalControlPoint);
-   points.push_back(originalFinalPoint);
-   return points;
+   return repairedCoordinates;
 }

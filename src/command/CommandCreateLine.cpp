@@ -4,7 +4,7 @@
 #include "LineShape.h"
 #include "UserInterface.h"
 
-CommandCreateLine::CommandCreateLine() : initial(Point()),final(Point()) {}
+CommandCreateLine::CommandCreateLine() : initial(Coordinate()),final(Coordinate()) {}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -13,6 +13,7 @@ void CommandCreateLine::exec(Data& data,UserInterface& ui)
    if (data.hasFile()) {
       id= data.getCurrentFile().generateIdShape();
       ui.markLineOptionAsSelected();
+      ui.setTipMessage("Select the position to start the line and move the mouse down to the end");
    }
    else
       ui.markOffAllOptions();
@@ -20,24 +21,24 @@ void CommandCreateLine::exec(Data& data,UserInterface& ui)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CommandCreateLine::posMousePress(Point& point,Data& data,UserInterface& ui)
+void CommandCreateLine::posMousePress(Coordinate& coordinate,Data& data,UserInterface& ui)
 {
    auto dataViewController= data.getCurrentFile().getDataViewController();
-   initial= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+   initial= dataViewController.repairCoordinateViewToWorld(coordinate);
    ui.activateMouseTracking();
 }
 
-void CommandCreateLine::posMouseMove(Point& point,Data& data,UserInterface& ui)
+void CommandCreateLine::posMouseMove(Coordinate& coordinate,Data& data,UserInterface& ui)
 {
    auto dataViewController= data.getCurrentFile().getDataViewController();
-   final= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+   final= dataViewController.repairCoordinateViewToWorld(coordinate);
    draw(ui,dataViewController,LineShape(id,initial,final));
 }
 
-void CommandCreateLine::posMouseRelease(Point& point,Data& data,UserInterface& ui)
+void CommandCreateLine::posMouseRelease(Coordinate& coordinate,Data& data,UserInterface& ui)
 {
    auto dataViewController= data.getCurrentFile().getDataViewController();
-   final= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+   final= dataViewController.repairCoordinateViewToWorld(coordinate);
 
    Shape& line= saveShapeOnFile(data);
    draw(ui,dataViewController,line);

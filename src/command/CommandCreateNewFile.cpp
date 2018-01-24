@@ -9,20 +9,29 @@ void CommandCreateNewFile::exec(Data& data,UserInterface& ui)
    bool response= true;
    if (data.hasFile()) {
       if (!data.getCurrentFile().isSaved())
-         response= ui.confirmOperation("Existe um arquivo aberto e ele não está salvo, deseja continuar mesmo assim?");
+         response= ui.confirmOperation("There's a file open and it's not save, do you want to continue?");
    }
 
-   if (response) {
-      std::string name= ui.showPopupNewFile();
-      if (name.size() > 0) {
-         File* file= new File(name);
-         file->getDataViewController().setWindowSize(ui.getSizeWindow());
-         data.setCurrentFile(file);
+   while (response) {
+      try {
+         std::string name= ui.showPopupNewFile();
+         if (name.size() > 0) {
+            File* file= new File(name);
+            file->getDataViewController().setWindowSize(ui.getSizeWindow());
+            data.setCurrentFile(file);
 
-         ui.setTitleWindow(name.c_str());
-         ui.setZoomScaleWidget(ZOOM::DEFAULT);
-         ui.createDrawArea();
-         verifyTheNeedForScrollInDrawArea(data.getCurrentFile().getDataViewController(),ui);
+            ui.createDrawArea();
+            ui.setTitleWindow(name.c_str());
+            ui.setZoomScaleWidget(ZOOM::DEFAULT);
+            ui.setTipMessage("Select the shape");
+            verifyTheNeedForScrollInDrawArea(data.getCurrentFile().getDataViewController(),ui);
+            break;
+         }
+         else
+            ui.showErrorMessage("File name can not be empty");
+      }
+      catch (UserInterface::CancelNewFile ex) {
+         break;
       }
    }
 }

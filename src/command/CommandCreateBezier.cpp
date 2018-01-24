@@ -1,13 +1,12 @@
 #include "CommandCreateBezier.h"
 #include "Data.h"
 #include "File.h"
-#include "Point.h"
+#include "Coordinate.h"
 #include "LineShape.h"
 #include "BezierShape.h"
 #include "UserInterface.h"
 
-CommandCreateBezier::CommandCreateBezier() : initial(Point()),control(Point()),final(Point()) 
-{}
+CommandCreateBezier::CommandCreateBezier() : initial(Coordinate()),control(Coordinate()),final(Coordinate()) {}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -16,6 +15,7 @@ void CommandCreateBezier::exec(Data& data,UserInterface& ui)
    if (data.hasFile()) {
       id= data.getCurrentFile().generateIdShape();
       ui.markBezierOptionAsSelected();
+      ui.setTipMessage("Draw a line and select the start point to the create a curvature and move the mouse down to end of bezier control");
    }
    else
       ui.markOffAllOptions();
@@ -23,45 +23,45 @@ void CommandCreateBezier::exec(Data& data,UserInterface& ui)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CommandCreateBezier::posMousePress(Point& point,Data& data,UserInterface& ui)
+void CommandCreateBezier::posMousePress(Coordinate& coordinate,Data& data,UserInterface& ui)
 {
    auto dataViewController= data.getCurrentFile().getDataViewController();
    if (initial.isNull())
-      initial= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+      initial= dataViewController.repairCoordinateViewToWorld(coordinate);
    else
-      control= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+      control= dataViewController.repairCoordinateViewToWorld(coordinate);
    ui.activateMouseTracking();
 }
 
-void CommandCreateBezier::posMouseMove(Point& point,Data& data,UserInterface& ui)
+void CommandCreateBezier::posMouseMove(Coordinate& coordinate,Data& data,UserInterface& ui)
 {
    auto dataViewController= data.getCurrentFile().getDataViewController();
    if (!final.isNull())
       if (!control.isNull()) {
-         control= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+         control= dataViewController.repairCoordinateViewToWorld(coordinate);
          draw(ui,dataViewController,BezierShape(id,initial,control,final));
       }
       else {
-         final= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+         final= dataViewController.repairCoordinateViewToWorld(coordinate);
          draw(ui,dataViewController,LineShape(id,initial,final));
       }
    else {
-      final=dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+      final=dataViewController.repairCoordinateViewToWorld(coordinate);
       draw(ui,dataViewController,LineShape(id,initial,final));
    }
 }
 
-void CommandCreateBezier::posMouseRelease(Point& point,Data& data,UserInterface& ui)
+void CommandCreateBezier::posMouseRelease(Coordinate& coordinate,Data& data,UserInterface& ui)
 {
    auto dataViewController= data.getCurrentFile().getDataViewController();
    if (!control.isNull()) {
-      control= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+      control= dataViewController.repairCoordinateViewToWorld(coordinate);
 
       Shape& bezier= saveShapeOnFile(data);
       draw(ui,dataViewController,bezier);
    }
    else {
-      final= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+      final= dataViewController.repairCoordinateViewToWorld(coordinate);
       draw(ui,dataViewController,LineShape(id,initial,final));
    }
 }
@@ -70,7 +70,7 @@ void CommandCreateBezier::posMouseRelease(Point& point,Data& data,UserInterface&
 
 void CommandCreateBezier::prepareToNewDraw(Data& data)
 {
-   initial= control= final= Point();
+   initial= control= final= Coordinate();
    id= data.getCurrentFile().generateIdShape();
 }
 

@@ -20,6 +20,7 @@ private:
    DataViewController viewController;
 
    bool saved;
+
 public:
    ~File();
    File(std::string _fileName);
@@ -39,8 +40,8 @@ public:
    bool alreadySaved();
    void setSaved(bool status);
 
-   std::map<int,std::deque<Point>> repaintAll();
-   std::map<int,std::deque<Point>> repaintRectInPresentation();
+   std::map<int,std::deque<Coordinate>> repaintAll();
+   std::map<int,std::deque<Coordinate>> repaintRectInPresentation();
 
    DataViewController& getDataViewController();
 };

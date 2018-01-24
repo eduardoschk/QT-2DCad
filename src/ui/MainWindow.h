@@ -4,7 +4,7 @@
 
 #include <QMainWindow>
 #include <deque>
-#include "Point.h"
+#include "Coordinate.h"
 
 class QLabel;
 class QSlider;
@@ -16,7 +16,7 @@ class MainWindow : public QMainWindow
 {
    Q_OBJECT
 private:
-   UserInterface& ui;
+   UserInterface & ui;
    QWidget viewPort;
    DrawArea* drawArea;
    QScrollBar* verticalScroll;
@@ -27,7 +27,8 @@ private:
    QAction* qActionBezier;
    QSlider* qSliderZoom;
 
-   void configureDrawArea();
+   QLabel* qLTipMessage;
+
    void configureDrawActions();
    void configureToolBarShapes();
    void configureZoomControlOnStatusBar();
@@ -39,14 +40,15 @@ public:
    MainWindow(UserInterface& _ui,QWidget* parent= nullptr);
 
    void createNewDrawArea();
+   void setTipMessage(const char* messageTip);
 
    void activateMouseTracking();
    void disableMouseTracking();
 
    void clearArea();
    void eraseShape(int idShape);
-   void drawPoint(int idShape,Point& point);
-   void drawPoints(int idShape,std::deque<Point>& points);
+   void drawCoordinate(int idShape,Coordinate& coordinate);
+   void drawCoordinates(int idShape,std::deque<Coordinate>& coordinates);
 
    void markOffAllOptions();
    void markArcOptionAsSelected();
@@ -63,7 +65,7 @@ public:
    void createVerticalScrollBar(int pageStep,int limit);
    void createHorizontalScrollBar(int pagetStep,int limit);
 
-public slots:
+   public slots:
    void minusZoomClicked();
    void plusZoomClicked();
 

@@ -1,6 +1,6 @@
  #include "File.h"
 #include "Shape.h"
-#include "Point.h"
+#include "Coordinate.h"
 #include "Rect.h"
 
 File::~File()
@@ -10,7 +10,7 @@ File::~File()
    shapes.clear();
 }
 
-File::File(std::string _fileName) : viewController()
+File::File(std::string _fileName)
 {
    saved= false;
    fileName= _fileName;
@@ -36,28 +36,33 @@ std::deque<Shape*> File::getShapes()
 void File::addShapeOnFile(Shape* newShape)
 {
    saved= false;
-   viewController.newShape(newShape->getOriginalRectShape());
+   viewController.newShape(newShape->getRectShape());
    shapes.insert(std::pair<int,Shape*>(newShape->getId(),newShape));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::map<int,std::deque<Point>> File::repaintAll()
+std::map<int,std::deque<Coordinate>> File::repaintAll()
 {
-   std::map<int,std::deque<Point>> points;
+   std::map<int,std::deque<Coordinate>> coordinates;
    for (std::pair<int,Shape*> shape : shapes) 
-      points.insert(std::pair<int,std::deque<Point>>(shape.second->getId(),shape.second->getPointsToDraw(viewController)));
-   return points;
+      coordinates.insert(std::pair<int,std::deque<Coordinate>>(shape.second->getId(),shape.second->getCoordinatesToDraw(viewController)));
+   return coordinates;
 }
 
-std::map<int,std::deque<Point>> File::repaintRectInPresentation()
+std::map<int,std::deque<Coordinate>> File::repaintRectInPresentation()
 {
-   std::map<int,std::deque<Point>> points;
+   std::map<int,std::deque<Coordinate>> coordinates;
    for (std::pair<int,Shape*> shape : shapes) {
-      std::deque<Point> pointsOfShape= shape.second->getPointsToDrawInRect(viewController);
-      points.insert(std::pair<int,std::deque<Point>>(shape.second->getId(),pointsOfShape));
+      Rect rectShape= shape.second->getCurrentRectShape(viewController);
+      if (viewController.rectIsInPresentation(rectShape)) {
+         std::deque<Coordinate> coordinatesOfShape= shape.second->getCoordinatesToDrawInRect(viewController);
+         coordinates.insert(std::pair<int,std::deque<Coordinate>>(shape.second->getId(),coordinatesOfShape));
+      }
+      else
+         coordinates.insert(std::pair<int,std::deque<Coordinate>>(shape.second->getId(),0));
    }
-   return points;
+   return coordinates;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

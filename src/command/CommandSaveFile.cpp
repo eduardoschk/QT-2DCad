@@ -19,5 +19,5 @@ void CommandSaveFile::exec(Data& data,UserInterface& ui)
          data.save();
    }
    else
-      ui.showErrorMessage("Não existe arquivo para ser salvo");
+      ui.showErrorMessage("There aren't files open");
 }

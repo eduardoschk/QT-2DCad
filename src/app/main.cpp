@@ -1,7 +1,7 @@
 #include <crtdbg.h>
 #include "App.h"
 
-#include "Point.h"
+#include "Coordinate.h"
 
 void main(int argc,char **argv)
 {   

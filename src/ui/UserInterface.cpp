@@ -45,7 +45,7 @@ void UserInterface::markBezierOptionAsSelected()
 std::string UserInterface::requestPathFileToSave(std::string fileName)
 {
    const char* a = fileName.c_str();
-   QString path = QFileDialog::getSaveFileName(this,tr("Salvar"),
+   QString path = QFileDialog::getSaveFileName(this,tr("Save"),
       a,
       tr("Custom(.cad);"));
 
@@ -62,7 +62,7 @@ std::string UserInterface::requestPathFileToOpen()
 void UserInterface::showErrorMessage(std::string _message)
 {
    const char* message = _message.c_str();
-   QMessageBox::warning(this,QString::fromLatin1("Atenção"),QString::fromLatin1(message),
+   QMessageBox::warning(&mainWindow,QString::fromLatin1("Caution"),QString::fromLatin1(message),
       QMessageBox::StandardButton::Ok);
 }
 
@@ -70,17 +70,27 @@ bool UserInterface::confirmOperation(std::string _message)
 {
    const char* message = _message.c_str();
    QMessageBox::StandardButton response;
-   response = QMessageBox::question(this,QString::fromLatin1("Atenção"),QString::fromLatin1(message),
+   response = QMessageBox::question(&mainWindow,QString::fromLatin1("Caution"),QString::fromLatin1(message),
       QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No);
 
    return (response == QMessageBox::Yes) ? true : false ;
 }
 
-std::string UserInterface::showPopupNewFile()
+std::string UserInterface::showPopupNewFile() throw(CancelNewFile)
 {
-   std::string name= QInputDialog::getText(this,QString::fromLatin1("Nome"),QString::fromLatin1("Digite o nome desejado para o arquivo")).toStdString();
-   
-   return name;
+   QInputDialog inputName(&mainWindow);
+   inputName.setWindowTitle(QString::fromLatin1("Name"));
+   inputName.setLabelText(QString::fromLatin1("Type the intended name of the file"));
+   inputName.adjustSize();
+
+   bool ok= inputName.exec();
+
+   if (ok)
+      return inputName.textValue().toStdString();
+   else {
+      CancelNewFile cancel;
+      throw cancel;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -105,22 +115,22 @@ void UserInterface::startCreateBezier()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UserInterface::mouseMoveEventInDrawArea(Point point) 
+void UserInterface::mouseMoveEventInDrawArea(Coordinate coordinate) 
 { 
    if (initialized)
-      app.actionMouseMoveInDrawArea(point);
+      app.actionMouseMoveInDrawArea(coordinate);
 }
 
-void UserInterface::mousePressEventInDrawArea(Point point) 
+void UserInterface::mousePressEventInDrawArea(Coordinate coordinate) 
 { 
    if (initialized)
-      app.actionMousePressInDrawArea(point);
+      app.actionMousePressInDrawArea(coordinate);
 }
 
-void UserInterface::mouseReleaseEventInDrawArea(Point point) 
+void UserInterface::mouseReleaseEventInDrawArea(Coordinate coordinate) 
 { 
    if (initialized)
-      app.actionMouseReleaseInDrawArea(point);
+      app.actionMouseReleaseInDrawArea(coordinate);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -196,7 +206,12 @@ void UserInterface::disableMouseTracking()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UserInterface::setTitleWindow(const char* name) 
+void UserInterface::setTipMessage(const char* messageTip)
+{
+   mainWindow.setTipMessage(messageTip);
+}
+
+void UserInterface::setTitleWindow(const char* name)
 { 
    mainWindow.setWindowTitle(name); 
 }
@@ -218,14 +233,14 @@ void UserInterface::eraseShape(int idShape)
    mainWindow.eraseShape(idShape); 
 }
 
-void UserInterface::drawPoint(int idShape,Point point) 
+void UserInterface::drawCoordinate(int idShape,Coordinate coordinate) 
 { 
-   mainWindow.drawPoint(idShape,point); 
+   mainWindow.drawCoordinate(idShape,coordinate);
 }
 
-void UserInterface::drawPoints(int idShape,std::deque<Point> points)
+void UserInterface::drawCoordinates(int idShape,std::deque<Coordinate> coordinates)
 {
-   mainWindow.drawPoints(idShape,points);
+   mainWindow.drawCoordinates(idShape,coordinates);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

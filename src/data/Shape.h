@@ -3,16 +3,19 @@
 #define INCLUDED_SHAPE_H
 
 #include <deque>
-#include "Point.h"
+#include "Coordinate.h"
 #include "ShapeTypes.h"
+#include "Rect.h"
 
-class Rect;
 class DataViewController;
 
 class Shape
 {
 protected:
    int id;
+   Rect rectShape;
+
+   virtual void calcRectShape() = 0;
 
 public:
    virtual ~Shape() {}
@@ -21,12 +24,12 @@ public:
    int getId() { return id; }
    virtual int getType() = 0;
 
-   virtual Rect getOriginalRectShape() = 0;
+   virtual Rect getRectShape() = 0;
    virtual Rect getCurrentRectShape(DataViewController& dataViewController) = 0;
 
-   virtual std::deque<Point> getSelectedPoints() = 0;
-   virtual std::deque<Point> getPointsToDraw(DataViewController& dataViewController) = 0;
-   virtual std::deque<Point> getPointsToDrawInRect(DataViewController& dataViewController) = 0;
+   virtual std::deque<Coordinate> getSelectedCoordinates() = 0;
+   virtual std::deque<Coordinate> getCoordinatesToDraw(DataViewController& dataViewController) = 0;
+   virtual std::deque<Coordinate> getCoordinatesToDrawInRect(DataViewController& dataViewController) = 0;
 };
 
 #endif //INCLUDED_SHAPE_H

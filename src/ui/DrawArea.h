@@ -6,13 +6,13 @@
 #include <deque>
 #include <QWidget>
 
-#include "Point.h"
+#include "Coordinate.h"
 
 class DrawArea : public QWidget
 {
 Q_OBJECT
 private:
-   std::map<int,std::deque<Point>> points;
+   std::map<int,std::deque<Coordinate>> coordinatesOfTheShapesDrawn;
    void configureDefaultValues();
 
 protected:
@@ -27,13 +27,13 @@ public:
 
    void clearArea();
    void eraseShape(int idShape);
-   void drawPoint(int idShape,Point& point);
-   void drawPoints(int idShape,std::deque<Point>& points);
+   void drawCoordinate(int idShape,Coordinate& coordinate);
+   void drawCoordinates(int idShape,std::deque<Coordinate>& coordinates);
 
 signals:
-   void mousePress(Point);
-   void mouseMove(Point);
-   void mouseRelease(Point);
+   void mousePress(Coordinate);
+   void mouseMove(Coordinate);
+   void mouseRelease(Coordinate);
 
 };
 

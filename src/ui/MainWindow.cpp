@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+#include <QLabel>
 #include <QSlider>
 #include <QMenuBar>
 #include <QToolBar>
@@ -9,7 +10,6 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QResizeEvent>
-#include <QCoreApplication>
 
 #include "Size.h"
 #include "DrawArea.h"
@@ -27,19 +27,114 @@ MainWindow::~MainWindow()
    delete qActionLine;
    delete qActionBezier;
    delete qSliderZoom;
+   delete qLTipMessage;
 }
 
 MainWindow::MainWindow(UserInterface& _ui,QWidget* parent) : QMainWindow(parent),drawArea(nullptr),verticalScroll(nullptr),horizontalScroll(nullptr),ui(_ui),viewPort(this)
 {
    setAutoFillBackground(true);
-   setBackgroundRole(QPalette::Dark);
+   setBackgroundRole(QPalette::Shadow);
 
-   configureDrawArea();
+   setCentralWidget(&viewPort);
    configureMenuBar(*menuBar());
    configureToolBarShapes();
    configureZoomControlOnStatusBar();
 
    showMaximized();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MainWindow::configureMenuBar(QMenuBar& menu)
+{
+   QMenu* file= menu.addMenu("File");
+   QAction* newAction= file->addAction("New");
+   QAction* openAction= file->addAction("Open");
+   QAction* saveAction= file->addAction("Save");
+   QAction* saveAsAction= file->addAction("Save As..");
+   file->addSeparator();
+   QAction* exitAction= file->addAction("Exit");
+
+   newAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_N));
+   openAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
+   saveAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
+   saveAsAction->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_S));
+
+   connect(newAction,&QAction::triggered,&ui,&UserInterface::startOptionNewFile);
+   connect(openAction,&QAction::triggered,&ui,&UserInterface::startOptionOpenFile);
+   connect(saveAction,&QAction::triggered,&ui,&UserInterface::startOptionSaveFile);
+   connect(saveAsAction,&QAction::triggered,&ui,&UserInterface::startOptionSaveAsFile);
+   connect(exitAction,&QAction::triggered,&ui,&UserInterface::startOptionQuit);
+}
+
+void MainWindow::configureToolBarShapes()
+{
+   QToolBar* tool= new QToolBar(this);
+   tool->setAutoFillBackground(true);
+   tool->setBackgroundRole(QPalette::Mid);
+
+   addToolBar(tool);
+   qActionLine=   tool->addAction(QIcon(":/line.png"),"Line");
+   qActionBezier= tool->addAction(QIcon(":/bezier.png"),"Bezier");
+   qActionArc=    tool->addAction(QIcon(":/arc.png"),"Arc");
+
+   qActionLine->setShortcut(QKeySequence(Qt::Key_F1));
+   qActionBezier->setShortcut(QKeySequence(Qt::Key_F2));
+   qActionArc->setShortcut(QKeySequence(Qt::Key_F3));
+
+   qActionArc->setCheckable(true);
+   qActionLine->setCheckable(true);
+   qActionBezier->setCheckable(true);
+
+   connect(qActionArc,&QAction::triggered,&ui,&UserInterface::startCreateArc);
+   connect(qActionLine,&QAction::triggered,&ui,&UserInterface::startCreateLine);
+   connect(qActionBezier,&QAction::triggered,&ui,&UserInterface::startCreateBezier);
+}
+
+void MainWindow::configureZoomControlOnStatusBar()
+{
+   qLTipMessage= new QLabel();
+   QWidget* zoomControl= new QWidget(this);
+   QHBoxLayout* layoutZoomControl= new QHBoxLayout(zoomControl);
+
+   qSliderZoom= new QSlider(Qt::Horizontal);
+   qSliderZoom->setMinimum(ZOOM::FIRST);
+   qSliderZoom->setMaximum(ZOOM::LAST);
+   qSliderZoom->setValue(ZOOM::DEFAULT);
+   qSliderZoom->setFocusPolicy(Qt::StrongFocus);
+   qSliderZoom->setTickPosition(QSlider::TicksBelow);
+
+   QPushButton* zoomOut= new QPushButton(QIcon(":/zoom-out.png"),"",this);
+   zoomOut->setFixedWidth(WIDTH_ZOOM_BUTTON);
+   zoomOut->setShortcut(QKeySequence(Qt::Key_Minus));
+
+   QPushButton* zoomIn= new QPushButton(QIcon(":/zoom-in.png"),"",this);
+   zoomIn->setFixedWidth(WIDTH_ZOOM_BUTTON);
+   zoomIn->setShortcut(QKeySequence(Qt::Key_Plus));
+
+   layoutZoomControl->addWidget(zoomOut);
+   layoutZoomControl->addWidget(qSliderZoom);
+   layoutZoomControl->addWidget(zoomIn);
+
+   zoomControl->setLayout(layoutZoomControl);
+
+   QStatusBar* status= statusBar();
+   status->setAutoFillBackground(true);
+   status->setBackgroundRole(QPalette::Mid);
+
+   status->addWidget(qLTipMessage);
+   status->addPermanentWidget(zoomControl);
+
+   connect(zoomOut,SIGNAL(pressed()),this,SLOT(minusZoomClicked()));
+   connect(zoomIn,SIGNAL(pressed()),this,SLOT(plusZoomClicked()));
+   connect(qSliderZoom,SIGNAL(valueChanged(int)),&ui,SLOT(startZoomValueChange(int)));
+}
+
+void MainWindow::configureDrawActions()
+{
+   connect(drawArea,SIGNAL(mouseMove(Coordinate)),&ui,SLOT(mouseMoveEventInDrawArea(Coordinate)));
+   connect(drawArea,SIGNAL(mousePress(Coordinate)),&ui,SLOT(mousePressEventInDrawArea(Coordinate)));
+   connect(drawArea,SIGNAL(mouseRelease(Coordinate)),&ui,SLOT(mouseReleaseEventInDrawArea(Coordinate)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -71,20 +166,25 @@ void MainWindow::markArcOptionAsSelected()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void MainWindow::setTipMessage(const char* messageTip)
+{
+   qLTipMessage->setText(QString::fromLatin1(messageTip));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void MainWindow::createNewDrawArea()
 {
    drawArea= new DrawArea(&viewPort);
    configureDrawActions();
 
    delete viewPort.layout();
-   QGridLayout* layout= new QGridLayout(this);
+   QGridLayout* layout= new QGridLayout();
    layout->setMargin(0);
    layout->addWidget(drawArea,0,0);
 
    viewPort.setLayout(layout);
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::clearArea()
 {
@@ -96,14 +196,14 @@ void MainWindow::eraseShape(int idShape)
    drawArea->eraseShape(idShape);
 }
 
-void MainWindow::drawPoint(int idShape,Point& point)
+void MainWindow::drawCoordinate(int idShape,Coordinate& coordinate)
 {
-   drawArea->drawPoint(idShape,point);
+   drawArea->drawCoordinate(idShape,coordinate);
 }
 
-void MainWindow::drawPoints(int idShape,std::deque<Point>& points)
+void MainWindow::drawCoordinates(int idShape,std::deque<Coordinate>& coordinates)
 {
-   drawArea->drawPoints(idShape,points);
+   drawArea->drawCoordinates(idShape,coordinates);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -120,100 +220,13 @@ void MainWindow::disableMouseTracking()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::configureDrawArea()
+void MainWindow::minusZoomClicked()
 {
-   setCentralWidget(&viewPort);
-   QGridLayout* gridLayout= new QGridLayout(this);
-
-   gridLayout->setMargin(0);
-   gridLayout->addWidget(drawArea,0,0);
-   
-   viewPort.setLayout(gridLayout);
+   qSliderZoom->setValue(qSliderZoom->value() - 1);
 }
 
-void MainWindow::configureMenuBar(QMenuBar& menu)
+void MainWindow::plusZoomClicked()
 {
-   QMenu* file= menu.addMenu("Arquivo");
-   QAction* newAction= file->addAction("Novo");
-   QAction* openAction= file->addAction("Abrir");
-   QAction* saveAction= file->addAction("Salvar");
-   QAction* saveAsAction= file->addAction("Salvar Como..");
-   file->addSeparator();
-   QAction* exitAction= file->addAction("Sair");
-
-
-   connect(newAction,&QAction::triggered,&ui,&UserInterface::startOptionNewFile);
-   connect(openAction,&QAction::triggered,&ui,&UserInterface::startOptionOpenFile);
-   connect(saveAction,&QAction::triggered,&ui,&UserInterface::startOptionSaveFile);
-   connect(saveAsAction,&QAction::triggered,&ui,&UserInterface::startOptionSaveAsFile);
-   connect(exitAction,&QAction::triggered,&ui,&UserInterface::startOptionQuit);
-}
-
-void MainWindow::configureToolBarShapes()
-{
-   QToolBar* tool= new QToolBar(this);
-   addToolBar(tool);
-   qActionLine=   tool->addAction(QIcon(":/line.png"),"Linha");
-   qActionBezier= tool->addAction(QIcon(":/bezier.png"),"Bezier");
-   qActionArc=    tool->addAction(QIcon(":/arc.png"),"Arco");
-
-   qActionArc->setCheckable(true);
-   qActionLine->setCheckable(true);
-   qActionBezier->setCheckable(true);
-
-   connect(qActionArc,&QAction::triggered,&ui,&UserInterface::startCreateArc);
-   connect(qActionLine,&QAction::triggered,&ui,&UserInterface::startCreateLine);
-   connect(qActionBezier,&QAction::triggered,&ui,&UserInterface::startCreateBezier);
-}
-
-void MainWindow::configureZoomControlOnStatusBar()
-{
-   QWidget* zoomControl= new QWidget(this);
-   QHBoxLayout* layoutZoomControl= new QHBoxLayout(this);
-
-   qSliderZoom= new QSlider(Qt::Horizontal);
-   qSliderZoom->setMinimum(ZOOM::FIRST);
-   qSliderZoom->setMaximum(ZOOM::LAST);
-   qSliderZoom->setValue(ZOOM::DEFAULT);
-   qSliderZoom->setFocusPolicy(Qt::StrongFocus);
-   qSliderZoom->setTickPosition(QSlider::TicksBelow);
-
-   QPushButton* zoomOut= new QPushButton(QIcon(":/zoom-out.png"),"",this);
-   zoomOut->setFixedWidth(WIDTH_ZOOM_BUTTON);
-
-   QPushButton* zoomIn= new QPushButton(QIcon(":/zoom-in.png"),"",this);
-   zoomIn->setFixedWidth(WIDTH_ZOOM_BUTTON);
-
-   layoutZoomControl->addWidget(zoomOut);
-   layoutZoomControl->addWidget(qSliderZoom);
-   layoutZoomControl->addWidget(zoomIn);
-
-   zoomControl->setLayout(layoutZoomControl);
-
-   QStatusBar* status= statusBar();
-   status->addPermanentWidget(zoomControl);
-
-   connect(zoomOut,SIGNAL(pressed()),this,SLOT(minusZoomClicked()));
-   connect(zoomIn,SIGNAL(pressed()),this,SLOT(plusZoomClicked()));
-   connect(qSliderZoom,SIGNAL(valueChanged(int)),&ui,SLOT(startZoomValueChange(int)));
-}
-
-void MainWindow::configureDrawActions()
-{
-   connect(drawArea,SIGNAL(mouseMove(Point)),&ui,SLOT(mouseMoveEventInDrawArea(Point)));
-   connect(drawArea,SIGNAL(mousePress(Point)),&ui,SLOT(mousePressEventInDrawArea(Point)));
-   connect(drawArea,SIGNAL(mouseRelease(Point)),&ui,SLOT(mouseReleaseEventInDrawArea(Point)));
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MainWindow::minusZoomClicked() 
-{ 
-   qSliderZoom->setValue(qSliderZoom->value() - 1); 
-}
-
-void MainWindow::plusZoomClicked() 
-{ 
    qSliderZoom->setValue(qSliderZoom->value() + 1);
 }
 
@@ -269,11 +282,11 @@ void MainWindow::createVerticalScrollBar(int pageStep,int limit)
    if (!verticalScroll) {
       verticalScroll= new QScrollBar(Qt::Vertical,&viewPort);
       QGridLayout* layout= dynamic_cast<QGridLayout*>(viewPort.layout());
-      
+
       layout->addWidget(verticalScroll,0,1);
       connect(verticalScroll,SIGNAL(valueChanged(int)),&ui,SLOT(verticalScrollMove(int)));
    }
-   
+
    verticalScroll->setMaximum(limit);
    verticalScroll->setPageStep(pageStep);
 }

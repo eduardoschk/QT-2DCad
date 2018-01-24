@@ -1,12 +1,11 @@
 #include "CommandCreateArc.h"
 #include "Data.h"
 #include "File.h"
-#include "Point.h"
+#include "Coordinate.h"
 #include "ArcShape.h"
 #include "UserInterface.h"
 
-CommandCreateArc::CommandCreateArc() : initial(Point()),center(Point()),final(Point())
-{}
+CommandCreateArc::CommandCreateArc() : initial(Coordinate()),center(Coordinate()),final(Coordinate()) {}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -15,6 +14,7 @@ void CommandCreateArc::exec(Data& data,UserInterface& ui)
    if (data.hasFile()) {
       id= data.getCurrentFile().generateIdShape();
       ui.markArcOptionAsSelected();
+      ui.setTipMessage("Select the center point of the circle, after, select the initial point to draw and this point will be your radius default, with the mouse down move to draw your arc");
    }
    else
       ui.markOffAllOptions();
@@ -22,30 +22,30 @@ void CommandCreateArc::exec(Data& data,UserInterface& ui)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CommandCreateArc::posMousePress(Point& point,Data& data,UserInterface& ui)
+void CommandCreateArc::posMousePress(Coordinate& coordinate,Data& data,UserInterface& ui)
 {
    auto dataViewController= data.getCurrentFile().getDataViewController();
    if (center.isNull())
-      center= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+      center= dataViewController.repairCoordinateViewToWorld(coordinate);
    else
-      initial= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+      initial= dataViewController.repairCoordinateViewToWorld(coordinate);
    ui.activateMouseTracking();
 }
 
-void CommandCreateArc::posMouseMove(Point& point,Data& data,UserInterface& ui)
+void CommandCreateArc::posMouseMove(Coordinate& coordinate,Data& data,UserInterface& ui)
 {
    auto dataViewController= data.getCurrentFile().getDataViewController();
    if (!initial.isNull()) {
-      final= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+      final= dataViewController.repairCoordinateViewToWorld(coordinate);
       draw(ui,dataViewController,ArcShape(id,center,initial,final));
    }
 }
 
-void CommandCreateArc::posMouseRelease(Point& point,Data& data,UserInterface& ui)
+void CommandCreateArc::posMouseRelease(Coordinate& coordinate,Data& data,UserInterface& ui)
 {
    auto dataViewController= data.getCurrentFile().getDataViewController();
    if (!final.isNull()) {
-      final= dataViewController.fixPointViewInWorld(dataViewController.fixScroll(point));
+      final= dataViewController.repairCoordinateViewToWorld(coordinate);
       Shape& arc= saveShapeOnFile(data);
       draw(ui,dataViewController,arc);
    }  
@@ -55,7 +55,7 @@ void CommandCreateArc::posMouseRelease(Point& point,Data& data,UserInterface& ui
 
 void CommandCreateArc::prepareToNewDraw(Data& data)
 {
-   center= initial= final= Point();
+   center= initial= final= Coordinate();
    id= data.getCurrentFile().generateIdShape();
 }
 

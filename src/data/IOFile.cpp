@@ -4,7 +4,7 @@
 
 #include "File.h"
 #include "Shape.h"
-#include "Point.h"
+#include "Coordinate.h"
 #include "ArcShape.h"
 #include "LineShape.h"
 #include "BezierShape.h"
@@ -69,18 +69,18 @@ void IOFile::writeShape(std::ofstream& stream,Shape& shape)
 {
    int type= shape.getType();
    
-   std::deque<Point> pointsOfShape= shape.getSelectedPoints();
+   std::deque<Coordinate> CoordinatesOfShape= shape.getSelectedCoordinates();
 
    stream.write((char*)&type,sizeof(int));
 
-   for (int i= 0 ; i < pointsOfShape.size() ; ++i)
-      writePoint(stream,pointsOfShape[i]);
+   for (int i= 0 ; i < CoordinatesOfShape.size() ; ++i)
+      writeCoordinate(stream,CoordinatesOfShape[i]);
 }
 
-void IOFile::writePoint(std::ofstream& stream,Point point)
+void IOFile::writeCoordinate(std::ofstream& stream,Coordinate coordinate)
 {
-   stream.write((char*)&point.x,sizeof(int));
-   stream.write((char*)&point.y,sizeof(int));
+   stream.write((char*)&coordinate.x,sizeof(int));
+   stream.write((char*)&coordinate.y,sizeof(int));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -98,9 +98,9 @@ Shape* IOFile::readShape(int id,std::ifstream& stream)
    return nullptr;
 }
 
-Point IOFile::readPoint(std::ifstream& stream)
+Coordinate IOFile::readCoordinate(std::ifstream& stream)
 {
-   Point p= Point();
+   Coordinate p= Coordinate();
    stream.read((char*)&p.x,sizeof(int));
    stream.read((char*)&p.y,sizeof(int));
    return p;
@@ -108,26 +108,26 @@ Point IOFile::readPoint(std::ifstream& stream)
 
 Shape* IOFile::readArcShape(int id,std::ifstream& stream)
 {
-   Point center= readPoint(stream);
-   Point initial= readPoint(stream);
-   Point final= readPoint(stream);
+   Coordinate center= readCoordinate(stream);
+   Coordinate initial= readCoordinate(stream);
+   Coordinate final= readCoordinate(stream);
 
    return new ArcShape(id,center,initial,final);
 }
 
 Shape* IOFile::readLineShape(int id,std::ifstream& stream)
 {
-   Point initial= readPoint(stream);
-   Point final= readPoint(stream);
+   Coordinate initial= readCoordinate(stream);
+   Coordinate final= readCoordinate(stream);
 
    return new LineShape(id,initial,final);
 }
 
 Shape* IOFile::readBezierShape(int id,std::ifstream& stream)
 {
-   Point initial= readPoint(stream);
-   Point control= readPoint(stream);
-   Point final= readPoint(stream);
+   Coordinate initial= readCoordinate(stream);
+   Coordinate control= readCoordinate(stream);
+   Coordinate final= readCoordinate(stream);
 
    return new BezierShape(id,initial,control,final);
 }

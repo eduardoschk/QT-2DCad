@@ -9,5 +9,5 @@ void CommandSaveAsFile::exec(Data& data,UserInterface& ui)
    if (data.hasFile())
       data.saveAs(ui.requestPathFileToSave(data.getCurrentFile().getFileName()));
    else
-      ui.showErrorMessage("Não existe arquivo para ser salvo");
+      ui.showErrorMessage("There aren't files open");
 }
