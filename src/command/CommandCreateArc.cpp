@@ -1,13 +1,9 @@
 #include "CommandCreateArc.h"
 #include "Data.h"
 #include "File.h"
-#include "Coordinate.h"
 #include "ArcShape.h"
+#include "Coordinate.h"
 #include "UserInterface.h"
-
-CommandCreateArc::CommandCreateArc() : initial(Coordinate()),center(Coordinate()),final(Coordinate()) {}
-
-///////////////////////////////////////////////////////////////////////////////
 
 void CommandCreateArc::exec(Data& data,UserInterface& ui)
 {

@@ -35,9 +35,9 @@ MainWindow::MainWindow(UserInterface& _ui,QWidget* parent) : QMainWindow(parent)
    setAutoFillBackground(true);
    setBackgroundRole(QPalette::Shadow);
 
+   configureToolBarShapes();
    setCentralWidget(&viewPort);
    configureMenuBar(*menuBar());
-   configureToolBarShapes();
    configureZoomControlOnStatusBar();
 
    showMaximized();

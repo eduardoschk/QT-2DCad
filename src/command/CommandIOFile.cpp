@@ -1,14 +1,14 @@
 #include "CommandIOFile.h"
 
-FileParams CommandIOFile::dividerNameOfPath(std::string completedPath)
+FileParams CommandIOFile::getNameAndFolderPathOfAbsolutePath(std::string completedPath)
 {
-   int indexOf= 0;
+   int indexOfBar= 0;
    for (int i= 0 ; i < completedPath.size() ; ++i) {
       if (completedPath.at(i) == '/' )
-         indexOf= i;
+         indexOfBar= i;
    }
    FileParams file;
-   file.path=  completedPath.substr(0,indexOf);
-   file.name= completedPath.substr(indexOf + 1,completedPath.size());
+   file.path= completedPath.substr(0,indexOfBar);
+   file.name= completedPath.substr(indexOfBar + 1,completedPath.size());
    return file;
 }

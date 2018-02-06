@@ -4,27 +4,38 @@
 #include "ZoomControl.h"
 #include "UserInterface.h"
 
-void CommandCreateNewFile::exec(Data& data,UserInterface& ui)
+bool CommandCreateNewFile::checkIfCanCreateFile(Data& data,UserInterface& ui)
 {
    bool response= true;
-   if (data.hasFile()) {
-      if (!data.getCurrentFile().isSaved())
-         response= ui.confirmOperation("There's a file open and it's not save, do you want to continue?");
-   }
+   if (data.hasFile() && !data.getCurrentFile().isSaved())
+      response= ui.confirmOperation("There's a file open and it's not save, do you want to continue?");
+   return response;
+}
 
-   while (response) {
+void CommandCreateNewFile::configDrawArea(DataViewController& viewController,UserInterface& ui)
+{
+   ui.createDrawArea();
+   ui.markOffAllOptions();
+   ui.setZoomScaleWidget(ZOOM::DEFAULT);
+   ui.setTipMessage("Select the shape");
+   ui.setTitleWindow(file->getFileName().c_str());
+
+   verifyTheNeedForScrollInDrawArea(viewController,ui);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void CommandCreateNewFile::exec(Data& data,UserInterface& ui)
+{
+   while (checkIfCanCreateFile(data,ui)) {
       try {
          std::string name= ui.showPopupNewFile();
          if (name.size() > 0) {
-            File* file= new File(name);
+            file= new File(name);
             file->getDataViewController().setWindowSize(ui.getSizeWindow());
             data.setCurrentFile(file);
 
-            ui.createDrawArea();
-            ui.setTitleWindow(name.c_str());
-            ui.setZoomScaleWidget(ZOOM::DEFAULT);
-            ui.setTipMessage("Select the shape");
-            verifyTheNeedForScrollInDrawArea(data.getCurrentFile().getDataViewController(),ui);
+            configDrawArea(data.getCurrentFile().getDataViewController(),ui);
             break;
          }
          else

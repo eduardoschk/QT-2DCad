@@ -14,7 +14,7 @@ struct FileParams
 class CommandIOFile : public Command
 {
 protected:
-   FileParams dividerNameOfPath(std::string completedPath);
+   FileParams getNameAndFolderPathOfAbsolutePath(std::string completedPath);
 public:
    virtual void exec(Data& data,UserInterface& ui) = 0;
 };

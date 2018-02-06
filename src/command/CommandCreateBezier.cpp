@@ -1,14 +1,10 @@
 #include "CommandCreateBezier.h"
 #include "Data.h"
 #include "File.h"
-#include "Coordinate.h"
 #include "LineShape.h"
+#include "Coordinate.h"
 #include "BezierShape.h"
 #include "UserInterface.h"
-
-CommandCreateBezier::CommandCreateBezier() : initial(Coordinate()),control(Coordinate()),final(Coordinate()) {}
-
-///////////////////////////////////////////////////////////////////////////////
 
 void CommandCreateBezier::exec(Data& data,UserInterface& ui)
 {

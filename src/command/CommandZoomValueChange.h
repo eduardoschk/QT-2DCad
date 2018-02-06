@@ -8,6 +8,7 @@ class CommandZoomValueChange : public CommandChangeDrawArea
 {
 private:
    int zoom;
+   float getScaleByZoomValue();
 public:
    ~CommandZoomValueChange() {}
    CommandZoomValueChange(int value) { zoom= value; }

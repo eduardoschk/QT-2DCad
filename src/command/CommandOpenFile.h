@@ -11,8 +11,9 @@ class DataViewController;
 class CommandOpenFile : public CommandIOFile
 {
 private:
+   bool checkIfCanCreateFile(Data& data,UserInterface& ui);
+
    void drawOpenFile(UserInterface& ui,File& openedFile);
-   void drawShape(UserInterface& ui,Shape& shape,DataViewController& dataViewController);
 public:
    ~CommandOpenFile() {}
    CommandOpenFile() {}

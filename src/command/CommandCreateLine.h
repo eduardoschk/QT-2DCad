@@ -11,12 +11,12 @@ private:
    Coordinate initial;
    Coordinate final;
 
-   Shape& saveShapeOnFile(Data& data);
    void prepareToNewDraw(Data& data);
+   Shape& saveShapeOnFile(Data& data);
 
 public:
    ~CommandCreateLine() {}
-   CommandCreateLine();
+   CommandCreateLine() {}
 
    void exec(Data& data,UserInterface& ui);
 

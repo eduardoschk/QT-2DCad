@@ -4,10 +4,6 @@
 #include "LineShape.h"
 #include "UserInterface.h"
 
-CommandCreateLine::CommandCreateLine() : initial(Coordinate()),final(Coordinate()) {}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void CommandCreateLine::exec(Data& data,UserInterface& ui)
 {
    if (data.hasFile()) {

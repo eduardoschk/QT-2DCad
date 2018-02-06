@@ -23,25 +23,25 @@ public:
 
    void run();
 
-   void startMoveXScroll(int value);
-   void startMoveYScroll(int value);
-
-   void startCommandDrawArc();
-   void startCommandDrawLine();  
-   void startCommandDrawBezier();
-
-   void actionMousePressInDrawArea(Coordinate& coordinate);
-   void actionMouseMoveInDrawArea(Coordinate& coordinate);
-   void actionMouseReleaseInDrawArea(Coordinate& coordinate);
-
    void startCommandQuit();
    void startCommandNewFile();
    void startCommandOpenFile();
    void startCommandSaveFile();
    void startCommandSaveAsFile();
 
+   void startCommandDrawArc();
+   void startCommandDrawLine();  
+   void startCommandDrawBezier();
+
+   void startMoveXScroll(int value);
+   void startMoveYScroll(int value);
+
    void startCommandResizeWindow(Size& size);
    void startCommandZoomValueChange(int value);
+
+   void actionMousePressInDrawArea(Coordinate& coordinate);
+   void actionMouseMoveInDrawArea(Coordinate& coordinate);
+   void actionMouseReleaseInDrawArea(Coordinate& coordinate);
 };
 
 #endif // INCLUDED_APP_H

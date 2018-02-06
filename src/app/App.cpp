@@ -47,46 +47,6 @@ void App::setCurrentCmd(Command* newCm)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void App::startCommandDrawArc()
-{
-   setCurrentCmd(new CommandCreateArc());
-}
-
-void App::startCommandDrawLine()
-{
-   setCurrentCmd(new CommandCreateLine());
-}
-
-void App::startCommandDrawBezier()
-{
-   setCurrentCmd(new CommandCreateBezier());
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void App::actionMousePressInDrawArea(Coordinate& coordinate)
-{
-   CommandCreateDraw* isDrawCommand= dynamic_cast<CommandCreateDraw*>(currentCommand);
-   if (isDrawCommand)
-      isDrawCommand->posMousePress(coordinate,data,userInterface);
-}
-
-void App::actionMouseMoveInDrawArea(Coordinate& coordinate)
-{
-   CommandCreateDraw* isDrawCommand= dynamic_cast<CommandCreateDraw*>(currentCommand);
-   if (isDrawCommand)
-      isDrawCommand->posMouseMove(coordinate,data,userInterface);
-}
-
-void App::actionMouseReleaseInDrawArea(Coordinate& coordinate)
-{
-   CommandCreateDraw* isDrawCommand= dynamic_cast<CommandCreateDraw*>(currentCommand);
-   if (isDrawCommand)
-      isDrawCommand->posMouseRelease(coordinate,data,userInterface);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void App::startCommandNewFile()
 {
    setCurrentCmd(new CommandCreateNewFile());
@@ -114,14 +74,19 @@ void App::startCommandQuit()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void App::startCommandZoomValueChange(int value)
+void App::startCommandDrawArc()
 {
-   CommandZoomValueChange(value).exec(data,userInterface);
+   setCurrentCmd(new CommandCreateArc());
 }
 
-void App::startCommandResizeWindow(Size& size)
+void App::startCommandDrawLine()
 {
-   CommandResizeWindow(size).exec(data,userInterface);
+   setCurrentCmd(new CommandCreateLine());
+}
+
+void App::startCommandDrawBezier()
+{
+   setCurrentCmd(new CommandCreateBezier());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -134,4 +99,39 @@ void App::startMoveXScroll(int value)
 void App::startMoveYScroll(int value)
 {
    CommandMoveScroll(value,SCROL_ORIENTATION::VERTICAL).exec(data,userInterface);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void App::startCommandResizeWindow(Size& size)
+{
+   CommandResizeWindow(size).exec(data,userInterface);
+}
+
+void App::startCommandZoomValueChange(int value)
+{
+   CommandZoomValueChange(value).exec(data,userInterface);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void App::actionMousePressInDrawArea(Coordinate& coordinate)
+{
+   CommandCreateDraw* isDrawCommand= dynamic_cast<CommandCreateDraw*>(currentCommand);
+   if (isDrawCommand)
+      isDrawCommand->posMousePress(coordinate,data,userInterface);
+}
+
+void App::actionMouseMoveInDrawArea(Coordinate& coordinate)
+{
+   CommandCreateDraw* isDrawCommand= dynamic_cast<CommandCreateDraw*>(currentCommand);
+   if (isDrawCommand)
+      isDrawCommand->posMouseMove(coordinate,data,userInterface);
+}
+
+void App::actionMouseReleaseInDrawArea(Coordinate& coordinate)
+{
+   CommandCreateDraw* isDrawCommand= dynamic_cast<CommandCreateDraw*>(currentCommand);
+   if (isDrawCommand)
+      isDrawCommand->posMouseRelease(coordinate,data,userInterface);
 }

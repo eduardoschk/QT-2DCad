@@ -6,21 +6,41 @@
 #include "ZoomControl.h"
 #include "UserInterface.h"
 
-void CommandOpenFile::exec(Data& data,UserInterface& ui)
+bool CommandOpenFile::checkIfCanCreateFile(Data& data,UserInterface& ui)
 {
    bool response= true;
-
    if (data.hasFile() && !data.getCurrentFile().isSaved())
-      response= ui.confirmOperation("There are a file open and your changes isn't save, do you want to continue?");
+      response= ui.confirmOperation("There's a file open and it's not save, do you want to continue?");
+   return response;
+}
 
-   if (response) {
+///////////////////////////////////////////////////////////////////////////////
+
+void CommandOpenFile::drawOpenFile(UserInterface& ui,File& opennedFile)
+{
+   ui.createDrawArea();
+   ui.markOffAllOptions();
+   ui.setZoomScaleWidget(ZOOM::DEFAULT);
+   ui.setTipMessage("Select the shape");
+   ui.setTitleWindow(opennedFile.getFileName().c_str());
+
+   std::deque<Shape*> shapes= opennedFile.getShapes();
+   for (Shape* shape : shapes)
+      ui.drawCoordinates(shape->getId(),shape->getCoordinatesToDraw(opennedFile.getDataViewController()));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void CommandOpenFile::exec(Data& data,UserInterface& ui)
+{
+   if (checkIfCanCreateFile(data,ui)) {
       std::string completedPath= ui.requestPathFileToOpen();
 
       if (completedPath.size() > 0) {
          File* file= data.open(completedPath);
          file->getDataViewController().setWindowSize(ui.getSizeWindow());
 
-         FileParams params= dividerNameOfPath(completedPath);
+         FileParams& params= getNameAndFolderPathOfAbsolutePath(completedPath);
          file->setPath(params.path);
          file->setFileName(params.name);
 
@@ -28,20 +48,4 @@ void CommandOpenFile::exec(Data& data,UserInterface& ui)
          drawOpenFile(ui,*file);
       }
    }
-}
-
-void CommandOpenFile::drawOpenFile(UserInterface& ui,File& opennedFile)
-{
-   ui.createDrawArea();
-   ui.setZoomScaleWidget(ZOOM::DEFAULT);
-   ui.setTipMessage("Select the shape");
-   std::deque<Shape*> shapes= opennedFile.getShapes();
-   for (Shape* shape : shapes)
-      drawShape(ui,*shape,opennedFile.getDataViewController());
-}
-
-void CommandOpenFile::drawShape(UserInterface& ui,Shape& shape,DataViewController& dataViewController)
-{
-   ui.markOffAllOptions();
-   ui.drawCoordinates(shape.getId(),shape.getCoordinatesToDraw(dataViewController));
 }

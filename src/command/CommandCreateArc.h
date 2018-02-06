@@ -12,12 +12,12 @@ private:
    Coordinate initial;
    Coordinate final;
 
-   Shape& saveShapeOnFile(Data& data);
    void prepareToNewDraw(Data& data);
+   Shape& saveShapeOnFile(Data& data);
 
 public:
    ~CommandCreateArc() {}
-   CommandCreateArc();
+   CommandCreateArc() {}
 
    void exec(Data& data,UserInterface& ui);
 

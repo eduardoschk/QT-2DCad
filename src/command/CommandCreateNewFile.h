@@ -4,8 +4,15 @@
 
 #include "CommandChangeDrawArea.h"
 
+class File;
+
 class CommandCreateNewFile : public CommandChangeDrawArea
 {
+private:
+   File* file;
+
+   bool checkIfCanCreateFile(Data& data,UserInterface& ui);
+   void configDrawArea(DataViewController& viewController,UserInterface& ui);
 public:
    ~CommandCreateNewFile() {}
    CommandCreateNewFile() {}

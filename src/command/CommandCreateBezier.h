@@ -12,12 +12,12 @@ private:
    Coordinate control;
    Coordinate final;
 
-   Shape& saveShapeOnFile(Data& data);
    void prepareToNewDraw(Data& data);
+   Shape& saveShapeOnFile(Data& data);
 
 public:
    ~CommandCreateBezier() {}
-   CommandCreateBezier();
+   CommandCreateBezier() {}
 
    void exec(Data& data,UserInterface& ui);
 

@@ -14,8 +14,8 @@ class CommandCreateDraw : public Command
 protected:
    int id;
 
-   virtual Shape& saveShapeOnFile(Data& data) = 0;
    virtual void prepareToNewDraw(Data& data) = 0;
+   virtual Shape& saveShapeOnFile(Data& data) = 0;
    void draw(UserInterface& ui,DataViewController& viewController,Shape& shape);
 
 public:

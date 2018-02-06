@@ -4,6 +4,26 @@
 #include "Rect.h"
 #include "UserInterface.h"
 
+void CommandChangeDrawArea::configVerticalScroll(DataViewController& dataView,UserInterface& ui)
+{
+   int limit= dataView.calcVerticalScrollLimit();
+   int pageStep= dataView.calcVerticalScrollPageStep();
+
+   ui.createVerticalScrollBar(pageStep,limit);
+   ui.setVerticalScrollBarPosition(dataView.getRectPresentation().initialY);
+}
+
+void CommandChangeDrawArea::configHorizontalScroll(DataViewController& dataView,UserInterface& ui)
+{
+   int limit= dataView.calcHorizontalScrollLimit();
+   int pageStep= dataView.calcHorizontalScrollPageStep();
+
+   ui.createHorizontalScrollBar(pageStep,limit);
+   ui.setHorizontalScrollBarPosition(dataView.getRectPresentation().initialX);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void CommandChangeDrawArea::repaint(Data& data,UserInterface& ui)
 {
    for (std::pair<int,std::deque<Coordinate>> coordinates : data.getCurrentFile().repaintRectInPresentation()) {
@@ -16,22 +36,13 @@ void CommandChangeDrawArea::repaint(Data& data,UserInterface& ui)
 
 void CommandChangeDrawArea::verifyTheNeedForScrollInDrawArea(DataViewController& dataView,UserInterface& ui)
 {
-   if (dataView.verifyNeedVerticalScroll()) {
-      int limit= dataView.calcVerticalScrollLimit();
-      int pageStep= dataView.calcVerticalScrollPageStep();
-
-      ui.createVerticalScrollBar(pageStep,limit);
-      ui.setVerticalScrollBarPosition(dataView.getRectPresentation().initialY);
-   } else 
+   if (dataView.verifyNeedVerticalScroll())
+      configVerticalScroll(dataView,ui);
+   else 
       ui.destructVerticalScrollBar();
 
-   if (dataView.verifyNeedHorizontalScroll()) {
-      int limit= dataView.calcHorizontalScrollLimit();
-      int pageStep= dataView.calcHorizontalScrollPageStep();
-
-      ui.createHorizontalScrollBar(pageStep,limit);
-      ui.setHorizontalScrollBarPosition(dataView.getRectPresentation().initialX);
-   }
+   if (dataView.verifyNeedHorizontalScroll())
+      configHorizontalScroll(dataView,ui);
    else
       ui.destructHorizontalScrollBar();
 }
